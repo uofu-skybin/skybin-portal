@@ -1,0 +1,11 @@
+<div id='my-files-buttons'>
+    <button (click)='uploadFile()' name='my-files-upload-button'>Upload</button>
+    <button (click)='downloadFile()' name='my-files-download-button'>Download</button>
+</div>
+<div id='my-files-list'>
+    <ul>
+        <li *ngFor='let file of files'>
+            {{file}}
+        </li>
+    </ul>
+</div>

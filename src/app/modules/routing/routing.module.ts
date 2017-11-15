@@ -1,16 +1,15 @@
 import { NgModule } from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {RegisterComponent} from '../register/register.component';
-import {LoginComponent} from '../login/login.component';
-import {MyFilesComponent} from '../my-files/my-files.component';
-import {SharedWithMeComponent} from '../shared-with-me/shared-with-me.component';
-import {RentStorageComponent} from '../rent-storage/rent-storage.component';
-import {ProvideStorageComponent} from '../provide-storage/provide-storage.component';
-import {MyWalletComponent} from '../my-wallet/my-wallet.component';
-
+import {LoginComponent} from '../../components/login/login.component';
+import {RegisterComponent} from '../../components/register/register.component';
+import {MyFilesComponent} from '../../components/my-files/my-files.component';
+import {SharedWithMeComponent} from '../../components/shared-with-me/shared-with-me.component';
+import {RentStorageComponent} from '../../components/rent-storage/rent-storage.component';
+import {ProvideStorageComponent} from '../../components/provide-storage/provide-storage.component';
+import {MyWalletComponent} from '../../components/my-wallet/my-wallet.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '', pathMatch: 'full' },
+  { path: '', redirectTo: 'my-files', pathMatch: 'full' },
   { path: 'login', pathMatch: 'full', component: LoginComponent },
   { path: 'register', pathMatch: 'full', component: RegisterComponent },
   { path: 'my-files', pathMatch: 'full', component: MyFilesComponent },
