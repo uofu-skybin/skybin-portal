@@ -11,6 +11,8 @@ import {SharedWithMeComponent} from './components/shared-with-me/shared-with-me.
 import {RentStorageComponent} from './components/rent-storage/rent-storage.component';
 import {ProvideStorageComponent} from './components/provide-storage/provide-storage.component';
 import {RoutingModule} from './modules/routing/routing.module';
+import {HttpClientModule} from '@angular/common/http';
+import {NgxElectronModule} from 'ngx-electron';
 
 @NgModule({
     declarations: [
@@ -26,7 +28,9 @@ import {RoutingModule} from './modules/routing/routing.module';
     ],
     imports: [
         BrowserModule,
-        RoutingModule
+        RoutingModule,
+        HttpClientModule,
+        NgxElectronModule
     ],
     providers: [],
     bootstrap: [AppComponent]

@@ -1,4 +1,16 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {ElectronService} from 'ngx-electron';
+
+interface File {
+    name: string,
+    blocks: Object[],
+    id: string
+}
+
+interface filesResponse {
+    files: File[]
+}
 
 @Component({
     selector: 'app-my-files',
@@ -7,18 +19,21 @@ import {Component, OnInit, ViewEncapsulation} from '@angular/core';
     encapsulation: ViewEncapsulation.None
 })
 export class MyFilesComponent implements OnInit {
-    files: string[] = ['file 1', 'file 2', 'file 3', 'file 4', 'file 5'];
+    myFiles: File[] = [];
 
-    constructor() {
+    constructor(private http: HttpClient, private electronService: ElectronService) {
     }
 
     ngOnInit() {
-        // Fetch files in order to populate the list view.
         this.loadFiles();
     }
 
     private loadFiles() {
-        // TODO Retch files with skybin go.
+        this.http.get<filesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
+            response.files.forEach(file => {
+                this.myFiles.push(file);
+            })
+        })
     }
 
     downloadFile() {
@@ -26,6 +41,19 @@ export class MyFilesComponent implements OnInit {
     }
 
     uploadFile() {
-        console.log('upload');
+        this.electronService.remote.dialog.showOpenDialog(files => {
+            files.forEach(sourcePath => {
+                let dirs = sourcePath.split('/');
+                let destPath = dirs[dirs.length - 1];
+                let body = {
+                    sourcePath: sourcePath,
+                    destPath : destPath
+                };
+
+                this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
+                    console.log(response);
+                });
+            });
+        });
     }
 }
