@@ -19,7 +19,8 @@ interface filesResponse {
     encapsulation: ViewEncapsulation.None
 })
 export class MyFilesComponent implements OnInit {
-    myFiles: File[] = [];
+    private myFiles: File[] = [];
+    private selectedFiles: File[] = [];
 
     constructor(private http: HttpClient, private electronService: ElectronService) {
     }
@@ -30,14 +31,28 @@ export class MyFilesComponent implements OnInit {
 
     private loadFiles() {
         this.http.get<filesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
-            response.files.forEach(file => {
-                this.myFiles.push(file);
-            })
-        })
+            if (response.files) {
+                response.files.forEach(file => {
+                    this.myFiles.push(file);
+                });
+            }
+        });
+        console.log(this.myFiles);
     }
 
     downloadFile() {
-        console.log('download');
+        this.selectedFiles.forEach(file => {
+            this.electronService.remote.dialog.showSaveDialog(savePath => {
+                let url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
+                // console.log(url);
+                let body = {
+                    destination: savePath
+                };
+                this.http.post(url, body).subscribe(response => {
+                    console.log(response);
+                });
+            });
+        });
     }
 
     uploadFile() {
@@ -55,5 +70,17 @@ export class MyFilesComponent implements OnInit {
                 });
             });
         });
+    }
+
+    selectFile(e, file) {
+        // console.log(e, file);
+        if (e.srcElement.checked) {
+            this.selectedFiles.push(file);
+        } else {
+            this.selectedFiles = this.selectedFiles.filter(remainingFile => {
+                return remainingFile.id != file.id;
+            });
+        }
+        console.log(this.selectedFiles);
     }
 }

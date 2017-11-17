@@ -3,9 +3,8 @@
     <button (click)='downloadFile()' name='my-files-download-button'>Download</button>
 </div>
 <div id='my-files-list'>
-    <ul>
-        <li *ngFor='let file of myFiles'>
-            {{file.name}}
-        </li>
-    </ul>
+    <div *ngFor='let file of myFiles'>
+        <input type="checkbox" (change)="selectFile($event, file)">
+        {{file.name}}
+    </div>
 </div>
