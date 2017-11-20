@@ -1,10 +1,12 @@
-<div id='my-files-buttons'>
-    <button (click)='uploadFile()' name='my-files-upload-button'>Upload</button>
-    <button (click)='downloadFile()' name='my-files-download-button'>Download</button>
-</div>
-<div id='my-files-list'>
-    <div *ngFor='let file of myFiles'>
-        <input type="checkbox" (change)="selectFile($event, file)">
-        {{file.name}}
+<div id='my-files-container'>
+    <div id='my-files-buttons'>
+        <button mat-raised-button color='primary' (click)='uploadFile()' name='my-files-upload-button'>Upload</button>
+        <button mat-raised-button color='primary' (click)='downloadFile()' name='my-files-download-button'>Download</button>
     </div>
+    <mat-list>
+        <mat-list-item *ngFor='let file of myFiles'>
+            <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox>
+            {{file.name}}
+        </mat-list-item>
+    </mat-list>
 </div>

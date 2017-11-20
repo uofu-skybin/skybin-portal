@@ -13,6 +13,7 @@ import {ProvideStorageComponent} from './components/provide-storage/provide-stor
 import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
+import {MatButtonModule, MatCheckboxModule, MatListModule} from '@angular/material';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,10 @@ import {NgxElectronModule} from 'ngx-electron';
         BrowserModule,
         RoutingModule,
         HttpClientModule,
-        NgxElectronModule
+        NgxElectronModule,
+        MatButtonModule,
+        MatListModule,
+        MatCheckboxModule,
     ],
     providers: [],
     bootstrap: [AppComponent]

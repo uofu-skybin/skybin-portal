@@ -3,13 +3,13 @@ import {HttpClient} from '@angular/common/http';
 import {ElectronService} from 'ngx-electron';
 
 interface File {
-    name: string,
-    blocks: Object[],
-    id: string
+    name: string;
+    blocks: Object[];
+    id: string;
 }
 
-interface filesResponse {
-    files: File[]
+interface FilesResponse {
+    files: File[];
 }
 
 @Component({
@@ -19,8 +19,8 @@ interface filesResponse {
     encapsulation: ViewEncapsulation.None
 })
 export class MyFilesComponent implements OnInit {
-    private myFiles: File[] = [];
-    private selectedFiles: File[] = [];
+    myFiles: File[] = [];
+    selectedFiles: File[] = [];
 
     constructor(private http: HttpClient, private electronService: ElectronService) {
     }
@@ -30,22 +30,21 @@ export class MyFilesComponent implements OnInit {
     }
 
     private loadFiles() {
-        this.http.get<filesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
+        this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
             if (response.files) {
                 response.files.forEach(file => {
                     this.myFiles.push(file);
                 });
             }
         });
-        console.log(this.myFiles);
     }
 
     downloadFile() {
         this.selectedFiles.forEach(file => {
             this.electronService.remote.dialog.showSaveDialog(savePath => {
-                let url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
+                const url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
                 // console.log(url);
-                let body = {
+                const body = {
                     destination: savePath
                 };
                 this.http.post(url, body).subscribe(response => {
@@ -57,30 +56,31 @@ export class MyFilesComponent implements OnInit {
 
     uploadFile() {
         this.electronService.remote.dialog.showOpenDialog(files => {
-            files.forEach(sourcePath => {
-                let dirs = sourcePath.split('/');
-                let destPath = dirs[dirs.length - 1];
-                let body = {
-                    sourcePath: sourcePath,
-                    destPath : destPath
-                };
+            if (files) {
+                files.forEach(sourcePath => {
+                    const dirs = sourcePath.split('/');
+                    const destPath = dirs[dirs.length - 1];
+                    const body = {
+                        sourcePath: sourcePath,
+                        destPath : destPath
+                    };
 
-                this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                    console.log(response);
+                    this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
+                        console.log(response);
+                    });
                 });
-            });
+            }
         });
     }
 
     selectFile(e, file) {
-        // console.log(e, file);
-        if (e.srcElement.checked) {
+        // console.log(e);
+        if (e.checked) {
             this.selectedFiles.push(file);
         } else {
             this.selectedFiles = this.selectedFiles.filter(remainingFile => {
-                return remainingFile.id != file.id;
+                return remainingFile.id !== file.id;
             });
         }
-        console.log(this.selectedFiles);
     }
 }

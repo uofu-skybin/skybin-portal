@@ -1,23 +1,33 @@
-<div class="header-bar"></div>
-<nav>
-  <!--TODO: later implementations will have login/register as the first views -->
-  <!--<a routerLink="/login" routerLinkActive="active">Login</a>-->
-  <!--<a routerLink="/register" routerLinkActive="active">Register</a>-->
+<div class='container'>
+    <div id='header' class='row'>
+        <h1>SkyBin</h1>
+    </div>
+    <div class='row'>
+        <div style='background-color: #b2ffe9' class="col-sm-4">
+            <nav>
+                <!--TODO: later implementations will have login/register as the first views -->
+                <!--<a routerLink="/login" routerLinkActive="active">Login</a>-->
+                <!--<a routerLink="/register" routerLinkActive="active">Register</a>-->
 
-  <p>
-    <a routerLink="/my-files" routerLinkActive="active">My Files</a>
-  </p>
-  <p>
-    <a routerLink="/shared-with-me" routerLinkActive="active">Shared With Me</a>
-  </p>
-  <p>
-    <a routerLink="/rent-storage" routerLinkActive="active">Rent Storage</a>
-  </p>
-  <p>
-    <a routerLink="/provide-storage" routerLinkActive="active">Provide Storage</a>
-  </p>
-  <p>
-    <a routerLink="/my-wallet" routerLinkActive="active">My Wallet</a>
-  </p>
-</nav>
-<router-outlet></router-outlet>
+                <p>
+                    <a routerLink="/my-files" routerLinkActive="active">My Files</a>
+                </p>
+                <p>
+                    <a routerLink="/shared-with-me" routerLinkActive="active">Shared With Me</a>
+                </p>
+                <p>
+                    <a routerLink="/rent-storage" routerLinkActive="active">Rent Storage</a>
+                </p>
+                <p>
+                    <a routerLink="/provide-storage" routerLinkActive="active">Provide Storage</a>
+                </p>
+                <p>
+                    <a routerLink="/my-wallet" routerLinkActive="active">My Wallet</a>
+                </p>
+            </nav>
+        </div>
+        <div class="col-sm-4">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
