@@ -1,32 +1,26 @@
-<div class='container'>
+<div class='container-fluid'>
     <div id='header' class='row'>
-        <h1>SkyBin</h1>
+        <div class='col-sm-4'>
+            <h1>SkyBin</h1>
+        </div>
     </div>
-    <div class='row'>
-        <div style='background-color: #b2ffe9' class="col-sm-4">
-            <nav>
+    <div id='content-row' class='row'>
+        <div class='col-sm-4'>
+            <nav class="nav flex-column">
                 <!--TODO: later implementations will have login/register as the first views -->
                 <!--<a routerLink="/login" routerLinkActive="active">Login</a>-->
                 <!--<a routerLink="/register" routerLinkActive="active">Register</a>-->
 
-                <p>
-                    <a routerLink="/my-files" routerLinkActive="active">My Files</a>
-                </p>
-                <p>
-                    <a routerLink="/shared-with-me" routerLinkActive="active">Shared With Me</a>
-                </p>
-                <p>
-                    <a routerLink="/rent-storage" routerLinkActive="active">Rent Storage</a>
-                </p>
-                <p>
-                    <a routerLink="/provide-storage" routerLinkActive="active">Provide Storage</a>
-                </p>
-                <p>
-                    <a routerLink="/my-wallet" routerLinkActive="active">My Wallet</a>
-                </p>
+                <div class='row'>
+                    <a class='nav-link' routerLink='/my-files' routerLinkActive='active'>My Files</a>
+                </div>
+                <p><a class='nav-link' routerLink='/shared-with-me' routerLinkActive='active'>Shared With Me</a><p>
+                <p><a class='nav-link' routerLink='/rent-storage' routerLinkActive='active'>Rent Storage</a></p>
+                <p><a class='nav-link' routerLink='/provide-storage' routerLinkActive='active'>Provide Storage</a></p>
+                <p><a class='nav-link' routerLink='/my-wallet' routerLinkActive='active'>My Wallet</a></p>
             </nav>
         </div>
-        <div class="col-sm-4">
+        <div class='col-sm-8'>
             <router-outlet></router-outlet>
         </div>
     </div>
