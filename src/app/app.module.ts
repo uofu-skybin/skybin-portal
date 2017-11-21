@@ -13,7 +13,13 @@ import {ProvideStorageComponent} from './components/provide-storage/provide-stor
 import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
-import {MatButtonModule, MatCheckboxModule, MatListModule} from '@angular/material';
+import {MatCheckboxModule, MatListModule} from '@angular/material';
+import {ReserveSpaceOverlayComponent} from './components/reserve-space-overlay/reserve-space-overlay.component';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatCardModule } from '@angular/material/card';
+import {MatInputModule} from '@angular/material/input';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
     declarations: [
@@ -25,7 +31,8 @@ import {MatButtonModule, MatCheckboxModule, MatListModule} from '@angular/materi
         RegisterComponent,
         SharedWithMeComponent,
         RentStorageComponent,
-        ProvideStorageComponent
+        ProvideStorageComponent,
+        ReserveSpaceOverlayComponent
     ],
     imports: [
         BrowserModule,
@@ -35,6 +42,10 @@ import {MatButtonModule, MatCheckboxModule, MatListModule} from '@angular/materi
         MatButtonModule,
         MatListModule,
         MatCheckboxModule,
+        MatSliderModule,
+        MatCardModule,
+        MatInputModule,
+        BrowserAnimationsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

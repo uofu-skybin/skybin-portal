@@ -1,3 +1,39 @@
-<p>
-  rent-storage works!
-</p>
+<div id="rent-storage-container">
+  <mat-card>
+    <mat-card-title>
+      Storage
+    </mat-card-title>
+    <section>
+      <mat-card-subtitle>
+        Reserved Space
+      </mat-card-subtitle>
+      <mat-card-content>
+        {{renterInfo.reservedStorage}}
+      </mat-card-content>
+    </section>
+    <section>
+      <mat-card-subtitle>
+        Free Space
+      </mat-card-subtitle>
+      <mat-card-content>
+        {{renterInfo.freeStorage}}
+      </mat-card-content>
+    </section>
+    <section>
+      <mat-card-subtitle>
+        Total Contracts
+      </mat-card-subtitle>
+      <mat-card-content>
+        {{renterInfo.totalContracts}}
+      </mat-card-content>
+    </section>
+    <section>
+      <mat-card-subtitle>Reserve Storage</mat-card-subtitle>
+      <mat-form-field>
+        <input #storageAmount matInput placeholder="Amount" value="0" type="number">
+      </mat-form-field>
+      <br>
+      <button mat-raised-button (click)="reserveClicked(storageAmount.value)">Reserve</button>
+    </section>
+  </mat-card>
+</div>
