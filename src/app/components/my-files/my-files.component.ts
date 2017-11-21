@@ -6,6 +6,7 @@ interface File {
     name: string;
     blocks: Object[];
     id: string;
+    isDir: boolean;
 }
 
 interface FilesResponse {
@@ -20,7 +21,10 @@ interface FilesResponse {
 })
 export class MyFilesComponent implements OnInit {
     myFiles: File[] = [];
+    myDirs: File[] = [];
+
     selectedFiles: File[] = [];
+    currentPath: string[] = [];
 
     constructor(private http: HttpClient, private electronService: ElectronService) {
     }
@@ -32,9 +36,13 @@ export class MyFilesComponent implements OnInit {
     private loadFiles() {
         this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
             if (response.files) {
-                response.files.forEach(file => {
-                    this.myFiles.push(file);
-                });
+                for (let file of response.files) {
+                    if (file.isDir) {
+                        this.myDirs.push(file);
+                    } else {
+                        this.myFiles.push(file);
+                    }
+                }
             }
         });
     }
@@ -59,7 +67,9 @@ export class MyFilesComponent implements OnInit {
             if (files) {
                 files.forEach(sourcePath => {
                     const dirs = sourcePath.split('/');
-                    const destPath = dirs[dirs.length - 1];
+                    let dest = this.currentPath.slice();
+                    dest.push(dirs[dirs.length - 1]);
+                    let destPath = dest.join('/');
                     const body = {
                         sourcePath: sourcePath,
                         destPath : destPath
@@ -82,5 +92,41 @@ export class MyFilesComponent implements OnInit {
                 return remainingFile.id !== file.id;
             });
         }
+    }
+
+    changeDir(dir) {
+        this.currentPath = dir.name.split('/');
+    }
+
+    breadcrumbPath(dir) {
+        let prevPath = this.currentPath.slice();
+        
+        this.currentPath = [];
+        for (let prevDir of prevPath) {
+            this.currentPath.push(prevDir);
+            if (dir == prevDir) {
+                break;
+            }
+        }
+    }
+
+    getFilesInCurrentDirectory(currentPath, files) {
+        let currentDir = currentPath.join('/');
+
+        let returnFiles: File[] = [];
+        for (let file of files) {
+            let filePath = file.name.split('/');
+            let fileDir = filePath.slice(0, filePath.length - 1).join('/');
+            if (fileDir === currentDir) {
+                returnFiles.push(file);
+            }
+        }
+
+        return returnFiles;
+    }
+
+    getName(file) {
+        let filePath = file.name.split('/');
+        return filePath[filePath.length - 1];
     }
 }

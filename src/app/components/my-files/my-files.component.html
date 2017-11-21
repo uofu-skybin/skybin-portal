@@ -3,10 +3,22 @@
         <button mat-raised-button color='primary' (click)='uploadFile()' name='my-files-upload-button'>Upload</button>
         <button mat-raised-button color='primary' (click)='downloadFile()' name='my-files-download-button'>Download</button>
     </div>
+
+    <nav aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item" (click)="currentPath = []" aria-current="page">Home</li>
+          <li class="breadcrumb-item"  *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
+        </ol>
+      </nav>
+
     <mat-list>
-        <mat-list-item *ngFor='let file of myFiles'>
+        <mat-list-item (click)="changeDir(dir)" *ngFor='let dir of getFilesInCurrentDirectory(currentPath, myDirs)'>
+            <mat-checkbox (change)="selectFile($event, dir)"></mat-checkbox>
+            {{getName(dir)}}
+        </mat-list-item>
+        <mat-list-item *ngFor='let file of getFilesInCurrentDirectory(currentPath, myFiles)'>
             <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox>
-            {{file.name}}
+            {{getName(file)}}
         </mat-list-item>
     </mat-list>
 </div>
