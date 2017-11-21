@@ -14,7 +14,6 @@ import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
 import {MatCheckboxModule, MatListModule} from '@angular/material';
-import {ReserveSpaceOverlayComponent} from './components/reserve-space-overlay/reserve-space-overlay.component';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatCardModule } from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
@@ -31,8 +30,7 @@ import {MatButtonModule} from '@angular/material/button';
         RegisterComponent,
         SharedWithMeComponent,
         RentStorageComponent,
-        ProvideStorageComponent,
-        ReserveSpaceOverlayComponent
+        ProvideStorageComponent
     ],
     imports: [
         BrowserModule,
