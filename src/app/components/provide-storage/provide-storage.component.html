@@ -1,3 +1,8 @@
-<p>
-  provide-storage works!
-</p>
+<div id='provide-storage-container'>
+<mat-list>
+  <mat-list-item *ngFor='let contract of myContracts'>
+      {{contract.storageSpace}}
+           {{contract.renterID}}
+  </mat-list-item>
+</mat-list>
+</div>
