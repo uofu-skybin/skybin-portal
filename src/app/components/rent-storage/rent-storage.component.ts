@@ -13,6 +13,13 @@ export class RentStorageComponent implements OnInit {
   // Renter info object returned from the renter service.
   private renterInfo: any = {};
 
+  private settings: any = {
+    redundancy: 3,
+    minContractDuration: 300000,
+    maxContractDuration: 300000,
+    maxPricePerGbPerMonth: 30,
+  };
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {

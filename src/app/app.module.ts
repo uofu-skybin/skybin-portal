@@ -19,31 +19,33 @@ import {MatCardModule } from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
         AppComponent,
-        MyFilesComponent,
         AuthenticationComponent,
-        MyWalletComponent,
         LoginComponent,
+        MyFilesComponent,
+        MyWalletComponent,
+        ProvideStorageComponent,
         RegisterComponent,
-        SharedWithMeComponent,
         RentStorageComponent,
-        ProvideStorageComponent
+        SharedWithMeComponent
     ],
     imports: [
+        BrowserAnimationsModule,
         BrowserModule,
-        RoutingModule,
+        FormsModule,
         HttpClientModule,
-        NgxElectronModule,
         MatButtonModule,
-        MatListModule,
-        MatCheckboxModule,
-        MatSliderModule,
         MatCardModule,
+        MatCheckboxModule,
         MatInputModule,
-        BrowserAnimationsModule
+        MatListModule,
+        MatSliderModule,
+        NgxElectronModule,
+        RoutingModule
     ],
     providers: [],
     bootstrap: [AppComponent]

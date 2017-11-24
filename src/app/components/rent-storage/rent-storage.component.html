@@ -1,39 +1,50 @@
 <div id="rent-storage-container">
-  <mat-card>
-    <mat-card-title>
+  <div id="storage-container">
+    <h1>
       Storage
-    </mat-card-title>
-    <section>
-      <mat-card-subtitle>
-        Reserved Space
-      </mat-card-subtitle>
-      <mat-card-content>
-        {{renterInfo.reservedStorage}}
-      </mat-card-content>
-    </section>
-    <section>
-      <mat-card-subtitle>
-        Free Space
-      </mat-card-subtitle>
-      <mat-card-content>
-        {{renterInfo.freeStorage}}
-      </mat-card-content>
-    </section>
-    <section>
-      <mat-card-subtitle>
-        Total Contracts
-      </mat-card-subtitle>
-      <mat-card-content>
-        {{renterInfo.totalContracts}}
-      </mat-card-content>
-    </section>
-    <section>
-      <mat-card-subtitle>Reserve Storage</mat-card-subtitle>
-      <mat-form-field>
-        <input #storageAmount matInput placeholder="Amount" value="0" type="number">
-      </mat-form-field>
-      <br>
-      <button mat-raised-button (click)="reserveClicked(storageAmount.value)">Reserve</button>
-    </section>
-  </mat-card>
+    </h1>
+    <div>
+      <h3>Reserved Space</h3>
+      <p>{{renterInfo.reservedStorage}}</p>
+    </div>
+    <div>
+      <h3>Free Space</h3>
+      <p>{{renterInfo.freeStorage}}</p>
+    </div>
+    <div>
+      <h3>Cost Per Month</h3>
+      <p>$32</p>
+    </div>
+    <div>
+      <h3>Total Storage Contracts</h3>
+      <p>{{renterInfo.totalContracts}}</p>
+    </div>
+    <div>
+      <h3>Reserve More Space</h3>
+      <input #storageAmount placeholder="Amount" value="0" type="number">
+      <button (click)="reserveClicked(storageAmount.value)">Reserve</button>
+    </div>
+  </div>
+  <div id="settings-container">
+    <h1>Settings</h1>
+    <form>
+      <div class="form-group">
+        <label>Storage Redundancy</label>
+        <input [(ngModel)]="settings.redundancy" name="redundancy" type="number" class="form-control" id="redundancy">
+      </div>
+      <div class="form-group">
+        <label>Min Contract Duration</label>
+        <input [(ngModel)]="settings.minContractDuration" name="minContractDuration" type="number" class="form-control" id="minContractDuration">
+      </div>
+      <div class="form-group">
+        <label>Max Contract Duration</label>
+        <input [(ngModel)]="settings.maxContractDuration" name="maxContractDuration" type="number" class="form-control" id="maxContractDuration">
+      </div>
+      <div class="form-group">
+        <label>Max Price/GB/Month</label>
+        <input [(ngModel)]="settings.maxPricePerGbPerMonth" name="maxPricePerGbPerMonth" type="number" class="form-control" id="maxPricePerGbPerMonth">
+      </div>
+    </form>
+    <button>Update Settings</button>
+  </div>
 </div>
