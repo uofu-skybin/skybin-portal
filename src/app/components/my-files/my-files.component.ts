@@ -39,6 +39,7 @@ export class MyFilesComponent implements OnInit {
         this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
             if (response.files) {
                 let newFiles: File[] = [];
+                let newDirs: File[] = [];
                 for (let file of response.files) {
                     newFiles.push(file);
                 }
