@@ -20,8 +20,13 @@ import {MatCardModule } from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
+<<<<<<< Updated upstream
 import {FormsModule} from '@angular/forms';
 import { FilebrowserComponent } from './filebrowser/filebrowser.component';
+=======
+import { FilebrowserComponent } from './filebrowser/filebrowser.component';
+
+>>>>>>> Stashed changes
 
 @NgModule({
     declarations: [
