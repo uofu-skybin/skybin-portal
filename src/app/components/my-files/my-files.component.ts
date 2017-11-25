@@ -85,6 +85,11 @@ export class MyFilesComponent implements OnInit {
         });
     }
 
+    newFolder() {
+        // TODO: Implement
+        console.log('new folder clicked');
+    }
+
     selectFile(e, file) {
         // console.log(e);
         if (e.checked) {

@@ -2,6 +2,7 @@
     <div id='my-files-buttons'>
         <button mat-raised-button color='primary' (click)='uploadFile()' name='my-files-upload-button'>Upload</button>
         <button mat-raised-button color='primary' (click)='downloadFile()' name='my-files-download-button'>Download</button>
+        <button mat-raised-button color='primary' (click)='newFolder()' name='my-files-new-folder-button'>New Folder</button>
     </div>
 
     <app-filebrowser [filesToDisplay]="myFiles"></app-filebrowser>
