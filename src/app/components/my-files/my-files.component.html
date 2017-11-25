@@ -4,7 +4,9 @@
         <button mat-raised-button color='primary' (click)='downloadFile()' name='my-files-download-button'>Download</button>
     </div>
 
-    <nav aria-label="breadcrumb" role="navigation">
+    <app-filebrowser [filesToDisplay]="myFiles"></app-filebrowser>
+
+    <!-- <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
           <li class="breadcrumb-item" (click)="currentPath = []" aria-current="page">Home</li>
           <li class="breadcrumb-item"  *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
@@ -20,5 +22,5 @@
             <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox>
             {{getName(file)}}
         </mat-list-item>
-    </mat-list>
+    </mat-list> -->
 </div>

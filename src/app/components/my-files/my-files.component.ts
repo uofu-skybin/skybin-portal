@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ElectronService} from 'ngx-electron';
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 interface File {
     name: string;
@@ -17,7 +18,7 @@ interface FilesResponse {
     selector: 'app-my-files',
     templateUrl: './my-files.component.html',
     styleUrls: ['./my-files.component.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class MyFilesComponent implements OnInit {
     myFiles: File[] = [];
@@ -34,15 +35,14 @@ export class MyFilesComponent implements OnInit {
     }
 
     private loadFiles() {
+        console.log("Loading files!");
         this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
             if (response.files) {
+                let newFiles: File[] = [];
                 for (let file of response.files) {
-                    if (file.isDir) {
-                        this.myDirs.push(file);
-                    } else {
-                        this.myFiles.push(file);
-                    }
+                    newFiles.push(file);
                 }
+                this.myFiles = newFiles;
             }
         });
     }
@@ -77,6 +77,7 @@ export class MyFilesComponent implements OnInit {
 
                     this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
                         console.log(response);
+                        this.loadFiles();
                     });
                 });
             }

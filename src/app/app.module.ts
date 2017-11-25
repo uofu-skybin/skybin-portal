@@ -13,13 +13,15 @@ import {ProvideStorageComponent} from './components/provide-storage/provide-stor
 import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
-import {MatCheckboxModule, MatListModule} from '@angular/material';
+import {MatCheckboxModule, MatListModule, MatTable, MatTableModule} from '@angular/material';
+import {CdkTableModule} from '@angular/cdk/table';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatCardModule } from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
+import { FilebrowserComponent } from './filebrowser/filebrowser.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +33,9 @@ import {FormsModule} from '@angular/forms';
         ProvideStorageComponent,
         RegisterComponent,
         RentStorageComponent,
-        SharedWithMeComponent
+        SharedWithMeComponent,
+        ProvideStorageComponent,
+        FilebrowserComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -45,7 +49,10 @@ import {FormsModule} from '@angular/forms';
         MatListModule,
         MatSliderModule,
         NgxElectronModule,
-        RoutingModule
+        RoutingModule,
+        BrowserAnimationsModule,
+        CdkTableModule,
+        MatTableModule
     ],
     providers: [],
     bootstrap: [AppComponent]
