@@ -28,7 +28,7 @@ export class MyFilesComponent implements OnInit {
     myDirs: File[] = [];
 
     selectedFiles: File[] = [];
-    currentPath: string;
+    currentPath: string = "";
 
     constructor(private http: HttpClient, private electronService: ElectronService, public dialog: MatDialog) {
     }
@@ -94,7 +94,20 @@ export class MyFilesComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
+            let folderPath = this.currentPath + '/' + result;
+            if (folderPath.startsWith('/')) {
+                folderPath = folderPath.slice(1);
+            }
+            const body = {
+                destPath : folderPath
+            };
+
+            console.log(folderPath);
+
+            this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
+                console.log(response);
+                this.loadFiles();
+            })
         })
     }
 

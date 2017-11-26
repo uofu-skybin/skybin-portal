@@ -25,6 +25,7 @@ export class NewFolderDialogComponent implements OnInit {
   }
 
   submit() {
+    // TODO: have this make sure the name is not empty and show an error if it is.
     this.dialogRef.close(this.name);
   }
 
