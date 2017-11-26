@@ -13,7 +13,7 @@ import {ProvideStorageComponent} from './components/provide-storage/provide-stor
 import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
-import {MatCheckboxModule, MatListModule, MatTable, MatTableModule} from '@angular/material';
+import {MatCheckboxModule, MatListModule, MatTable, MatTableModule, MatDialogModule} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatCardModule } from '@angular/material/card';
@@ -22,8 +22,12 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
 import { FilebrowserComponent } from './filebrowser/filebrowser.component';
+import { NewFolderDialogComponent } from './new-folder-dialog/new-folder-dialog.component';
 
 @NgModule({
+    entryComponents: [
+        NewFolderDialogComponent
+    ],
     declarations: [
         AppComponent,
         AuthenticationComponent,
@@ -35,9 +39,11 @@ import { FilebrowserComponent } from './filebrowser/filebrowser.component';
         RentStorageComponent,
         SharedWithMeComponent,
         ProvideStorageComponent,
-        FilebrowserComponent
+        FilebrowserComponent,
+        NewFolderDialogComponent
     ],
     imports: [
+        MatDialogModule,
         BrowserAnimationsModule,
         BrowserModule,
         FormsModule,

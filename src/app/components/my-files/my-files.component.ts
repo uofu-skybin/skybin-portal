@@ -1,7 +1,10 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, Inject, ViewEncapsulation} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ElectronService} from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { NewFolderDialogComponent } from '../../new-folder-dialog/new-folder-dialog.component';
+
 
 interface File {
     name: string;
@@ -27,7 +30,7 @@ export class MyFilesComponent implements OnInit {
     selectedFiles: File[] = [];
     currentPath: string;
 
-    constructor(private http: HttpClient, private electronService: ElectronService) {
+    constructor(private http: HttpClient, private electronService: ElectronService, public dialog: MatDialog) {
     }
 
     ngOnInit() {
@@ -86,19 +89,9 @@ export class MyFilesComponent implements OnInit {
     }
 
     newFolder() {
-        // TODO: Implement
-        console.log('new folder clicked');
-    }
-
-    selectFile(e, file) {
-        // console.log(e);
-        if (e.checked) {
-            this.selectedFiles.push(file);
-        } else {
-            this.selectedFiles = this.selectedFiles.filter(remainingFile => {
-                return remainingFile.id !== file.id;
-            });
-        }
+        let dialogRef = this.dialog.open(NewFolderDialogComponent, {
+            width: '250px'
+        });
     }
 
     onPathChanged(newPath) {
