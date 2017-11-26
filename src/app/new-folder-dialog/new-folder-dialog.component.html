@@ -1,3 +1,6 @@
-<p>
-  new-folder-dialog works!
-</p>
+<div>
+  <mat-form-field>
+      <input matInput (keyup.enter)="submit()" [(ngModel)]="name" placeholder="please enter a folder name">      
+  </mat-form-field>
+  <button mat-button (click)="submit()">Create</button>
+</div>

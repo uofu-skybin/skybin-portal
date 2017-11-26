@@ -44,6 +44,7 @@ import { NewFolderDialogComponent } from './new-folder-dialog/new-folder-dialog.
     ],
     imports: [
         MatDialogModule,
+        MatButtonModule,
         BrowserAnimationsModule,
         BrowserModule,
         FormsModule,

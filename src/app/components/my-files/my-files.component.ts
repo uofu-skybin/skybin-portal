@@ -90,8 +90,12 @@ export class MyFilesComponent implements OnInit {
 
     newFolder() {
         let dialogRef = this.dialog.open(NewFolderDialogComponent, {
-            width: '250px'
+            width: '325px'
         });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+        })
     }
 
     onPathChanged(newPath) {
