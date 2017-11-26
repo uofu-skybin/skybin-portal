@@ -5,7 +5,7 @@
         <button mat-raised-button color='primary' (click)='newFolder()' name='my-files-new-folder-button'>New Folder</button>
     </div>
 
-    <app-filebrowser [filesToDisplay]="myFiles"></app-filebrowser>
+    <app-filebrowser [filesToDisplay]="myFiles" (onPathChanged)="onPathChanged($event)" (onFileSelected)="onFileSelected($event)"></app-filebrowser>
 
     <!-- <nav aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">

@@ -25,7 +25,7 @@ export class MyFilesComponent implements OnInit {
     myDirs: File[] = [];
 
     selectedFiles: File[] = [];
-    currentPath: string[] = [];
+    currentPath: string;
 
     constructor(private http: HttpClient, private electronService: ElectronService) {
     }
@@ -68,7 +68,7 @@ export class MyFilesComponent implements OnInit {
             if (files) {
                 files.forEach(sourcePath => {
                     const dirs = sourcePath.split('/');
-                    let dest = this.currentPath.slice();
+                    let dest = this.currentPath.split('/');
                     dest.push(dirs[dirs.length - 1]);
                     let destPath = dest.join('/');
                     const body = {
@@ -101,39 +101,11 @@ export class MyFilesComponent implements OnInit {
         }
     }
 
-    changeDir(dir) {
-        this.currentPath = dir.name.split('/');
+    onPathChanged(newPath) {
+        this.currentPath = newPath;
     }
 
-    breadcrumbPath(dir) {
-        let prevPath = this.currentPath.slice();
-        
-        this.currentPath = [];
-        for (let prevDir of prevPath) {
-            this.currentPath.push(prevDir);
-            if (dir == prevDir) {
-                break;
-            }
-        }
-    }
-
-    getFilesInCurrentDirectory(currentPath, files) {
-        let currentDir = currentPath.join('/');
-
-        let returnFiles: File[] = [];
-        for (let file of files) {
-            let filePath = file.name.split('/');
-            let fileDir = filePath.slice(0, filePath.length - 1).join('/');
-            if (fileDir === currentDir) {
-                returnFiles.push(file);
-            }
-        }
-
-        return returnFiles;
-    }
-
-    getName(file) {
-        let filePath = file.name.split('/');
-        return filePath[filePath.length - 1];
+    onFileSelected(newFiles) {
+        this.selectedFiles = newFiles;
     }
 }

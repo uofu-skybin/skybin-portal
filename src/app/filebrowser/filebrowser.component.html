@@ -7,7 +7,6 @@
 
 <mat-list>
     <mat-list-item (click)="changeDir(dir)" *ngFor='let dir of getDirsInCurrentDirectory()'>
-        <mat-checkbox (change)="selectFile($event, dir)"></mat-checkbox>
         {{getName(dir)}}
     </mat-list-item>
     <mat-list-item *ngFor='let file of getFilesInCurrentDirectory()'>

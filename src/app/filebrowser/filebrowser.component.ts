@@ -25,6 +25,9 @@ export class FilebrowserComponent implements OnInit {
 
   currentPath: string[] = [];
   @Output() onPathChanged = new EventEmitter<string>();
+
+  selectedFiles: File[] = [];
+  @Output() onFileSelected = new EventEmitter<File[]>();
  
   constructor() { }
 
@@ -83,5 +86,18 @@ export class FilebrowserComponent implements OnInit {
         }
     }
     this.onPathChanged.emit(this.currentPath.join('/'));
+  }
+
+  selectFile(e, file) {
+    // console.log(e);
+    if (e.checked) {
+        this.selectedFiles.push(file);
+    } else {
+        this.selectedFiles = this.selectedFiles.filter(remainingFile => {
+            return remainingFile.id !== file.id;
+        });
+    }
+
+    this.onFileSelected.emit(this.selectedFiles);
   }
 }
