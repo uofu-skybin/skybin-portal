@@ -1,8 +1,114 @@
-<div id='provide-storage-container'>
-<mat-list>
-  <mat-list-item *ngFor='let contract of myContracts'>
-      {{contract.storageSpace}}
-           {{contract.renterID}}
-  </mat-list-item>
-</mat-list>
-</div>
+<mat-tab-group class="provider-tab-group">
+    <mat-tab label="Summary">
+        <div id='provide-storage-container'>
+            <section>
+                <mat-card>
+                    <mat-card-title>
+                        Summary
+                    </mat-card-title>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Allocated
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{999999}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Used
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{111111}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Remaining
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{888888}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Total Contracts
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{11}}
+                        </mat-card-content>
+                    </section>
+                </mat-card>
+            </section>
+        </div>
+    </mat-tab>
+    <mat-tab label="Settings">
+        <div id='provide-storage-settings-container'>
+            <section>
+                <mat-card>
+                    <mat-card-title>
+                        Settings
+                    </mat-card-title>
+                    <!--<section>-->
+                    <mat-card-subtitle>
+                        Choose Wallet
+                    </mat-card-subtitle>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input #storageAmount matInput placeholder="Storage Available" value="999999" type="number">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input #minPrice matInput placeholder="Min Price per GB" value="1" type="number">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input #minContract matInput placeholder="Min Contract Duration" value="17" type="number">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input #maxContract matInput placeholder="Max Contract Duration" value="84" type="number">
+                        </mat-form-field>
+                    </mat-card-content>
+                    <!--</section>-->
+
+                    <!--<section>-->
+                    <mat-card-content>
+                        <button mat-raised-button color='primary' (click)='updateProviderSettings()'
+                                name='provide-storage-update-button'>Update Settings
+                        </button>
+                    </mat-card-content>
+                    <!--</section>-->
+                </mat-card>
+            </section>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+
+<!-- change to table -->
+
+<!--&lt;!&ndash;<div>&ndash;&gt;-->
+<!--&lt;!&ndash;<h2>Transactions</h2>&ndash;&gt;-->
+<!--&lt;!&ndash;<mat-table [dataSource]="myContracts">&ndash;&gt;-->
+<!--&lt;!&ndash;<ng-container matColumnDef="renter">&ndash;&gt;-->
+<!--&lt;!&ndash;<mat-header-cell *matHeaderCellDef>Renter ID</mat-header-cell>&ndash;&gt;-->
+<!--&lt;!&ndash;<mat-cell *matCellDef="let contract">  {{contract.renterID}} </mat-cell>&ndash;&gt;-->
+<!--&lt;!&ndash;</ng-container>&ndash;&gt;-->
+<!--&lt;!&ndash;<ng-container matColumnDef="storage">&ndash;&gt;-->
+<!--&lt;!&ndash;<mat-header-cell *matHeaderCellDef>Storage Rented</mat-header-cell>&ndash;&gt;-->
+<!--&lt;!&ndash;<mat-cell *matCellDef="let contract"> {{contract.storageSpace}} </mat-cell>&ndash;&gt;-->
+<!--&lt;!&ndash;</ng-container>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</mat-table>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--<mat-list>-->
+<!--<mat-list-item *ngFor='let contract of myContracts'>-->
+<!--{{contract.storageSpace}}-->
+<!--{{contract.renterID}}-->
+<!--</mat-list-item>-->
+<!--</mat-list>-->
+
+

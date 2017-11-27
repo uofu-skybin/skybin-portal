@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { MatTableDataSource } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
@@ -22,11 +23,14 @@ interface ContractsResponse {
 
 export class ProvideStorageComponent implements OnInit {
       myContracts: Contract[] = [];
-    
+
+        private dataSource = null;
+
       constructor(private http: HttpClient) { }
-    
+
       ngOnInit() {
         this.loadContracts();
+        this.dataSource = new MatTableDataSource(this.myContracts);
       }
 
       private loadContracts() {
@@ -39,4 +43,8 @@ export class ProvideStorageComponent implements OnInit {
             }
         });
     }
+    updateProviderSettings() {
+        // TODO: get some stuff here
+    }
+
 }

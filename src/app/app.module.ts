@@ -13,7 +13,10 @@ import {ProvideStorageComponent} from './components/provide-storage/provide-stor
 import {RoutingModule} from './modules/routing/routing.module';
 import {HttpClientModule} from '@angular/common/http';
 import {NgxElectronModule} from 'ngx-electron';
-import {MatCheckboxModule, MatListModule, MatTable, MatTableModule, MatDialogModule} from '@angular/material';
+import {
+    MatCheckboxModule, MatListModule, MatTable, MatTableModule, MatDialogModule,
+    MatTabsModule
+} from '@angular/material';
 import {CdkTableModule} from '@angular/cdk/table';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatCardModule } from '@angular/material/card';
@@ -54,6 +57,7 @@ import { NewFolderDialogComponent } from './new-folder-dialog/new-folder-dialog.
         MatCheckboxModule,
         MatInputModule,
         MatListModule,
+        MatTabsModule,
         MatSliderModule,
         NgxElectronModule,
         RoutingModule,
