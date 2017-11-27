@@ -1,9 +1,10 @@
-import {Component, OnInit, Inject, ViewEncapsulation} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {ElectronService} from 'ngx-electron';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ElectronService } from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { NewFolderDialogComponent } from '../../new-folder-dialog/new-folder-dialog.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 interface File {
@@ -25,12 +26,13 @@ interface FilesResponse {
 })
 export class MyFilesComponent implements OnInit {
     myFiles: File[] = [];
-    myDirs: File[] = [];
-
     selectedFiles: File[] = [];
-    currentPath: string = "";
+    currentPath = '';
 
-    constructor(private http: HttpClient, private electronService: ElectronService, public dialog: MatDialog) {
+    constructor(private http: HttpClient,
+        private electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -38,16 +40,16 @@ export class MyFilesComponent implements OnInit {
     }
 
     private loadFiles() {
-        console.log("Loading files!");
         this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
-            if (response.files) {
-                let newFiles: File[] = [];
-                let newDirs: File[] = [];
-                for (let file of response.files) {
-                    newFiles.push(file);
-                }
-                this.myFiles = newFiles;
+            const files = response['files'];
+            if (!files) {
+                console.error('loadFiles: no files returned');
+                console.error('response: ', response);
+                return;
             }
+            this.myFiles = files;
+        }, (error) => {
+            console.error(error);
         });
     }
 
@@ -55,12 +57,13 @@ export class MyFilesComponent implements OnInit {
         this.selectedFiles.forEach(file => {
             this.electronService.remote.dialog.showSaveDialog(savePath => {
                 const url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
-                // console.log(url);
                 const body = {
                     destination: savePath
                 };
                 this.http.post(url, body).subscribe(response => {
                     console.log(response);
+                }, (error) => {
+                    console.error(error);
                 });
             });
         });
@@ -68,47 +71,67 @@ export class MyFilesComponent implements OnInit {
 
     uploadFile() {
         this.electronService.remote.dialog.showOpenDialog(files => {
-            if (files) {
-                files.forEach(sourcePath => {
-                    const dirs = sourcePath.split('/');
-                    let dest = this.currentPath.split('/');
-                    dest.push(dirs[dirs.length - 1]);
-                    let destPath = dest.join('/');
-                    const body = {
-                        sourcePath: sourcePath,
-                        destPath : destPath
-                    };
-
-                    this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                        console.log(response);
-                        this.loadFiles();
-                    });
-                });
+            if (!files) {
+                return;
             }
+            files.forEach(sourcePath => {
+                const dirs = sourcePath.split('/');
+                const dest = this.currentPath.split('/');
+                dest.push(dirs[dirs.length - 1]);
+                const destPath = dest.join('/');
+
+                const body = {
+                    sourcePath: sourcePath,
+                    destPath: destPath
+                };
+
+                this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
+                    const file = response['file'];
+                    if (file === undefined) {
+                        console.error('uploadFile: request returned no files');
+                        console.error('response: ', response);
+                        return;
+                    }
+
+                    this.myFiles.push(file);
+
+                    // Force change detection, since angular doesn't know about the new file.
+                    this.ref.detectChanges();
+                }, (error) => {
+                    console.error(error);
+                });
+            });
         });
     }
 
     newFolder() {
-        let dialogRef = this.dialog.open(NewFolderDialogComponent, {
+        const dialogRef = this.dialog.open(NewFolderDialogComponent, {
             width: '325px'
         });
 
         dialogRef.afterClosed().subscribe(result => {
+            if (result === undefined) {
+                return;
+            }
             let folderPath = this.currentPath + '/' + result;
             if (folderPath.startsWith('/')) {
                 folderPath = folderPath.slice(1);
             }
             const body = {
-                destPath : folderPath
+                destPath: folderPath
             };
-
-            console.log(folderPath);
-
             this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                console.log(response);
-                this.loadFiles();
-            })
-        })
+                const file = response['file'];
+                if (!file) {
+                    console.error('newFolder: no folder returned from request');
+                    this.loadFiles();
+                    return;
+                }
+                this.myFiles.push(file);
+            }, (error) => {
+                console.error(error);
+            });
+        });
     }
 
     onPathChanged(newPath) {
