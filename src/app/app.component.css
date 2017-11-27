@@ -14,6 +14,14 @@ nav {
     height: 100%;
 }
 
+a {
+    color: #658798;
+}
+
+.active {
+    color: #1a99ef;
+}
+
 #nav-container {
     max-width: 250px;
     padding-left: 0;
