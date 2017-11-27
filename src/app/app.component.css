@@ -11,6 +11,11 @@ nav {
 
 #nav-container {
     padding-left: 0;
+    padding-right: 0;
+}
+
+#main-content {
+    padding-left: 0;
 }
 
 #header {
