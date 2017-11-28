@@ -1,16 +1,36 @@
 <nav aria-label="breadcrumb" role="navigation">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
-      <li class="breadcrumb-item"  *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
+        <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
+        <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
     </ol>
 </nav>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
+            <td>{{getName(dir)}}</td>
+            <td>-</td>
+        </tr>
+        <tr *ngFor='let file of getFilesInCurrentDirectory()' (click)="selectFile($event, file)" 
+            [class.selected]="file === selectedFile">
+            <td>{{getName(file)}}</td>
+            <td>{{file.size}}</td>
+        </tr>
+    </tbody>
+</table>
 
-<mat-list>
+<!-- <mat-list>
     <mat-list-item (click)="changeDir(dir)" *ngFor='let dir of getDirsInCurrentDirectory()'>
         {{getName(dir)}}
     </mat-list-item>
     <mat-list-item *ngFor='let file of getFilesInCurrentDirectory()'>
-        <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox>
+        <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox> 
         {{getName(file)}}
     </mat-list-item>
-</mat-list>
+</mat-list> 
+ -->

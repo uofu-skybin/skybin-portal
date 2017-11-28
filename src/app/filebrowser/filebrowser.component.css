@@ -1,0 +1,12 @@
+
+th:first-child {
+    padding-left: 50px;
+}
+
+td:first-child {
+    padding-left: 50px;
+}
+
+.selected {
+    background: #eff9ff;
+}
