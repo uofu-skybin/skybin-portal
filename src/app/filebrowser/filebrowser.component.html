@@ -13,7 +13,10 @@
     </thead>
     <tbody>
         <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
-            <td>{{getName(dir)}}</td>
+            <td>
+                <i class="fa fa-folder" aria-hidden="true"></i>
+                {{getName(dir)}}
+            </td>
             <td>-</td>
         </tr>
         <tr *ngFor='let file of getFilesInCurrentDirectory()' (click)="selectFile($event, file)" 
