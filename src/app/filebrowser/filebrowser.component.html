@@ -1,9 +1,9 @@
-<nav aria-label="breadcrumb" role="navigation">
+<div aria-label="breadcrumb" role="navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
         <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
     </ol>
-</nav>
+</div>
 <table class="table">
     <thead>
         <tr>
