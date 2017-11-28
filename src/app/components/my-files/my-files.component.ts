@@ -85,11 +85,10 @@ export class MyFilesComponent implements OnInit {
                     destPath: destPath
                 };
 
-                this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                    const file = response['file'];
-                    if (file === undefined) {
-                        console.error('uploadFile: request returned no files');
-                        console.error('response: ', response);
+                this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+                    if (file['id'] === undefined) {
+                        console.error('uploadFile: request did not return file object');
+                        console.error('response: ', file);
                         return;
                     }
 
