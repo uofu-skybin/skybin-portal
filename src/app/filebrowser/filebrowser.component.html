@@ -1,4 +1,4 @@
-<div aria-label="breadcrumb" role="navigation">
+<div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
     <ol class="breadcrumb">
         <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
         <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
@@ -23,14 +23,3 @@
         </tr>
     </tbody>
 </table>
-
-<!-- <mat-list>
-    <mat-list-item (click)="changeDir(dir)" *ngFor='let dir of getDirsInCurrentDirectory()'>
-        {{getName(dir)}}
-    </mat-list-item>
-    <mat-list-item *ngFor='let file of getFilesInCurrentDirectory()'>
-        <mat-checkbox (change)="selectFile($event, file)"></mat-checkbox> 
-        {{getName(file)}}
-    </mat-list-item>
-</mat-list> 
- -->

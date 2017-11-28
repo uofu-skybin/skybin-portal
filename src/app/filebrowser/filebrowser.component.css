@@ -10,3 +10,8 @@ td:first-child {
 .selected {
     background: #eff9ff;
 }
+
+ol.breadcrumb {
+    margin: 0;
+    background: white;
+}

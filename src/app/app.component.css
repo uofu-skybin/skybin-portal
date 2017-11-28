@@ -24,15 +24,17 @@ a {
     max-width: 250px;
     padding-left: 0;
     padding-right: 0;
-    height: calc(100vh - 50px);
+    height: calc(100vh - 81px);
 }
 
 #main-content {
     padding-left: 0;
     padding-right: 0;
-    max-height: calc(100vh - 50px);
+    max-height: calc(100vh - 81px);
     overflow-y: auto;
 }
 
 #header {
+    padding: 15px;
+    border-bottom: 1px solid #d5d5fa;
 }

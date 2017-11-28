@@ -2,6 +2,11 @@
     height: 100%;
 }
 
+#my-files-buttons {
+    padding: 15px;
+    border-bottom: 1px solid #d5d5fa    
+}
+
 .container-fluid {
     height: 100%;
 }
