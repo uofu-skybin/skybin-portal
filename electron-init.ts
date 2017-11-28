@@ -10,6 +10,9 @@ function createWindow () {
   });
   win.loadURL(`file://${__dirname}/dist/index.html`);
 
+  // Uncomment to enable the menu bar.
+  win.setMenu(null);
+
   //// uncomment below to open the DevTools.
   win.webContents.openDevTools();
   // Event when the window is closed.
