@@ -20,31 +20,29 @@ interface ContractsResponse {
   encapsulation: ViewEncapsulation.None
 })
 
-
 export class ProvideStorageComponent implements OnInit {
-      myContracts: Contract[] = [];
+  myContracts: Contract[] = [];
+  private dataSource = null;
 
-        private dataSource = null;
+  constructor(private http: HttpClient) { }
 
-      constructor(private http: HttpClient) { }
+  ngOnInit() {
+    this.loadContracts();
+    this.dataSource = new MatTableDataSource(this.myContracts);
+  }
 
-      ngOnInit() {
-        this.loadContracts();
-        this.dataSource = new MatTableDataSource(this.myContracts);
-      }
-
-      private loadContracts() {
-        this.http.get<ContractsResponse>('http://127.0.0.1:8003/contracts').subscribe(response => {
-            console.log(response);
-            if (response.contracts) {
-                response.contracts.forEach(contract => {
-                    this.myContracts.push(contract);
-                });
-            }
+  private loadContracts() {
+    this.http.get<ContractsResponse>('http://127.0.0.1:8003/contracts').subscribe(response => {
+      console.log(response);
+      if (response.contracts) {
+        response.contracts.forEach(contract => {
+          this.myContracts.push(contract);
         });
-    }
-    updateProviderSettings() {
-        // TODO: get some stuff here
-    }
+      }
+    });
+  }
+  updateProviderSettings() {
+    // TODO: get some stuff here
+  }
 
 }
