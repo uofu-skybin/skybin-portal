@@ -1,48 +1,58 @@
 <div id="rent-storage-container">
-  <div id="storage-container">
-    <h2>Storage</h2>
-    <div>
-      <h3>Reserved Space</h3>
-      <p>{{renterInfo.reservedStorage}}</p>
-    </div>
-    <div>
-      <h3>Free Space</h3>
-      <p>{{renterInfo.freeStorage}}</p>
-    </div>
-    <div>
-      <h3>Cost Per Month</h3>
-      <p>$32</p>
-    </div>
-    <div>
-      <h3>Total Storage Contracts</h3>
-      <p>{{renterInfo.totalContracts}}</p>
-    </div>
-    <div>
-      <h3>Reserve More Space</h3>
-      <input #storageAmount placeholder="Amount" value="0" type="number">
-      <button (click)="reserveClicked(storageAmount.value)">Reserve</button>
-    </div>
-  </div>
-  <div id="settings-container">
-    <h2>Settings</h2>
-    <form>
-      <div class="form-group">
-        <label>Storage Redundancy</label>
-        <input [(ngModel)]="settings.redundancy" name="redundancy" type="number" class="form-control" id="redundancy">
-      </div>
-      <div class="form-group">
-        <label>Min Contract Duration</label>
-        <input [(ngModel)]="settings.minContractDuration" name="minContractDuration" type="number" class="form-control" id="minContractDuration">
-      </div>
-      <div class="form-group">
-        <label>Max Contract Duration</label>
-        <input [(ngModel)]="settings.maxContractDuration" name="maxContractDuration" type="number" class="form-control" id="maxContractDuration">
-      </div>
-      <div class="form-group">
-        <label>Max Price/GB/Month</label>
-        <input [(ngModel)]="settings.maxPricePerGbPerMonth" name="maxPricePerGbPerMonth" type="number" class="form-control" id="maxPricePerGbPerMonth">
-      </div>
-    </form>
-    <button>Update Settings</button>
-  </div>
-</div>
+  <mat-tab-group>
+    <mat-tab label="Summary">
+      <mat-card>
+        <mat-card-title>Storage</mat-card-title>
+        <section>
+          <mat-card-subtitle>Reserved Space</mat-card-subtitle>
+          <mat-card-content>{{renterInfo.reservedStorage}}</mat-card-content>
+        </section>
+        <section>
+          <mat-card-subtitle>Free Space</mat-card-subtitle>
+          <mat-card-content>{{renterInfo.freeStorage}}</mat-card-content>
+        </section>
+        <section>
+          <mat-card-subtitle>Cost Per Month</mat-card-subtitle>
+          <mat-card-content>$2.63</mat-card-content>
+        </section>
+        <section>
+          <mat-card-subtitle>Total Storage Contracts</mat-card-subtitle>
+          <mat-card-content>{{renterInfo.totalContracts}}</mat-card-content>
+        </section>
+        <section>
+          <mat-card-subtitle>Reserve More Space</mat-card-subtitle>
+          <mat-card-content>
+            <mat-form-field>
+              <input matInput #storageAmount placeholder="Amount" value="0" type="number">
+            </mat-form-field>
+            <button mat-raised-button (click)="reserveClicked(storageAmount.value)">Reserve</button>
+          </mat-card-content>
+        </section>
+      </mat-card>
+    </mat-tab>
+    <mat-tab label="Settings">
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput [(ngModel)]="settings.redundancy" placeholder="Storage Redundancy" type="number">
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput [(ngModel)]="settings.minContractDuration" placeholder="Min Contract Duration" type="number">
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput [(ngModel)]="settings.maxContractDuration" placeholder="Max Contract Duration" type="number">
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput [(ngModel)]="settings.maxPricePerGbPerMonth" placeholder="Max Price/GB/Month" type="number">
+          </mat-form-field>
+        </mat-card-content>
+        <button mat-raised-button>Update Settings</button>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
