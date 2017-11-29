@@ -68,7 +68,7 @@ import {NewFolderDialogComponent} from './new-folder-dialog/new-folder-dialog.co
         MatSliderModule,
         MatTableModule,
         MatSelectModule,
-        MatOptionModule
+        MatOptionModule,
         NgxElectronModule,
         RoutingModule,
 

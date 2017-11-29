@@ -20,7 +20,6 @@ interface ContractsResponse {
     encapsulation: ViewEncapsulation.None
 })
 
-
 export class ProvideStorageComponent implements OnInit {
     private myContracts: Contract[] = [];
     private providerInfo: any = {};
@@ -28,7 +27,7 @@ export class ProvideStorageComponent implements OnInit {
     // private dataSource = null;
     private displayedColumns = ['renterID', 'storageSpace'];
 
-    //TODO make dynamic
+    // TODO make dynamic
     wallets = [
         {value: 'wallet-0', viewValue: 'Wallet 1'},
         {value: 'wallet-1', viewValue: 'Wallet 2'},
