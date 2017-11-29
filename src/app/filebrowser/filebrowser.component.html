@@ -9,6 +9,7 @@
         <tr>
             <th>Name</th>
             <th>Size</th>
+            <th>Last Modified</th>
         </tr>
     </thead>
     <tbody>
@@ -18,11 +19,15 @@
                 {{getName(dir)}}
             </td>
             <td>-</td>
+            <td>-</td>
         </tr>
-        <tr *ngFor='let file of getFilesInCurrentDirectory()' (click)="selectFile($event, file)" (contextmenu)="launchMenu($event)"
+        <tr *ngFor='let file of getFilesInCurrentDirectory()' 
+            (click)="selectFile($event, file)" 
+            (contextmenu)="launchMenu($event)"
             [class.selected]="file === selectedFile">
             <td>{{getName(file)}}</td>
-            <td>{{file.size}}</td>
+            <td>{{formatSize(file.size)}}</td>
+            <td>{{formatModTime(file.modTime)}}</td>
         </tr>
     </tbody>
 </table>

@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { ElectronService } from "ngx-electron";
+import { ElectronService } from 'ngx-electron';
 
 interface File {
   name: string;
@@ -30,7 +30,6 @@ export class FilebrowserComponent implements OnInit {
 //  selectedFiles: File[] = [];
   @Output() onFileSelected = new EventEmitter<File[]>();
 
-  // 
   selectedFile: any = null;
  
   constructor(
@@ -114,11 +113,30 @@ export class FilebrowserComponent implements OnInit {
 
     const menu = new this.electronService.remote.Menu();
     const menuItem = new this.electronService.remote.MenuItem({
-      label: "Delete"
+      label: 'Delete'
     });
     menu.append(menuItem);
 
     event.preventDefault();
     menu.popup(this.electronService.remote.getCurrentWindow());
   }
+
+  formatModTime(modString) {
+    const date = new Date(modString);
+    return date.toLocaleDateString().replace(/\//g, '-');
+  }
+
+  formatSize(size) {
+    if (size > 1000000000) {
+      return Math.round(size / 1000000000) + ' GB';
+    }
+    if (size > 1000000) {
+      return Math.round(size / 1000000) + ' MB';
+    }
+    if (size > 1000) {
+      return Math.round(size / 1000) + ' KB';
+    }
+    return size + ' B';
+  }
+
 }
