@@ -25,7 +25,8 @@
             <mat-form-field>
               <input matInput #storageAmount placeholder="Amount" value="0" type="number">
             </mat-form-field>
-            <button mat-raised-button (click)="reserveClicked(storageAmount.value)">Reserve</button>
+            <br>
+            <button mat-raised-button class="skybin-btn-primary" (click)="reserveClicked(storageAmount.value)">Reserve</button>
           </mat-card-content>
         </section>
       </mat-card>
@@ -52,7 +53,7 @@
             <input matInput [(ngModel)]="settings.maxPricePerGbPerMonth" placeholder="Max Price/GB/Month" type="number">
           </mat-form-field>
         </mat-card-content>
-        <button mat-raised-button>Update Settings</button>
+        <button mat-raised-button class="skybin-btn-primary" >Update Settings</button>
       </mat-card>
     </mat-tab>
   </mat-tab-group>

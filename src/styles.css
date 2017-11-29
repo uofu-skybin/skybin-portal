@@ -1,2 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.skybin-btn-primary {
+  color: rgb(255, 255, 255) !important;
+  background-color: #00A7F3;
+}
