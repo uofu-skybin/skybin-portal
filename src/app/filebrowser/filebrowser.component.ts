@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { ElectronService } from "ngx-electron";
 
 interface File {
   name: string;
@@ -32,7 +33,9 @@ export class FilebrowserComponent implements OnInit {
   // 
   selectedFile: any = null;
  
-  constructor() { }
+  constructor(
+    private electronService: ElectronService    
+  ) { }
 
   ngOnChanges() {
     console.log("Input to file browser changed!");
@@ -104,5 +107,18 @@ export class FilebrowserComponent implements OnInit {
     // }
 
     // this.onFileSelected.emit(this.selectedFiles);
+  }
+
+  launchMenu(event) {
+    console.log("Popping up menu!");
+
+    const menu = new this.electronService.remote.Menu();
+    const menuItem = new this.electronService.remote.MenuItem({
+      label: "Delete"
+    });
+    menu.append(menuItem);
+
+    event.preventDefault();
+    menu.popup(this.electronService.remote.getCurrentWindow());
   }
 }
