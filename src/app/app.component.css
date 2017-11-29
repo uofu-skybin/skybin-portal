@@ -17,7 +17,8 @@ a {
 }
 
 .active {
-    color: #1a99ef;
+    color: #116eac;
+    font-weight: bold;
 }
 
 #nav-container {
