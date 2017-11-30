@@ -9,8 +9,7 @@ import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 
 interface Upload {
-    sourcePath: string;
-    destPath: string;
+    fileName: string;
     state: string;
 }
 
@@ -55,7 +54,6 @@ export class MyFilesComponent implements OnInit {
     deleteFile(file) {
         this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
             this.loadFiles();
-            // this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');
             console.error('Error:', error);
@@ -86,16 +84,15 @@ export class MyFilesComponent implements OnInit {
 
             files.forEach(sourcePath => {
                 const dirs = sourcePath.split('/');
+                const fileName = dirs[dirs.length - 1];
                 const dest = this.currentPath.split('/');
-                dest.push(dirs[dirs.length - 1]);
+                dest.push(fileName);
                 const destPath = dest.join('/');
 
                 const upload = {
-                    sourcePath,
-                    destPath,
+                    fileName,
                     state: 'running',
                 };
-
                 this.uploads.push(upload);
                 this.showUploads = true;
 

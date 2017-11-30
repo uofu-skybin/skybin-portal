@@ -33,7 +33,7 @@
                 <div class="modal-body">
                     <mat-dialog-content>
                         <div *ngFor="let upload of uploads" class="upload-item">
-                            <div>{{upload.sourcePath}}</div>
+                            <div>{{upload.fileName}}</div>
                             <mat-progress-bar *ngIf="upload.state === 'running'" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </mat-dialog-content>
