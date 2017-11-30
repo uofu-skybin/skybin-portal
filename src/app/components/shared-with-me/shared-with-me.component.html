@@ -1,3 +1,5 @@
-<p>
-  shared-with-me works!
-</p>
+<div id='shared-with-me-buttons'>
+    <button mat-raised-button class="skybin-btn-primary" (click)='downloadFile()' name='my-files-download-button'>Download</button>
+    <button mat-raised-button class="skybin-btn-primary" (click)='newFolder()' name='my-files-new-folder-button'>New Folder</button>
+</div>
+<app-filebrowser [filesToDisplay]="myFiles" (onPathChanged)="onPathChanged($event)" (onFileSelected)="onFileSelected($event)"></app-filebrowser>

@@ -3,20 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
-import { NewFolderDialogComponent } from '../../new-folder-dialog/new-folder-dialog.component';
+import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
-
-
-interface File {
-  name: string;
-  blocks: Object[];
-  id: string;
-  isDir: boolean;
-}
-
-interface FilesResponse {
-  files: File[];
-}
+import {SkyFile} from '../../models/sky-file';
+import {LoadSkyFilesResponse} from '../../models/load-sky-files-response';
 
 @Component({
   selector: 'app-my-files',
@@ -25,8 +15,8 @@ interface FilesResponse {
   encapsulation: ViewEncapsulation.None,
 })
 export class MyFilesComponent implements OnInit {
-  myFiles: File[] = [];
-  selectedFiles: File[] = [];
+  myFiles: SkyFile[] = [];
+  selectedFiles: SkyFile[] = [];
   currentPath = '';
 
   constructor(private http: HttpClient,
@@ -40,8 +30,9 @@ export class MyFilesComponent implements OnInit {
   }
 
   private loadFiles() {
-    this.http.get<FilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
+    this.http.get<LoadSkyFilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
       const files = response['files'];
+      console.log(files);
       if (!files) {
         console.error('loadFiles: no files returned');
         console.error('response: ', response);

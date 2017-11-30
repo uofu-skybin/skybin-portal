@@ -14,13 +14,13 @@ export class NewFolderDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<NewFolderDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
-  name: string = "";
+  name: string = '';
 
   ngOnInit() {
 
   }
 
-  onNoClick() : void {
+  onNoClick(): void {
       this.dialogRef.close();
   }
 

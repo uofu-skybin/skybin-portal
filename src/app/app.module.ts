@@ -29,8 +29,8 @@ import {MatInputModule} from '@angular/material/input';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
-import {FilebrowserComponent} from './filebrowser/filebrowser.component';
-import {NewFolderDialogComponent} from './new-folder-dialog/new-folder-dialog.component';
+import {FilebrowserComponent} from './components/filebrowser/filebrowser.component';
+import {NewFolderDialogComponent} from './components/new-folder-dialog/new-folder-dialog.component';
 
 @NgModule({
     entryComponents: [
