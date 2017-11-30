@@ -5,11 +5,11 @@
         <mat-card-title>Storage</mat-card-title>
         <section>
           <mat-card-subtitle>Reserved Space</mat-card-subtitle>
-          <mat-card-content>{{renterInfo.reservedStorage}}</mat-card-content>
+          <mat-card-content>{{formatBytes(renterInfo.reservedStorage)}}</mat-card-content>
         </section>
         <section>
           <mat-card-subtitle>Free Space</mat-card-subtitle>
-          <mat-card-content>{{renterInfo.freeStorage}}</mat-card-content>
+          <mat-card-content>{{formatBytes(renterInfo.freeStorage)}}</mat-card-content>
         </section>
         <section>
           <mat-card-subtitle>Cost Per Month</mat-card-subtitle>
@@ -20,13 +20,13 @@
           <mat-card-content>{{renterInfo.totalContracts}}</mat-card-content>
         </section>
         <section>
-          <mat-card-subtitle>Reserve More Space</mat-card-subtitle>
+          <mat-card-title>Reserve More Space</mat-card-title>
           <mat-card-content>
             <mat-form-field>
-              <input matInput #storageAmount placeholder="Amount" value="0" type="number">
+              <input matInput [(ngModel)]="storageAmount" placeholder="Amount" type="number">
             </mat-form-field>
             <br>
-            <button mat-raised-button class="skybin-btn-primary" (click)="reserveClicked(storageAmount.value)">Reserve</button>
+            <button mat-raised-button class="skybin-btn-primary" (click)="reserveClicked()">Reserve</button>
           </mat-card-content>
         </section>
       </mat-card>
