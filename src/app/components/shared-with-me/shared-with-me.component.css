@@ -2,3 +2,7 @@
     padding: 15px;
     border-bottom: 1px solid #d5d5fa
 }
+#shared-search-container {
+    float: right;
+    width: 15em;
+}

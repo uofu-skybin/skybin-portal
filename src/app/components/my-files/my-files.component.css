@@ -4,10 +4,19 @@
 
 #my-files-buttons {
     padding: 15px;
-    border-bottom: 1px solid #d5d5fa    
+    border-bottom: 1px solid #d5d5fa
 }
 
 .container-fluid {
     height: 100%;
 }
 
+#my-files-search-container {
+    float: right;
+    width: 15em;
+}
+
+#search-button {
+    color: rgb(255, 255, 255) !important;
+    background-color: #00A7F3;
+}
