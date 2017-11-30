@@ -1,112 +1,109 @@
 import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-
-interface File {
-  name: string;
-  blocks: Object[];
-  id: string;
-  isDir: boolean;
-}
+import { SkyFile } from '../../models/sky-file';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface FilesResponse {
-  files: File[];
+    files: File[];
 }
 
 @Component({
-  selector: 'app-filebrowser',
-  templateUrl: './filebrowser.component.html',
-  styleUrls: ['./filebrowser.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-filebrowser',
+    templateUrl: './filebrowser.component.html',
+    styleUrls: ['./filebrowser.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class FilebrowserComponent {
 
-  // Files to display.
-  @Input() filesToDisplay: File[];
-  currentPath: string[] = [];
-  selectedFile: any = null;
-  @Output() onPathChanged = new EventEmitter<string>();
-  @Output() onFileSelected = new EventEmitter<File[]>();
-  @Output() onFileMenu = new EventEmitter<File>();
+    @Input() filesToDisplay: SkyFile[];
+    currentPath: string[] = [];
+    selectedFile: any = null;
+    @Output() onPathChanged = new EventEmitter<string>();
+    @Output() onFileSelected = new EventEmitter<File[]>();
+    @Output() onFileMenu = new EventEmitter<File>();
 
 
-  constructor() { }
+    constructor(private ref: ChangeDetectorRef) { }
 
-  inCurrentDirectory(file) {
-    let currentDir = this.currentPath.join('/');
-    let filePath = file.name.split('/');
-    let fileDir = filePath.slice(0, filePath.length - 1).join('/');
-    return fileDir === currentDir;
-  }
-
-  getDirsInCurrentDirectory() {
-    let dirs = [];
-    for (let file of this.filesToDisplay) {
-      if (file.isDir && this.inCurrentDirectory(file)) {
-        dirs.push(file);
-      }
+    inCurrentDirectory(file) {
+        let currentDir = this.currentPath.join('/');
+        let filePath = file.name.split('/');
+        let fileDir = filePath.slice(0, filePath.length - 1).join('/');
+        return fileDir === currentDir;
     }
-    return dirs;
-  }
 
-  getFilesInCurrentDirectory() {
-    let files = [];
-    for (let file of this.filesToDisplay) {
-      if (!file.isDir && this.inCurrentDirectory(file)) {
-        files.push(file);
-      }
+    getDirsInCurrentDirectory() {
+        let dirs = [];
+        for (let file of this.filesToDisplay) {
+            if (file.isDir && this.inCurrentDirectory(file)) {
+                dirs.push(file);
+            }
+        }
+        return dirs;
     }
-    return files;
-  }
 
-  getName(file) {
-    let filePath = file.name.split('/');
-    return filePath[filePath.length - 1];
-  }
-
-  changeDir(dir) {
-    this.currentPath = dir.name.split('/');
-    this.onPathChanged.emit(this.currentPath.join('/'));
-  }
-
-  breadcrumbPath(dir) {
-    let prevPath = this.currentPath.slice();
-
-    this.currentPath = [];
-    for (let prevDir of prevPath) {
-      this.currentPath.push(prevDir);
-      if (dir == prevDir) {
-        break;
-      }
+    getFilesInCurrentDirectory() {
+        let files = [];
+        for (let file of this.filesToDisplay) {
+            if (!file.isDir && this.inCurrentDirectory(file)) {
+                files.push(file);
+            }
+        }
+        return files;
     }
-    this.onPathChanged.emit(this.currentPath.join('/'));
-  }
 
-  selectFile(e, file) {
-    this.selectedFile = file;
-    this.onFileSelected.emit([this.selectedFile]);
-  }
-
-  onFileMenuContextClick(event, file) {
-    event.preventDefault();
-    this.onFileMenu.emit(file);
-  }
-
-  formatModTime(modString) {
-    const date = new Date(modString);
-    return date.toLocaleDateString().replace(/\//g, '-');
-  }
-
-  formatSize(size) {
-    if (size > 1000000000) {
-      return Math.round(size / 1000000000) + ' GB';
+    getName(file) {
+        let filePath = file.name.split('/');
+        return filePath[filePath.length - 1];
     }
-    if (size > 1000000) {
-      return Math.round(size / 1000000) + ' MB';
+
+    changeDir(dir) {
+        this.currentPath = dir.name.split('/');
+        this.onPathChanged.emit(this.currentPath.join('/'));
     }
-    if (size > 1000) {
-      return Math.round(size / 1000) + ' KB';
+
+    breadcrumbPath(dir) {
+        let prevPath = this.currentPath.slice();
+
+        this.currentPath = [];
+        for (let prevDir of prevPath) {
+            this.currentPath.push(prevDir);
+            if (dir == prevDir) {
+                break;
+            }
+        }
+        this.onPathChanged.emit(this.currentPath.join('/'));
     }
-    return size + ' B';
-  }
+
+    selectFile(file) {
+        this.selectedFile = file;
+        this.onFileSelected.emit([this.selectedFile]);
+        this.ref.detectChanges();
+    }
+
+    onFileMenuContextClick(event, file) {
+        if (file !== this.selectedFile) {
+            this.selectFile(file);
+        }
+        this.onFileMenu.emit(file);
+    }
+
+    formatModTime(modString) {
+        const date = new Date(modString);
+        return date.toLocaleDateString().replace(/\//g, '-');
+    }
+
+    formatSize(size) {
+        if (size > 1000000000) {
+            return Math.round(size / 1000000000) + ' GB';
+        }
+        if (size > 1000000) {
+            return Math.round(size / 1000000) + ' MB';
+        }
+        if (size > 1000) {
+            return Math.round(size / 1000) + ' KB';
+        }
+        return size + ' B';
+    }
 
 }

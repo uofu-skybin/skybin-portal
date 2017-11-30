@@ -45,7 +45,6 @@ export class MyFilesComponent implements OnInit {
                 return;
             }
             this.myFiles = files;
-            this.ref.detectChanges();
         }, (error) => {
             console.error(error);
         });
@@ -53,7 +52,8 @@ export class MyFilesComponent implements OnInit {
 
     deleteFile(file) {
         this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
-            this.loadFiles();
+            this.myFiles = this.myFiles.filter(e => e.id !== file.id);
+            this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');
             console.error('Error:', error);
@@ -69,7 +69,6 @@ export class MyFilesComponent implements OnInit {
             }
         });
         menu.append(deleteMenuItem);
-
         menu.popup(this.electronService.remote.getCurrentWindow());
     }
 
@@ -85,9 +84,11 @@ export class MyFilesComponent implements OnInit {
             files.forEach(sourcePath => {
                 const dirs = sourcePath.split('/');
                 const fileName = dirs[dirs.length - 1];
-                const dest = this.currentPath.split('/');
-                dest.push(fileName);
-                const destPath = dest.join('/');
+                let destPath = this.currentPath;
+                if (destPath.length > 0) {
+                    destPath += '/';
+                }
+                destPath += fileName;
 
                 const upload = {
                     fileName,
@@ -97,8 +98,8 @@ export class MyFilesComponent implements OnInit {
                 this.showUploads = true;
 
                 const body = {
-                    sourcePath: sourcePath,
-                    destPath: destPath
+                    sourcePath,
+                    destPath
                 };
                 this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
                     if (file['id'] === undefined) {
@@ -117,6 +118,7 @@ export class MyFilesComponent implements OnInit {
                     if (elapsed < 1000) {
                         setTimeout(() => this.ref.detectChanges(), 1000 - elapsed);
                     } else {
+                        console.log('detecting changes');
                         this.ref.detectChanges();
                     }
                 }, (error) => {
@@ -186,5 +188,6 @@ export class MyFilesComponent implements OnInit {
 
     hideUploads() {
         this.showUploads = false;
+        this.ref.detectChanges();
     }
 }
