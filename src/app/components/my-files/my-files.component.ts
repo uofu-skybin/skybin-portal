@@ -8,21 +8,10 @@ import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 
-interface File {
-    name: string;
-    blocks: Object[];
-    id: string;
-    isDir: boolean;
-}
-
 interface Upload {
     sourcePath: string;
     destPath: string;
     state: string;
-}
-
-interface FilesResponse {
-    files: File[];
 }
 
 @Component({
@@ -68,8 +57,8 @@ export class MyFilesComponent implements OnInit {
             this.loadFiles();
             // this.ref.detectChanges();
         }, (error) => {
-            console.error("Unable to delete file");
-            console.error("Error:", error);
+            console.error('Unable to delete file');
+            console.error('Error:', error);
         });
     }
 
