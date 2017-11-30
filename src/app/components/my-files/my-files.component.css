@@ -7,6 +7,29 @@
     border-bottom: 1px solid #d5d5fa
 }
 
+.modal.in {
+    display: block;
+    width: 300px;
+    max-height: 150px;
+}
+
+.modal .modal-body {
+    overflow-y: auto;
+}
+
+.modal-header {
+    max-height: 60px;
+}
+
+.modal-dialog {
+    position: fixed;
+    width: 300px;
+    height: 150px;
+    bottom: 20px;
+    right: 50px;
+    margin: 0px;
+}
+
 .container-fluid {
     height: 100%;
 }
@@ -19,4 +42,7 @@
 #search-button {
     color: rgb(255, 255, 255) !important;
     background-color: #00A7F3;
+}
+.upload-item {
+    margin-bottom: 10px;
 }

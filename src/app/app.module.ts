@@ -18,6 +18,7 @@ import {
     MatDialogModule,
     MatListModule,
     MatOptionModule,
+    MatProgressBarModule,
     MatSelectModule,
     MatTableModule,
     MatTabsModule
@@ -34,7 +35,7 @@ import {NewFolderDialogComponent} from './components/new-folder-dialog/new-folde
 
 @NgModule({
     entryComponents: [
-        NewFolderDialogComponent
+        NewFolderDialogComponent,
     ],
     declarations: [
         AppComponent,
@@ -64,14 +65,14 @@ import {NewFolderDialogComponent} from './components/new-folder-dialog/new-folde
         MatDialogModule,
         MatInputModule,
         MatListModule,
-        MatTabsModule,
+        MatOptionModule,
+        MatProgressBarModule,
+        MatSelectModule,
         MatSliderModule,
         MatTableModule,
-        MatSelectModule,
-        MatOptionModule,
+        MatTabsModule,
         NgxElectronModule,
         RoutingModule,
-
     ],
     providers: [],
     bootstrap: [AppComponent]
