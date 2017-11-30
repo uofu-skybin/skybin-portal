@@ -1,9 +1,5 @@
 import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-<<<<<<< Updated upstream
-import { ElectronService } from 'ngx-electron';
-=======
->>>>>>> Stashed changes
 
 interface File {
   name: string;
@@ -33,12 +29,9 @@ export class FilebrowserComponent implements OnInit {
 //  selectedFiles: File[] = [];
   @Output() onFileSelected = new EventEmitter<File[]>();
 
-<<<<<<< Updated upstream
-=======
   @Output() onFileMenu = new EventEmitter<File>();
 
   // 
->>>>>>> Stashed changes
   selectedFile: any = null;
  
   constructor(
@@ -116,19 +109,7 @@ export class FilebrowserComponent implements OnInit {
     // this.onFileSelected.emit(this.selectedFiles);
   }
 
-<<<<<<< Updated upstream
-  launchMenu(event) {
-    console.log("Popping up menu!");
-
-    const menu = new this.electronService.remote.Menu();
-    const menuItem = new this.electronService.remote.MenuItem({
-      label: 'Delete'
-    });
-    menu.append(menuItem);
-
-=======
   onFileMenuContextClick(event, file) {
->>>>>>> Stashed changes
     event.preventDefault();
     console.log("Sending " + file);
     this.onFileMenu.emit(file);
