@@ -5,5 +5,5 @@
         <button mat-raised-button class="skybin-btn-primary" (click)='newFolder()' name='my-files-new-folder-button'>New Folder</button>
     </div>
 
-<app-filebrowser [filesToDisplay]="myFiles" (onPathChanged)="onPathChanged($event)" (onFileSelected)="onFileSelected($event)"></app-filebrowser>
+<app-filebrowser [filesToDisplay]="myFiles" (onPathChanged)="onPathChanged($event)" (onFileSelected)="onFileSelected($event)" (onFileMenu)="launchFileMenu($event)"></app-filebrowser>
 </div>

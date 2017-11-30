@@ -21,9 +21,13 @@
             <td>-</td>
             <td>-</td>
         </tr>
+<<<<<<< Updated upstream
         <tr *ngFor='let file of getFilesInCurrentDirectory()' 
             (click)="selectFile($event, file)" 
             (contextmenu)="launchMenu($event)"
+=======
+        <tr *ngFor='let file of getFilesInCurrentDirectory()' (click)="selectFile($event, file)" (contextmenu)="onFileMenuContextClick($event, file)"
+>>>>>>> Stashed changes
             [class.selected]="file === selectedFile">
             <td>{{getName(file)}}</td>
             <td>{{formatSize(file.size)}}</td>
