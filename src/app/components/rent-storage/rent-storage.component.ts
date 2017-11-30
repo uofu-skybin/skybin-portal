@@ -20,15 +20,21 @@ export class RentStorageComponent implements OnInit {
     maxPricePerGbPerMonth: 30,
   };
 
+  // Storage space to reserve with a click to reserve.
+  private storageAmount: number = null;
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.updateRenterInfo();
   }
 
-  reserveClicked(amount) {
+  reserveClicked() {
+    if (!this.storageAmount || this.storageAmount <= 0) {
+      return;
+    }
     const params = {
-      amount: parseInt(amount),
+      amount: this.storageAmount
     };
     this.http.post('http://localhost:8002/storage', params)
       .subscribe((resp: any) => {
@@ -36,6 +42,7 @@ export class RentStorageComponent implements OnInit {
       }, (error: HttpErrorResponse) => {
         console.error(error);
       });
+    this.storageAmount = 0;
   }
 
   updateRenterInfo() {
@@ -45,6 +52,32 @@ export class RentStorageComponent implements OnInit {
       }, (error: HttpErrorResponse) => {
         console.error(error);
       });
+  }
+
+  formatBytes(n) {
+    if (!n) {
+      return '';
+    }
+
+    let amt = n;
+    let suffix = 'B';
+
+    if (n > 1e9) {
+      amt = n / 1e9;
+      suffix = 'GB';
+    } else if (n > 1e6) {
+      amt = n / 1e6;
+      suffix = 'MB';
+    } else if (n > 1e3) {
+      amt = n / 1e3;
+      suffix = 'KB';
+    }
+
+    if (amt % 1 !== 0) {
+      amt = amt.toFixed(1);
+    }
+
+    return amt + suffix;
   }
 
 }
