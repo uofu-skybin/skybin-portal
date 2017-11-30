@@ -1,9 +1,9 @@
-import {ChangeDetectorRef, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {SkyFile} from '../../models/sky-file';
-import {NewFolderDialogComponent} from '../new-folder-dialog/new-folder-dialog.component';
-import {MatDialog} from '@angular/material';
-import {ElectronService} from 'ngx-electron';
-import {HttpClient} from '@angular/common/http';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { SkyFile } from '../../models/sky-file';
+import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
+import { MatDialog } from '@angular/material';
+import { ElectronService } from 'ngx-electron';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-shared-with-me',
@@ -17,9 +17,9 @@ export class SharedWithMeComponent implements OnInit {
     currentPath = '';
 
     constructor(private http: HttpClient,
-                private electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef) {
+        private electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef) {
         const file1 = new SkyFile(null, null, '1', false, '11-29-2017', 'file 1', 30);
         const file2 = new SkyFile(null, null, '2', false, '01-02-2015', 'file 2', 1);
         const file3 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);

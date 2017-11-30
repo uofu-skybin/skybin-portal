@@ -21,7 +21,9 @@
             <td>-</td>
             <td>-</td>
         </tr>
-        <tr *ngFor='let file of getFilesInCurrentDirectory()' (click)="selectFile($event, file)" (contextmenu)="onFileMenuContextClick($event, file)"
+        <tr *ngFor='let file of getFilesInCurrentDirectory()' 
+            (click)="selectFile($event, file)" 
+            (contextmenu)="onFileMenuContextClick($event, file)"
             [class.selected]="file === selectedFile">
             <td>{{getName(file)}}</td>
             <td>{{formatSize(file.size)}}</td>

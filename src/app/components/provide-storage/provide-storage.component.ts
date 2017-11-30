@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 // import {MatTableDataSource} from '@angular/material';
-import {HttpErrorResponse} from '@angular/common/http/src/response';
+import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
 interface Contract {
@@ -29,9 +29,9 @@ export class ProvideStorageComponent implements OnInit {
 
     // TODO make dynamic
     wallets = [
-        {value: 'wallet-0', viewValue: 'Wallet 1'},
-        {value: 'wallet-1', viewValue: 'Wallet 2'},
-        {value: 'wallet-2', viewValue: 'Wallet 3'}
+        { value: 'wallet-0', viewValue: 'Wallet 1' },
+        { value: 'wallet-1', viewValue: 'Wallet 2' },
+        { value: 'wallet-2', viewValue: 'Wallet 3' }
     ];
 
     constructor(private http: HttpClient) {

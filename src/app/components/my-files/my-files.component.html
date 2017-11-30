@@ -17,8 +17,9 @@
             <input type="text" class="form-control" placeholder="Search for..." aria-label="Search for...">
         </div>
     </div>
-
-    <app-filebrowser [filesToDisplay]="myFiles" (onPathChanged)="onPathChanged($event)" (onFileSelected)="onFileSelected($event)"
+    <app-filebrowser [filesToDisplay]="myFiles" 
+        (onPathChanged)="onPathChanged($event)" 
+        (onFileSelected)="onFileSelected($event)"
         (onFileMenu)="launchFileMenu($event)"></app-filebrowser>
     <div *ngIf="showUploads" id="uploads-overlay" class="modal in" tabindex="-1" type="dialog" data-show="true">
         <div class="modal-dialog modal-sm" role="document">
