@@ -31,12 +31,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <mat-dialog-content>
                         <div *ngFor="let upload of uploads" class="upload-item">
                             <div>{{upload.fileName}}</div>
-                            <mat-progress-bar *ngIf="upload.state === 'running'" mode="indeterminate"></mat-progress-bar>
+                            <mat-progress-bar *ngIf="upload.state === 'UPLOAD_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
-                    </mat-dialog-content>
                 </div>
                 <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-primary">Save changes</button>

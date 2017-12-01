@@ -10,7 +10,10 @@
 .modal.in {
     display: block;
     width: 300px;
-    max-height: 150px;
+    height: 150px;
+    position: static;
+    right: 50px;
+    bottom: 20px;
 }
 
 .modal .modal-body {
@@ -30,6 +33,16 @@
     margin: 0px;
 }
 
+.modal-body {
+    max-height: 90px;
+    overflow: scroll;
+}
+
+.modal-content {
+    overflow: auto;
+    max-height: 150px;
+}
+
 .container-fluid {
     height: 100%;
 }
@@ -43,6 +56,7 @@
     color: rgb(255, 255, 255) !important;
     background-color: #00A7F3;
 }
+
 .upload-item {
     margin-bottom: 10px;
 }

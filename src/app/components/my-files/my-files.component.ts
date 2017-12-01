@@ -13,6 +13,10 @@ interface Upload {
     state: string;
 }
 
+const UPLOAD_RUNNING = 'UPLOAD_RUNNING';
+const UPLOAD_DONE = 'UPLOAD_DONE';
+const UPLOAD_ERROR = 'UPLOAD_ERROR';
+
 @Component({
     selector: 'app-my-files',
     templateUrl: './my-files.component.html',
@@ -92,9 +96,9 @@ export class MyFilesComponent implements OnInit {
 
                 const upload = {
                     fileName,
-                    state: 'running',
+                    state: UPLOAD_RUNNING,
                 };
-                this.uploads.push(upload);
+                this.uploads.unshift(upload);
                 this.showUploads = true;
 
                 const body = {
@@ -107,7 +111,7 @@ export class MyFilesComponent implements OnInit {
                         console.error('response: ', file);
                         return;
                     }
-                    upload.state = 'done';
+                    upload.state = UPLOAD_DONE;
                     this.myFiles.push(file);
 
                     // Force change detection to re-render files and uploads.
@@ -118,7 +122,6 @@ export class MyFilesComponent implements OnInit {
                     if (elapsed < 1000) {
                         setTimeout(() => this.ref.detectChanges(), 1000 - elapsed);
                     } else {
-                        console.log('detecting changes');
                         this.ref.detectChanges();
                     }
                 }, (error) => {
@@ -188,6 +191,7 @@ export class MyFilesComponent implements OnInit {
 
     hideUploads() {
         this.showUploads = false;
+        this.uploads = this.uploads.filter(e => e.state === UPLOAD_RUNNING);
         this.ref.detectChanges();
     }
 }
