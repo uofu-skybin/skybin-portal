@@ -1,44 +1,63 @@
 <div id="my-wallet-container">
-  <div>
-    <h2>Summary</h2>
-    <div>
-      <div>Wallet ID</div>
-      <p>KDUIAKENFAKU</p>
-    </div>
-    <div>
-      <div>Current Funds</div>
-      <p>$48.39</p>
-    </div>
-    <div>
-      <div>Total Spent this Month</div>
-      <p>$5.33</p>
-    </div>
-    <div>
-      <div>Total Earned this Month</div>
-      <p>$32.25</p>
-    </div>
-  </div>
-  <div>
-    <h2>Transactions</h2>
-    <mat-table [dataSource]="dataSource">
-      <ng-container matColumnDef="date">
-        <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.date.toDateString()}} </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="user">
-        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.user}} </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="type">
-        <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.type}} </mat-cell>
-      </ng-container>
-      <ng-container matColumnDef="amount">
-        <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.amount}} </mat-cell>
-      </ng-container>
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
-  </div>
+  <mat-tab-group>
+
+    <mat-tab label="Summary">
+      <mat-card>
+        <mat-card-title>Summary</mat-card-title>
+        
+        <section>
+          <mat-form-field>
+            <mat-select placeholder="Wallet">
+              <mat-option *ngFor="let wallet of wallets" (click)="selectWallet(wallet)" value="{{ wallet.id }}">{{ wallet.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button class="skybin-btn-primary">Add wallet</button>   
+        </section>
+      
+        <section>
+          <mat-card-subtitle>Wallet ID</mat-card-subtitle>
+          <mat-card-content>{{ selected.id }}</mat-card-content>
+        </section>
+
+        <section>
+          <mat-card-subtitle>Current funds</mat-card-subtitle>
+          <mat-card-content>${{ selected.funds.toFixed(2) }}</mat-card-content>
+        </section>
+
+        <section>
+          <mat-card-subtitle>Funds received</mat-card-subtitle>
+          <mat-card-content>${{ selected.received.toFixed(2) }}</mat-card-content>
+        </section>
+
+        <section>
+          <mat-card-subtitle>Funds spent</mat-card-subtitle>
+          <mat-card-content>${{ selected.spent.toFixed(2) }}</mat-card-content>
+        </section>
+      </mat-card>
+    </mat-tab>
+
+    <mat-tab label="Transactions">
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="date">
+          <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.date.toDateString()}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="user">
+          <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.user}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.type}} </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="amount">
+          <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.amount}} </mat-cell>
+        </ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </mat-tab>
+  </mat-tab-group>
 </div>
