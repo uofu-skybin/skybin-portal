@@ -1,0 +1,5 @@
+<div *ngFor="let form of forms">
+  <mat-form-field>
+    <input matInput (keyup.enter)="submit()" [(ngModel)]="formData[form]" placeholder="User ID" (click)="addFormField()" name="{{ form }}">
+  </mat-form-field>
+</div>

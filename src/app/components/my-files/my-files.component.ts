@@ -7,6 +7,7 @@ import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
+import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 
 interface Upload {
     fileName: string;
@@ -179,6 +180,10 @@ export class MyFilesComponent implements OnInit {
                 });
             });
         });
+    }
+
+    shareFile() {
+        const dialogRef = this.dialog.open(ShareDialogComponent, {});
     }
 
     onPathChanged(newPath) {

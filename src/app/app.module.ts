@@ -32,10 +32,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FilebrowserComponent } from './components/filebrowser/filebrowser.component';
 import { NewFolderDialogComponent } from './components/new-folder-dialog/new-folder-dialog.component';
+import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 
 @NgModule({
     entryComponents: [
         NewFolderDialogComponent,
+        ShareDialogComponent
     ],
     declarations: [
         AppComponent,
@@ -50,6 +52,7 @@ import { NewFolderDialogComponent } from './components/new-folder-dialog/new-fol
         RegisterComponent,
         RentStorageComponent,
         SharedWithMeComponent,
+        ShareDialogComponent,
     ],
     imports: [
         BrowserAnimationsModule,
