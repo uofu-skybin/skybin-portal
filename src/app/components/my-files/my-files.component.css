@@ -61,3 +61,7 @@
 .upload-item {
     margin-bottom: 10px;
 }
+
+#my-files-search {
+    font-family: FontAwesome, Arial;
+}
