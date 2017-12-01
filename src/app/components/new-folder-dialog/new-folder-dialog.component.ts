@@ -1,22 +1,17 @@
 import { Component, OnInit, ViewEncapsulation, Inject } from '@angular/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 
-
 @Component({
     selector: 'app-new-folder-dialog',
     templateUrl: './new-folder-dialog.component.html',
     styleUrls: ['./new-folder-dialog.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class NewFolderDialogComponent implements OnInit {
+export class NewFolderDialogComponent {
 
-    constructor(
-        public dialogRef: MatDialogRef<NewFolderDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any) { }
+    name = '';
 
-    name: string = '';
-
-    ngOnInit() {
+    constructor(public dialogRef: MatDialogRef<NewFolderDialogComponent>) {
 
     }
 

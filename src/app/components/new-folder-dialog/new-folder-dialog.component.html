@@ -1,6 +1,9 @@
 <div>
-  <mat-form-field>
-      <input matInput (keyup.enter)="submit()" [(ngModel)]="name" placeholder="please enter a folder name">      
-  </mat-form-field>
-  <button mat-button (click)="submit()">Create</button>
+    <mat-form-field>
+        <input matInput (keyup.enter)="submit()" [(ngModel)]="name" placeholder="New Folder">
+    </mat-form-field>
+    <mat-dialog-actions>
+        <button mat-button (click)="submit()">Create</button>
+        <button mat-button mat-dialog-close>Cancel</button>
+    </mat-dialog-actions>
 </div>
