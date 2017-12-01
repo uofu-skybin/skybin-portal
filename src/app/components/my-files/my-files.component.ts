@@ -141,7 +141,7 @@ export class MyFilesComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            if (result === undefined) {
+            if (!result || result.length === 0) {
                 return;
             }
             let folderPath = this.currentPath + '/' + result;
