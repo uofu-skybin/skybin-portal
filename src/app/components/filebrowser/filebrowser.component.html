@@ -1,33 +1,37 @@
-<div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
-        <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
-    </ol>
+<div id="file-browser-container">
+    <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
+            <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
+        </ol>
+    </div>
+    <table class="table header-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Last Modified</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="file-list-container">
+        <table class="table">
+           <tbody>
+                <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
+                    <td>
+                        <i class="fa fa-folder" aria-hidden="true"></i>
+                        {{getName(dir)}}
+                    </td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr *ngFor="let file of getFilesInCurrentDirectory()" (click)="selectFile(file)" (contextmenu)="onFileMenuContextClick($event, file)"
+                    [class.selected]="file === selectedFile">
+                    <td>{{getName(file)}}</td>
+                    <td>{{formatSize(file.size)}}</td>
+                    <td>{{formatModTime(file.modTime)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Last Modified</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
-            <td>
-                <i class="fa fa-folder" aria-hidden="true"></i>
-                {{getName(dir)}}
-            </td>
-            <td>-</td>
-            <td>-</td>
-        </tr>
-        <tr *ngFor="let file of getFilesInCurrentDirectory()"
-            (click)="selectFile(file)"
-            (contextmenu)="onFileMenuContextClick($event, file)"
-            [class.selected]="file === selectedFile">
-            <td>{{getName(file)}}</td>
-            <td>{{formatSize(file.size)}}</td>
-            <td>{{formatModTime(file.modTime)}}</td>
-        </tr>
-    </tbody>
-</table>

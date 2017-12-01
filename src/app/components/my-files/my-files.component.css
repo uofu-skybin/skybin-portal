@@ -1,5 +1,6 @@
 #my-files-container {
     height: 100%;
+    overflow: hidden;
 }
 
 #my-files-buttons {

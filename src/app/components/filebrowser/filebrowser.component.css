@@ -1,4 +1,23 @@
 
+#file-breadcrumb {
+    height: 50px;
+}
+
+#file-browser-container {
+    height: 100%;
+}
+
+#file-list-container {
+    height: calc(100% - 150px);
+    overflow: auto;
+}
+
+.header-table {
+    margin-bottom: 0 !important;
+    border-bottom-width: 1px !important;
+    height: 50px;
+}
+
 th:first-child {
     padding-left: 50px;
 }
