@@ -6,3 +6,7 @@
     float: right;
     width: 15em;
 }
+
+#search-input {
+    font-family: FontAwesome, Arial;
+}
