@@ -88,6 +88,21 @@ export class FilebrowserComponent {
         this.onFileMenu.emit(file);
     }
 
+    getLongestName(filter) {
+        return this.filesToDisplay
+            .filter(filter)
+            .map(e => e.name)
+            .reduce((prev, next) => next.length > prev.length ? next : prev, '');
+    }
+
+    getLongestFileName() {
+        return this.getLongestName(e => !e.isDir);
+    }
+
+    getLongestFolderName() {
+        return this.getLongestName(e => e.isDir);
+    }
+
     formatModTime(modString) {
         const date = new Date(modString);
         return date.toLocaleDateString().replace(/\//g, '-');

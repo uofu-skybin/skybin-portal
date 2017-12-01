@@ -5,18 +5,38 @@
             <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
         </ol>
     </div>
-    <table class="table header-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Size</th>
-                <th>Last Modified</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="header-table-container">
+        <table class="table header-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Last Modified</th>
+                </tr>
+            </thead>
+            <!-- Add sample rows so that the headers are properly spaced -->
+            <tbody>
+                <tr>
+                    <td>
+                        <i class="fa fa-folder" aria-hidden="true"></i>
+                        {{getLongestFolderName()}}
+                    </td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>
+                        {{getLongestFileName()}}
+                    </td>
+                    <td>100 GB</td>
+                    <td>11-27-2017</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <div id="file-list-container">
         <table class="table">
-           <tbody>
+            <tbody>
                 <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
                     <td>
                         <i class="fa fa-folder" aria-hidden="true"></i>

@@ -12,6 +12,11 @@
     overflow: auto;
 }
 
+.header-table-container {
+    height: 50px;
+    overflow: hidden;
+}
+
 .header-table {
     margin-bottom: 0 !important;
     border-bottom-width: 1px !important;
