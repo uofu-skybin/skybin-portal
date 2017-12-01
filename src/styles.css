@@ -5,3 +5,7 @@
   color: rgb(255, 255, 255) !important;
   background-color: #00A7F3;
 }
+
+*:focus {
+    outline: none;
+}
