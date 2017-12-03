@@ -5,11 +5,11 @@
         <mat-card-title>Storage</mat-card-title>
         <section>
           <mat-card-subtitle>Reserved Space</mat-card-subtitle>
-          <mat-card-content>{{formatBytes(renterInfo.reservedStorage)}}</mat-card-content>
+          <mat-card-content>{{renterInfo.reservedStorage | bytes}}</mat-card-content>
         </section>
         <section>
           <mat-card-subtitle>Free Space</mat-card-subtitle>
-          <mat-card-content>{{formatBytes(renterInfo.freeStorage)}}</mat-card-content>
+          <mat-card-content>{{renterInfo.freeStorage | bytes}}</mat-card-content>
         </section>
         <section>
           <mat-card-subtitle>Cost Per Month</mat-card-subtitle>

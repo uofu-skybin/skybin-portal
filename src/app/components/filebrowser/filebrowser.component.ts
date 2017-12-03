@@ -108,17 +108,4 @@ export class FilebrowserComponent {
         return date.toLocaleDateString().replace(/\//g, '-');
     }
 
-    formatSize(size) {
-        if (size > 1000000000) {
-            return Math.round(size / 1000000000) + ' GB';
-        }
-        if (size > 1000000) {
-            return Math.round(size / 1000000) + ' MB';
-        }
-        if (size > 1000) {
-            return Math.round(size / 1000) + ' KB';
-        }
-        return size + ' B';
-    }
-
 }

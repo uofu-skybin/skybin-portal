@@ -33,6 +33,7 @@ import { FormsModule } from '@angular/forms';
 import { FilebrowserComponent } from './components/filebrowser/filebrowser.component';
 import { NewFolderDialogComponent } from './components/new-folder-dialog/new-folder-dialog.component';
 import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
+import { BytesPipe } from './pipes/bytes.pipe';
 
 @NgModule({
     entryComponents: [
@@ -42,6 +43,7 @@ import { ShareDialogComponent } from './components/share-dialog/share-dialog.com
     declarations: [
         AppComponent,
         AuthenticationComponent,
+        BytesPipe,
         FilebrowserComponent,
         LoginComponent,
         MyFilesComponent,
@@ -51,8 +53,8 @@ import { ShareDialogComponent } from './components/share-dialog/share-dialog.com
         ProvideStorageComponent,
         RegisterComponent,
         RentStorageComponent,
-        SharedWithMeComponent,
         ShareDialogComponent,
+        SharedWithMeComponent,
     ],
     imports: [
         BrowserAnimationsModule,

@@ -48,7 +48,7 @@
                 <tr *ngFor="let file of getFilesInCurrentDirectory()" (click)="selectFile(file)" (contextmenu)="onFileMenuContextClick($event, file)"
                     [class.selected]="file === selectedFile">
                     <td>{{getName(file)}}</td>
-                    <td>{{formatSize(file.size)}}</td>
+                    <td>{{file.size | bytes}}</td>
                     <td>{{formatModTime(file.modTime)}}</td>
                 </tr>
             </tbody>
