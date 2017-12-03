@@ -186,6 +186,9 @@ export class MyFilesComponent implements OnInit {
     }
 
     shareFile() {
+        if (this.selectedFiles.length === 0) {
+            return;
+        }
         const dialogRef = this.dialog.open(ShareDialogComponent, {});
     }
 
