@@ -43,29 +43,7 @@
             </section>
         </div>
 
-        <div>
-            <mat-card>
-                <mat-card-title>
-                    Contracts
-                </mat-card-title>
-                <mat-card-content>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Renter ID</th>
-                            <th>Storage Rented</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor='let contract of myContracts'>
-                            <td>{{contract.renterID}}</td>
-                            <td>{{contract.storageSpace}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </mat-card-content>
-            </mat-card>
-        </div>
+
     </mat-tab>
     <mat-tab label="Settings">
         <div id='provide-storage-settings-container'>
@@ -110,6 +88,32 @@
                     </mat-card-content>
                 </mat-card>
             </section>
+        </div>
+    </mat-tab>
+
+    <mat-tab label="Contracts">
+        <div>
+            <mat-card>
+                <mat-card-title>
+                    Contracts
+                </mat-card-title>
+                <mat-card-content>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Renter ID</th>
+                            <th>Storage Rented</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor='let contract of myContracts'>
+                            <td>{{contract.renterID}}</td>
+                            <td>{{contract.storageSpace}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </mat-card-content>
+            </mat-card>
         </div>
     </mat-tab>
 </mat-tab-group>

@@ -25,7 +25,7 @@ export class ProvideStorageComponent implements OnInit {
     private providerInfo: any = {};
 
     // private dataSource = null;
-    private displayedColumns = ['renterID', 'storageSpace'];
+    // private displayedColumns = ['renterID', 'storageSpace'];
 
     // TODO make dynamic
     wallets = [
