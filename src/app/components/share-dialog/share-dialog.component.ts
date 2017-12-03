@@ -14,22 +14,17 @@ export class ShareDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<ShareDialogComponent>
   ) { }
 
-  private forms = [1];
-  private formData = {1: ''};
+  private currentName = '';
+  private names = [];
 
   ngOnInit() {
   }
 
-  addFormField() {
-    this.forms.push(this.forms.length + 1);
-    this.forms = this.forms.slice();
-  }
-
-  submit() {
-    const users = [];
-    for (const form of this.forms) {
-      users.push(this.formData[form]);
+  addName() {
+    if (this.currentName !== '') {
+      this.names.push(this.currentName);
+      this.names = this.names.slice();
+      this.currentName = '';
     }
-    this.dialogRef.close(users);
   }
 }
