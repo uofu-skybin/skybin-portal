@@ -17,10 +17,10 @@
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </span> -->
-            <input id="my-files-search" type="text" class="form-control" placeholder="&#xf002; Search for..." aria-label="Search for...">
+            <input id="my-files-search" [(ngModel)]="currentSearch" (input)="onSearchChanged()" type="text" class="form-control" placeholder="&#xf002; Search for..." aria-label="Search for...">
         </div>
     </div>
-    <app-filebrowser [filesToDisplay]="myFiles" 
+    <app-filebrowser [filesToDisplay]="filteredFiles" 
         (onPathChanged)="onPathChanged($event)" 
         (onFileSelected)="onFileSelected($event)"
         (onFileMenu)="launchFileMenu($event)"></app-filebrowser>

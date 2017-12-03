@@ -26,10 +26,12 @@ const UPLOAD_ERROR = 'UPLOAD_ERROR';
 })
 export class MyFilesComponent implements OnInit {
     myFiles: SkyFile[] = [];
+    filteredFiles: SkyFile[] = [];
     selectedFiles: SkyFile[] = [];
     currentPath = '';
     showUploads = false;
     uploads: Upload[] = [];
+    currentSearch = '';
 
     constructor(private http: HttpClient,
         private electronService: ElectronService,
@@ -50,6 +52,7 @@ export class MyFilesComponent implements OnInit {
                 return;
             }
             this.myFiles = files;
+            this.onSearchChanged();
         }, (error) => {
             console.error(error);
         });
@@ -188,6 +191,8 @@ export class MyFilesComponent implements OnInit {
 
     onPathChanged(newPath) {
         this.currentPath = newPath;
+        this.currentSearch = '';
+        this.onSearchChanged();
     }
 
     onFileSelected(newFiles) {
@@ -197,6 +202,81 @@ export class MyFilesComponent implements OnInit {
     hideUploads() {
         this.showUploads = false;
         this.uploads = this.uploads.filter(e => e.state === UPLOAD_RUNNING);
+        this.ref.detectChanges();
+    }
+
+    inCurrentDirectory(file) {
+        const filePath = file.name.split('/');
+        const fileDir = filePath.slice(0, filePath.length - 1).join('/');
+        return fileDir === this.currentPath;
+    }
+
+    getDirsInCurrentDirectory() {
+        const dirs = [];
+        for (const file of this.myFiles) {
+            if (file.isDir && this.inCurrentDirectory(file)) {
+                dirs.push(file);
+            }
+        }
+        return dirs;
+    }
+
+    getFilesInCurrentDirectory() {
+        const files = [];
+        for (const file of this.myFiles) {
+            if (!file.isDir && this.inCurrentDirectory(file)) {
+                files.push(file);
+            }
+        }
+        return files;
+    }
+
+    getName(file) {
+        const filePath = file.name.split('/');
+        return filePath[filePath.length - 1];
+    }
+
+    onSearchChanged() {
+        if (this.currentSearch === '') {
+            this.filteredFiles = this.myFiles;
+            this.ref.detectChanges();
+            return;
+        }
+
+        const searchTerms = this.currentSearch.split(' ');
+
+        const filteredFiles = [];
+        for (const dir of this.getDirsInCurrentDirectory()) {
+            if (this.inCurrentDirectory(dir)) {
+                const dirName = this.getName(dir);
+                let containsTerms = true;
+                for (const term of searchTerms) {
+                    if (dirName.indexOf(term) === -1) {
+                        containsTerms = false;
+                    }
+                }
+                if (containsTerms) {
+                    filteredFiles.push(dir);
+                }
+            }
+        }
+
+        for (const file of this.getFilesInCurrentDirectory()) {
+            if (this.inCurrentDirectory(file)) {
+                const fileName = this.getName(file);
+                let containsTerms = true;
+                for (const term of searchTerms) {
+                    if (fileName.indexOf(term) === -1) {
+                        containsTerms = false;
+                    }
+                }
+                if (containsTerms) {
+                    filteredFiles.push(file);
+                }
+            }
+        }
+
+        this.filteredFiles = filteredFiles;
         this.ref.detectChanges();
     }
 }
