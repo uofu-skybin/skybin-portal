@@ -31,7 +31,7 @@ const TRANSFER_ERROR = 'TRANSFER_ERROR';
 export class MyFilesComponent implements OnInit {
     allFiles: SkyFile[] = [];
     filteredFiles: SkyFile[] = [];
-    selectedFiles: SkyFile[] = [];
+    selectedFile: SkyFile = null;
     currentPath = '';
     uploads: Transfer[] = [];
     downloads: Transfer[] = [];
@@ -169,12 +169,10 @@ export class MyFilesComponent implements OnInit {
     }
 
     downloadClicked() {
-        if (this.selectedFiles.length === 0) {
+        if (!this.selectedFile) {
             return;
         }
-        this.selectedFiles.forEach(file => {
-            this.downloadFile(file);
-        });
+        this.downloadFile(this.selectedFile);
     }
 
     newFolderClicked() {
@@ -208,7 +206,7 @@ export class MyFilesComponent implements OnInit {
     }
 
     shareClicked() {
-        if (this.selectedFiles.length === 0) {
+        if (!this.selectedFile) {
             return;
         }
         const dialogRef = this.dialog.open(ShareDialogComponent, {});
@@ -230,8 +228,8 @@ export class MyFilesComponent implements OnInit {
         this.onSearchChanged();
     }
 
-    onFileSelected(newFiles) {
-        this.selectedFiles = newFiles;
+    onFileSelected(file: SkyFile) {
+        this.selectedFile = file;
     }
 
     hideUploads() {
@@ -272,11 +270,6 @@ export class MyFilesComponent implements OnInit {
         return files;
     }
 
-    getName(file) {
-        const filePath = file.name.split('/');
-        return filePath[filePath.length - 1];
-    }
-
     onSearchChanged() {
         if (this.currentSearch === '') {
             this.filteredFiles = this.allFiles;
@@ -289,7 +282,7 @@ export class MyFilesComponent implements OnInit {
         const filteredFiles = [];
         for (const dir of this.getDirsInCurrentDirectory()) {
             if (this.inCurrentDirectory(dir)) {
-                const dirName = this.getName(dir);
+                const dirName = this.baseName(dir.name);
                 let containsTerms = true;
                 for (const term of searchTerms) {
                     if (dirName.indexOf(term) === -1) {
@@ -304,7 +297,7 @@ export class MyFilesComponent implements OnInit {
 
         for (const file of this.getFilesInCurrentDirectory()) {
             if (this.inCurrentDirectory(file)) {
-                const fileName = this.getName(file);
+                const fileName = this.baseName(file.name);
                 let containsTerms = true;
                 for (const term of searchTerms) {
                     if (fileName.indexOf(term) === -1) {

@@ -17,9 +17,9 @@ export class FilebrowserComponent {
 
     @Input() filesToDisplay: SkyFile[];
     currentPath: string[] = [];
-    selectedFile: any = null;
+    selectedFile: SkyFile = null;
     @Output() onPathChanged = new EventEmitter<string>();
-    @Output() onFileSelected = new EventEmitter<File[]>();
+    @Output() onFileSelected = new EventEmitter<SkyFile>();
     @Output() onFileMenu = new EventEmitter<File>();
 
 
@@ -60,6 +60,13 @@ export class FilebrowserComponent {
     changeDir(dir) {
         this.currentPath = dir.name.split('/');
         this.onPathChanged.emit(this.currentPath.join('/'));
+        this.selectFile(null);
+    }
+
+    selectFile(file) {
+        this.selectedFile = file;
+        this.onFileSelected.emit(this.selectedFile);
+        this.ref.detectChanges();
     }
 
     breadcrumbPath(dir) {
@@ -73,12 +80,6 @@ export class FilebrowserComponent {
             }
         }
         this.onPathChanged.emit(this.currentPath.join('/'));
-    }
-
-    selectFile(file) {
-        this.selectedFile = file;
-        this.onFileSelected.emit([this.selectedFile]);
-        this.ref.detectChanges();
     }
 
     onFileMenuContextClick(event, file) {
