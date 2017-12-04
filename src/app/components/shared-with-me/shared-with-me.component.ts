@@ -53,35 +53,4 @@ export class SharedWithMeComponent implements OnInit {
             });
         });
     }
-
-    newFolder() {
-        const dialogRef = this.dialog.open(NewFolderDialogComponent, {
-            width: '325px'
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result === undefined) {
-                return;
-            }
-            let folderPath = this.currentPath + '/' + result;
-            if (folderPath.startsWith('/')) {
-                folderPath = folderPath.slice(1);
-            }
-            const body = {
-                destPath: folderPath
-            };
-            this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                const file = response['file'];
-                if (!file) {
-                    console.error('newFolder: no folder returned from request');
-                    // this.loadFiles();
-                    return;
-                }
-                this.myFiles.push(file);
-            }, (error) => {
-                console.error(error);
-            });
-        });
-    }
-
 }
