@@ -9,14 +9,18 @@ import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 
-interface Upload {
-    fileName: string;
+// An upload or download.
+// 'sourcePath' and 'destPath' are full path names.
+interface Transfer {
+    sourcePath: string;
+    destPath: string;
     state: string;
 }
 
-const UPLOAD_RUNNING = 'UPLOAD_RUNNING';
-const UPLOAD_DONE = 'UPLOAD_DONE';
-const UPLOAD_ERROR = 'UPLOAD_ERROR';
+// Transfer states
+const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
+const TRANSFER_DONE = 'TRANSFER_DONE';
+const TRANSFER_ERROR = 'TRANSFER_ERROR';
 
 @Component({
     selector: 'app-my-files',
@@ -25,12 +29,14 @@ const UPLOAD_ERROR = 'UPLOAD_ERROR';
     encapsulation: ViewEncapsulation.None,
 })
 export class MyFilesComponent implements OnInit {
-    myFiles: SkyFile[] = [];
+    allFiles: SkyFile[] = [];
     filteredFiles: SkyFile[] = [];
     selectedFiles: SkyFile[] = [];
     currentPath = '';
+    uploads: Transfer[] = [];
+    downloads: Transfer[] = [];
     showUploads = false;
-    uploads: Upload[] = [];
+    showDownloads = false;
     currentSearch = '';
 
     constructor(private http: HttpClient,
@@ -51,20 +57,10 @@ export class MyFilesComponent implements OnInit {
                 console.error('response: ', response);
                 return;
             }
-            this.myFiles = files;
+            this.allFiles = files;
             this.onSearchChanged();
         }, (error) => {
             console.error(error);
-        });
-    }
-
-    deleteFile(file) {
-        this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
-            this.myFiles = this.myFiles.filter(e => e.id !== file.id);
-            this.ref.detectChanges();
-        }, (error) => {
-            console.error('Unable to delete file');
-            console.error('Error:', error);
         });
     }
 
@@ -80,66 +76,108 @@ export class MyFilesComponent implements OnInit {
         menu.popup(this.electronService.remote.getCurrentWindow());
     }
 
-    uploadFile() {
+    // Returns the last element of a file path.
+    // e.g. "/users/a.txt" -> "a.txt"
+    baseName(fileName: string) {
+        const pathElems = fileName.split('/');
+        return pathElems[pathElems.length - 1];
+    }
+
+    uploadFile(sourcePath) {
+        const baseName = this.baseName(sourcePath);
+        let destPath = this.currentPath;
+        if (destPath.length > 0) {
+            destPath += '/';
+        }
+        destPath += baseName;
+
+        const upload = {
+            sourcePath,
+            destPath,
+            state: TRANSFER_RUNNING,
+        };
+        this.uploads.unshift(upload);
+        this.showUploads = true;
+
+        const body = {
+            sourcePath,
+            destPath,
+        };
+        const startTime = new Date();
+        this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+            if (file['id'] === undefined) {
+                console.error('uploadFile: request did not return file object');
+                console.error('response: ', file);
+                return;
+            }
+            upload.state = TRANSFER_DONE;
+            this.allFiles.push(file);
+
+            // Force change detection to re-render files and uploads.
+            // If the upload completed quickly, show the progress bar
+            // a little longer before re-rendering.
+            const endTime = new Date();
+            const elapsedMs = endTime.getTime() - startTime.getTime();
+            setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+        }, (error) => {
+            console.error(error);
+            upload.state = TRANSFER_ERROR;
+        });
+    }
+
+    uploadClicked() {
         this.electronService.remote.dialog.showOpenDialog(files => {
             if (!files) {
                 return;
             }
-
-            // Upload start time
-            const startTime = new Date();
-
             files.forEach(sourcePath => {
-                const dirs = sourcePath.split('/');
-                const fileName = dirs[dirs.length - 1];
-                let destPath = this.currentPath;
-                if (destPath.length > 0) {
-                    destPath += '/';
-                }
-                destPath += fileName;
-
-                const upload = {
-                    fileName,
-                    state: UPLOAD_RUNNING,
-                };
-                this.uploads.unshift(upload);
-                this.showUploads = true;
-
-                const body = {
-                    sourcePath,
-                    destPath
-                };
-                this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
-                    if (file['id'] === undefined) {
-                        console.error('uploadFile: request did not return file object');
-                        console.error('response: ', file);
-                        return;
-                    }
-                    upload.state = UPLOAD_DONE;
-                    this.myFiles.push(file);
-
-                    // Force change detection to re-render files and uploads.
-                    // If the upload completed quickly, show the progress bar
-                    // a little longer before re-rendering.
-                    const endTime = new Date();
-                    const elapsed = endTime.getTime() - startTime.getTime();
-                    if (elapsed < 1000) {
-                        setTimeout(() => this.ref.detectChanges(), 1000 - elapsed);
-                    } else {
-                        this.ref.detectChanges();
-                    }
-                }, (error) => {
-                    console.error(error);
-                    upload.state = 'error';
-                });
+                this.uploadFile(sourcePath);
             });
-
-            // Force re-render after starting uploads to show upload progress.
             this.ref.detectChanges();
         });
     }
 
-    newFolder() {
+    downloadFile(file) {
+        this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
+            if (!destPath) {
+                return;
+            }
+            const download = {
+                sourcePath: file.name,
+                destPath,
+                state: TRANSFER_RUNNING,
+            };
+            this.downloads.unshift(download);
+            this.showDownloads = true;
+            const url = `http://127.0.0.1:8002/files/${file.id}/download`;
+            const body = {
+                destination: destPath
+            };
+            const startTime = new Date();
+            this.http.post(url, body).subscribe(response => {
+                download.state = TRANSFER_DONE;
+                const endTime = new Date();
+                const elapsedMs = endTime.getTime() - startTime.getTime();
+                setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+           }, (error) => {
+                console.error(error);
+                download.state = TRANSFER_ERROR;
+                this.ref.detectChanges();
+            });
+            this.ref.detectChanges();
+        });
+    }
+
+    downloadClicked() {
+        if (this.selectedFiles.length === 0) {
+            return;
+        }
+        this.selectedFiles.forEach(file => {
+            this.downloadFile(file);
+        });
+    }
+
+    newFolderClicked() {
         const dialogRef = this.dialog.open(NewFolderDialogComponent, {
             width: '325px'
         });
@@ -162,34 +200,28 @@ export class MyFilesComponent implements OnInit {
                     this.loadFiles();
                     return;
                 }
-                this.myFiles.push(file);
+                this.allFiles.push(file);
             }, (error) => {
                 console.error(error);
             });
         });
     }
 
-    downloadFile() {
-        this.selectedFiles.forEach(file => {
-            this.electronService.remote.dialog.showSaveDialog(savePath => {
-                const url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
-                const body = {
-                    destination: savePath
-                };
-                this.http.post(url, body).subscribe(response => {
-                    console.log(response);
-                }, (error) => {
-                    console.error(error);
-                });
-            });
-        });
-    }
-
-    shareFile() {
+    shareClicked() {
         if (this.selectedFiles.length === 0) {
             return;
         }
         const dialogRef = this.dialog.open(ShareDialogComponent, {});
+    }
+
+    deleteFile(file) {
+        this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
+            this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+            this.ref.detectChanges();
+        }, (error) => {
+            console.error('Unable to delete file');
+            console.error('Error:', error);
+        });
     }
 
     onPathChanged(newPath) {
@@ -204,7 +236,13 @@ export class MyFilesComponent implements OnInit {
 
     hideUploads() {
         this.showUploads = false;
-        this.uploads = this.uploads.filter(e => e.state === UPLOAD_RUNNING);
+        this.uploads = this.uploads.filter(e => e.state === TRANSFER_RUNNING);
+        this.ref.detectChanges();
+    }
+
+    hideDownloads() {
+        this.showDownloads = false;
+        this.downloads = this.downloads.filter(e => e.state === TRANSFER_RUNNING);
         this.ref.detectChanges();
     }
 
@@ -216,7 +254,7 @@ export class MyFilesComponent implements OnInit {
 
     getDirsInCurrentDirectory() {
         const dirs = [];
-        for (const file of this.myFiles) {
+        for (const file of this.allFiles) {
             if (file.isDir && this.inCurrentDirectory(file)) {
                 dirs.push(file);
             }
@@ -226,7 +264,7 @@ export class MyFilesComponent implements OnInit {
 
     getFilesInCurrentDirectory() {
         const files = [];
-        for (const file of this.myFiles) {
+        for (const file of this.allFiles) {
             if (!file.isDir && this.inCurrentDirectory(file)) {
                 files.push(file);
             }
@@ -241,7 +279,7 @@ export class MyFilesComponent implements OnInit {
 
     onSearchChanged() {
         if (this.currentSearch === '') {
-            this.filteredFiles = this.myFiles;
+            this.filteredFiles = this.allFiles;
             this.ref.detectChanges();
             return;
         }
