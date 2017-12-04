@@ -1,51 +1,77 @@
-<div id='my-files-container'>
-    <div id='my-files-buttons'>
-        <button mat-raised-button class="skybin-btn-primary" (click)='uploadFile()' name='my-files-upload-button'>
+<div id="my-files-container">
+    <div id="my-files-buttons">
+        <button mat-raised-button class="skybin-btn-primary" (click)="uploadClicked()" name="my-files-upload-button">
             Upload
         </button>
-        <button mat-raised-button class="skybin-btn-primary" (click)='downloadFile()' name='my-files-download-button'>
+        <button mat-raised-button class="skybin-btn-primary" (click)="downloadClicked()" name="my-files-download-button">
             Download
         </button>
-        <button mat-raised-button class="skybin-btn-primary" (click)='shareFile()' name='my-files-share-button'>
+        <button mat-raised-button class="skybin-btn-primary" (click)="shareClicked()" name="my-files-share-button">
             Share
         </button>
-        <button mat-raised-button class="skybin-btn-primary" (click)='newFolder()' name='my-files-new-folder-button'>New Folder
+        <button mat-raised-button class="skybin-btn-primary" (click)="newFolderClicked()" name="my-files-new-folder-button">
+            New Folder
         </button>
-        <div id='my-files-search-container' class="input-group">
+        <div id="my-files-search-container" class="input-group">
             <!-- <span class="input-group-btn"> -->
-                <!-- <button id='search-button' class="btn" type="button">
+            <!-- <button id="search-button" class="btn" type="button">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
             </span> -->
-            <input id="my-files-search" [(ngModel)]="currentSearch" (input)="onSearchChanged()" type="text" class="form-control" placeholder="&#xf002; Search for..." aria-label="Search for...">
+            <input id="my-files-search"
+                [(ngModel)]="currentSearch"
+                (input)="onSearchChanged()"
+                type="text" class="form-control"
+                placeholder="&#xf002; Search for..." aria-label="Search for...">
         </div>
     </div>
-    <app-filebrowser [filesToDisplay]="filteredFiles" 
-        (onPathChanged)="onPathChanged($event)" 
+
+    <app-filebrowser
+        [filesToDisplay]="filteredFiles"
+        (onPathChanged)="onPathChanged($event)"
         (onFileSelected)="onFileSelected($event)"
         (onFileMenu)="launchFileMenu($event)"></app-filebrowser>
 
-    <div *ngIf="showUploads" id="uploads-overlay" class="modal in" tabindex="-1" type="dialog" data-show="true">
-        <div class="modal-dialog modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 mat-dialog-title>Uploads</h5>
-                    <button (click)="hideUploads()" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+    <!-- Uploads popup -->
+    <div id="popups-container">
+        <div *ngIf="showUploads" id="uploads-overlay" class="modal in" tabindex="-1" type="dialog" data-show="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 mat-dialog-title>Uploads</h5>
+                        <button (click)="hideUploads()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div *ngFor="let upload of uploads" class="upload-item">
-                            <div>{{upload.fileName}}</div>
-                            <mat-progress-bar *ngIf="upload.state === 'UPLOAD_RUNNING'" mode="indeterminate"></mat-progress-bar>
+                            <div>{{baseName(upload.destPath)}}</div>
+                            <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
+                    </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div> 
-            -->
             </div>
         </div>
+
+        <!-- Downloads popup -->
+        <div *ngIf="showDownloads" id="uploads-overlay" class="modal in" tabindex="-1" type="dialog" data-show="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 mat-dialog-title>Downloads</h5>
+                        <button (click)="hideDownloads()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div *ngFor="let download of downloads" class="upload-item">
+                            <div>{{download.destPath}}</div>
+                            <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

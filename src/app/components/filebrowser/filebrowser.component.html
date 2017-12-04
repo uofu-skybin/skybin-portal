@@ -1,8 +1,8 @@
 <div id="file-browser-container">
     <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item" (click)="currentPath = []; onPathChanged.emit('');" aria-current="page">Home</li>
-            <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbPath(dir)" aria-current="page">{{ dir }}</li>
+            <li class="breadcrumb-item" (click)="homeClicked()" aria-current="page">Home</li>
+            <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbClicked(dir)" aria-current="page">{{ dir }}</li>
         </ol>
     </div>
     <div class="header-table-container">
@@ -37,17 +37,17 @@
     <div id="file-list-container">
         <table class="table">
             <tbody>
-                <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir)">
+                <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir.name)">
                     <td>
                         <i class="fa fa-folder" aria-hidden="true"></i>
-                        {{getName(dir)}}
+                        {{baseName(dir.name)}}
                     </td>
                     <td>-</td>
                     <td>-</td>
                 </tr>
                 <tr *ngFor="let file of getFilesInCurrentDirectory()" (click)="selectFile(file)" (contextmenu)="onFileMenuContextClick($event, file)"
                     [class.selected]="file === selectedFile">
-                    <td>{{getName(file)}}</td>
+                    <td>{{baseName(file.name)}}</td>
                     <td>{{file.size | bytes}}</td>
                     <td>{{formatModTime(file.modTime)}}</td>
                 </tr>
