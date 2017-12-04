@@ -191,10 +191,10 @@ export class MyFilesComponent implements OnInit {
             const body = {
                 destPath: folderPath
             };
-            this.http.post('http:/127.0.0.1:8002/files', body).subscribe(response => {
-                const file = response['file'];
-                if (!file) {
+            this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+                if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
+                    console.log('response:', file);
                     this.loadFiles();
                     return;
                 }
