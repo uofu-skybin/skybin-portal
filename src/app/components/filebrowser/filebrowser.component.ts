@@ -25,61 +25,50 @@ export class FilebrowserComponent {
 
     constructor(private ref: ChangeDetectorRef) { }
 
-    inCurrentDirectory(file) {
+    inCurrentDirectory(path: string) {
         let currentDir = this.currentPath.join('/');
-        let filePath = file.name.split('/');
+        let filePath = path.split('/');
         let fileDir = filePath.slice(0, filePath.length - 1).join('/');
         return fileDir === currentDir;
     }
 
     getDirsInCurrentDirectory() {
-        let dirs = [];
-        for (let file of this.filesToDisplay) {
-            if (file.isDir && this.inCurrentDirectory(file)) {
-                dirs.push(file);
-            }
-        }
-        return dirs;
+        return this.filesToDisplay
+            .filter(e => e.isDir)
+            .filter(e => this.inCurrentDirectory(e.name));
     }
 
     getFilesInCurrentDirectory() {
-        let files = [];
-        for (let file of this.filesToDisplay) {
-            if (!file.isDir && this.inCurrentDirectory(file)) {
-                files.push(file);
-            }
-        }
-        return files;
+        return this.filesToDisplay
+            .filter(e => !e.isDir)
+            .filter(e => this.inCurrentDirectory(e.name));
     }
 
-    getName(file) {
-        let filePath = file.name.split('/');
-        return filePath[filePath.length - 1];
+    baseName(fileName: string) {
+        const pathElems = fileName.split('/');
+        return pathElems[pathElems.length - 1];
     }
 
-    changeDir(dir) {
-        this.currentPath = dir.name.split('/');
+    changeDir(path: string) {
+        this.currentPath = path.split('/');
         this.onPathChanged.emit(this.currentPath.join('/'));
         this.selectFile(null);
     }
 
-    selectFile(file) {
+    selectFile(file: SkyFile) {
         this.selectedFile = file;
         this.onFileSelected.emit(this.selectedFile);
         this.ref.detectChanges();
     }
 
-    breadcrumbPath(dir) {
-        let prevPath = this.currentPath.slice();
+    homeClicked() {
+        this.changeDir('');
+    }
 
-        this.currentPath = [];
-        for (let prevDir of prevPath) {
-            this.currentPath.push(prevDir);
-            if (dir == prevDir) {
-                break;
-            }
-        }
-        this.onPathChanged.emit(this.currentPath.join('/'));
+    breadcrumbClicked(path: string) {
+        const idx = this.currentPath.indexOf(path);
+        const newPath = this.currentPath.slice(0, idx + 1);
+        this.changeDir(newPath.join('/'));
     }
 
     onFileMenuContextClick(event, file) {
