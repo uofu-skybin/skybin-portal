@@ -21,6 +21,8 @@ interface ContractsResponse {
 })
 export class ProvideStorageComponent implements OnInit {
     private myContracts: Contract[] = [];
+
+    // TODO convert to structure as opposed to any object
     private providerInfo: any = {};
     displayedColumns = ['action', 'name', 'size', 'date'];
     dataSource = new MatTableDataSource<Info>(DATA);
@@ -42,14 +44,12 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.updateProviderInfo()
+        this.updateProviderInfo();
         this.loadContracts();
-        // this.dataSource = new MatTableDataSource(this.myContracts);
-        // console.log(this.dataSource);
+        // this.updateProviderActivity()
     }
 
     private loadContracts() {
-        // const myContracts: Contract[] = [];
         this.http.get<ContractsResponse>('http://127.0.0.1:8003/contracts').subscribe(response => {
             console.log(response);
             if (response.contracts) {
@@ -58,8 +58,6 @@ export class ProvideStorageComponent implements OnInit {
                 });
             }
         });
-
-        // this.myContracts = myContracts;
     }
 
     updateProviderInfo() {
@@ -74,6 +72,16 @@ export class ProvideStorageComponent implements OnInit {
 
     updateProviderSettings() {
         // TODO: set some stuff here
+    }
+
+    updateProviderActivity() {
+        // this.http.get('http://localhost:8003/activity')
+        //     .subscribe((resp: any) => {
+        //         this.providerInfo = resp;
+        //     }, (error: HttpErrorResponse) => {
+        //         console.error(error);
+        //     });
+        // console.log(this.providerInfo);
     }
 
 }

@@ -87,6 +87,58 @@
 
             </div>
         </div>
+<mat-tab-group class="provider-tab-group">
+    <mat-tab label="Summary">
+
+        <div class="column" id='provide-storage-container'>
+            <section>
+                <mat-card>
+                    <mat-card-title>
+                        Summary
+                    </mat-card-title>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Allocated
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerAllocated | bytes}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Reserved
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerReserved | bytes}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Used
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerUsed | bytes}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Free
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerFree | bytes}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Total Contracts
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerContracts}}
+                        </mat-card-content>
+                    </section>
+                </mat-card>
+            </section>
+        </div>
     </mat-tab>
 
     <mat-tab label='Settings'>
