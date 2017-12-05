@@ -1,6 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-// import {MatTableDataSource} from '@angular/material';
+import {MatSort, MatTableDataSource} from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 
 
@@ -19,13 +19,17 @@ interface ContractsResponse {
     styleUrls: ['./provide-storage.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-
 export class ProvideStorageComponent implements OnInit {
     private myContracts: Contract[] = [];
     private providerInfo: any = {};
+    displayedColumns = ['action', 'name', 'size', 'date'];
+    dataSource = new MatTableDataSource<Info>(DATA);
 
-    // private dataSource = null;
-    // private displayedColumns = ['renterID', 'storageSpace'];
+    @ViewChild(MatSort) sort: MatSort;
+
+    ngAfterViewInit() {
+        this.dataSource.sort = this.sort;
+    }
 
     // TODO make dynamic
     wallets = [
@@ -73,3 +77,29 @@ export class ProvideStorageComponent implements OnInit {
     }
 
 }
+
+export interface Info {
+    action: string;
+    name: string;
+    size: number;
+    date: string;
+}
+
+const DATA: Info[] = [
+    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
+    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
+    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
+    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
+    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
+    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
+    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
+    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
+    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
+    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
+    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
+    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
+    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
+    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
+    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
+    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
+]

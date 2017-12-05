@@ -4,16 +4,29 @@
 mat-list {
     flex-grow: 1;
     border: 3px solid green;
-    overflow: auto;
-}
-.column {
-    float: left;
-    width: 33.33%;
 }
 
-/* Clear floats after the columns */
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
+#provide-storage-summary-container {
+    /*padding-right: 0px;*/
+}
+
+#provide-storage-activity-container {
+    /*padding-left: 0px;*/
+    height: 396px;
+    overflow: overlay;
+    /*overflow-y: scroll;*/
+    /*overflow-x: hidden;*/
+}
+
+#provide-storage-container {
+    /*height: calc(100vh - 5px);*/
+}
+
+#mat-tab-content-0-0 > div {
+    overflow: hidden;
+}
+
+#activity-title-container {
+    padding-top: 24px;
+    padding-left: 24px;
 }

@@ -1,86 +1,95 @@
-<mat-tab-group class="provider-tab-group">
-    <mat-tab label="Summary">
+<mat-tab-group class='provider-tab-group'>
+    <mat-tab label='Summary' id='provide-storage-container'>
+        <div class='row'>
+            <div class='col-sm-4' id='provide-storage-summary-container'>
+                <section>
+                    <mat-card>
+                        <mat-card-title>
+                            Summary
+                        </mat-card-title>
+                        <section>
+                            <mat-card-subtitle>
+                                Storage Allocated
+                            </mat-card-subtitle>
+                            <mat-card-content>
+                                {{999999 | bytes}}
+                            </mat-card-content>
+                        </section>
+                        <section>
+                            <mat-card-subtitle>
+                                Storage Used
+                            </mat-card-subtitle>
+                            <mat-card-content>
+                                {{111111 | bytes}}
+                            </mat-card-content>
+                        </section>
+                        <section>
+                            <mat-card-subtitle>
+                                Storage Remaining
+                            </mat-card-subtitle>
+                            <mat-card-content>
+                                {{888888 | bytes}}
+                            </mat-card-content>
+                        </section>
+                        <section>
+                            <mat-card-subtitle>
+                                Total Contracts
+                            </mat-card-subtitle>
+                            <mat-card-content>
+                                {{11}}
+                            </mat-card-content>
+                        </section>
+                    </mat-card>
+                </section>
+            </div>
 
-        <div class="column" id='provide-storage-container'>
-            <section>
-                <mat-card>
-                    <mat-card-title>
-                        Summary
+            <div class='col-sm-8' id='provide-storage-activity-container'>
+                <section>
+                    <mat-card-title id='activity-title-container'>
+                        Activity
                     </mat-card-title>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Allocated
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{999999 | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Used
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{111111 | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Remaining
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{888888 | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Total Contracts
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{11}}
-                        </mat-card-content>
-                    </section>
-                </mat-card>
-            </section>
-        </div>
+                    <div class='example-container mat-elevation-z8'>
+                        <mat-table #table [dataSource]='dataSource' matSort>
 
-        <div class="column">
-            <mat-list>
-                <mat-list-item>GET block AKHUN@KLM$((joi</mat-list-item>
-                <mat-list-item>DEL block AKHUN@KLM$((joi</mat-list-item>
-                <mat-list-item>NEW CONTRACT FROM SLJF@*U)J</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-            </mat-list>
-            <!--<html>-->
-            <!--<body>-->
+                            <!--- Note that these columns can be defined in any order.
+                                  The actual rendered columns are set as a property on the row definition" -->
 
-            <!--<textarea rows="4" cols="50">-->
-<!--Provider X deleted block ASAJFLKJALKSJL:KFJ:AL-->
-<!--</textarea>-->
+                            <!-- Position Column -->
+                            <ng-container matColumnDef='action'>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Action</mat-header-cell>
+                                <mat-cell *matCellDef='let element'> {{element.action}}</mat-cell>
+                            </ng-container>
 
-            <!--</body>-->
-            <!--</html>-->
+                            <!-- Name Column -->
+                            <ng-container matColumnDef='name'>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Name</mat-header-cell>
+                                <mat-cell *matCellDef='let element'> {{element.name}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Weight Column -->
+                            <ng-container matColumnDef='size'>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Size</mat-header-cell>
+                                <mat-cell *matCellDef='let element'> {{element.size}}</mat-cell>
+                            </ng-container>
+
+                            <!-- Color Column -->
+                            <ng-container matColumnDef='date'>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header> Date</mat-header-cell>
+                                <mat-cell *matCellDef='let element'> {{element.date}}</mat-cell>
+                            </ng-container>
+
+                            <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
+                            <mat-row *matRowDef='let row; columns: displayedColumns;'></mat-row>
+                        </mat-table>
+                    </div>
+
+                </section>
+
+            </div>
         </div>
     </mat-tab>
 
-
-    <mat-tab label="Settings">
+    <mat-tab label='Settings'>
         <div id='provide-storage-settings-container'>
             <section>
                 <mat-card>
@@ -89,8 +98,8 @@
                     </mat-card-title>
                     <mat-card-content>
                         <mat-form-field>
-                            <mat-select placeholder="Select Wallet">
-                                <mat-option *ngFor="let wallet of wallets" [value]="wallet.value">
+                            <mat-select placeholder='Select Wallet'>
+                                <mat-option *ngFor='let wallet of wallets' [value]='wallet.value'>
                                     {{ wallet.viewValue }}
                                 </mat-option>
                             </mat-select>
@@ -98,26 +107,26 @@
                     </mat-card-content>
                     <mat-card-content>
                         <mat-form-field>
-                            <input #storageAmount matInput placeholder="Storage Available" value="999999" type="number">
+                            <input #storageAmount matInput placeholder='Storage Available' value='999999' type='number'>
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-content>
                         <mat-form-field>
-                            <input #minPrice matInput placeholder="Min Price per GB" value="1" type="number">
+                            <input #minPrice matInput placeholder='Min Price per GB' value='1' type='number'>
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-content>
                         <mat-form-field>
-                            <input #minContract matInput placeholder="Min Contract Duration" value="17" type="number">
+                            <input #minContract matInput placeholder='Min Contract Duration' value='17' type='number'>
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-content>
                         <mat-form-field>
-                            <input #maxContract matInput placeholder="Max Contract Duration" value="84" type="number">
+                            <input #maxContract matInput placeholder='Max Contract Duration' value='84' type='number'>
                         </mat-form-field>
                     </mat-card-content>
                     <mat-card-content>
-                        <button mat-raised-button class="skybin-btn-primary" (click)='updateProviderSettings()'
+                        <button mat-raised-button class='skybin-btn-primary' (click)='updateProviderSettings()'
                                 name='provide-storage-update-button'>Update Settings
                         </button>
                     </mat-card-content>
@@ -126,14 +135,14 @@
         </div>
     </mat-tab>
 
-    <mat-tab label="Contracts">
+    <mat-tab label='Contracts'>
         <div>
             <mat-card>
                 <mat-card-title>
                     Contracts
                 </mat-card-title>
                 <mat-card-content>
-                    <table class="table">
+                    <table class='table'>
                         <thead>
                         <tr>
                             <th>Renter ID</th>

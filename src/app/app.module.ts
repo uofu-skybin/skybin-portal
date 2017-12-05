@@ -19,7 +19,7 @@ import {
     MatListModule,
     MatOptionModule,
     MatProgressBarModule,
-    MatSelectModule,
+    MatSelectModule, MatSortModule,
     MatTableModule,
     MatTabsModule
 } from '@angular/material';
@@ -69,6 +69,7 @@ import { BytesPipe } from './pipes/bytes.pipe';
         MatCheckboxModule,
         MatDialogModule,
         MatInputModule,
+        MatSortModule,
         MatListModule,
         MatOptionModule,
         MatProgressBarModule,

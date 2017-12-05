@@ -22,7 +22,7 @@ a {
 }
 
 #nav-container {
-    max-width: 250px;
+    width: 10em;
     padding-left: 0;
     padding-right: 0;
     height: calc(100vh - 81px);
@@ -32,7 +32,8 @@ a {
     padding-left: 0;
     padding-right: 0;
     max-height: calc(100vh - 81px);
-    overflow-y: auto;
+    overflow: hidden;
+    /*overflow-y: auto;*/
 }
 
 #header {
