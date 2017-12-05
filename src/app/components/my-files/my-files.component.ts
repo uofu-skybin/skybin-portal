@@ -215,6 +215,7 @@ export class MyFilesComponent implements OnInit {
     deleteFile(file) {
         this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+            this.onSearchChanged();
             this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');
