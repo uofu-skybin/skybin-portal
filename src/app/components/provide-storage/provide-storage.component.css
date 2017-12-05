@@ -1,11 +1,6 @@
 .provider-tab-group {
     border: 1px solid #e8e8e8;
 }
-mat-list {
-    flex-grow: 1;
-    border: 3px solid green;
-    overflow: auto;
-}
 .column {
     float: left;
     width: 33.33%;

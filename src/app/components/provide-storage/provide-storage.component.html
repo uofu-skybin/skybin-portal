@@ -12,7 +12,15 @@
                             Storage Allocated
                         </mat-card-subtitle>
                         <mat-card-content>
-                            {{999999 | bytes}}
+                            {{providerInfo.providerAllocated | bytes}}
+                        </mat-card-content>
+                    </section>
+                    <section>
+                        <mat-card-subtitle>
+                            Storage Reserved
+                        </mat-card-subtitle>
+                        <mat-card-content>
+                            {{providerInfo.providerReserved | bytes}}
                         </mat-card-content>
                     </section>
                     <section>
@@ -20,15 +28,15 @@
                             Storage Used
                         </mat-card-subtitle>
                         <mat-card-content>
-                            {{111111 | bytes}}
+                            {{providerInfo.providerUsed | bytes}}
                         </mat-card-content>
                     </section>
                     <section>
                         <mat-card-subtitle>
-                            Storage Remaining
+                            Storage Free
                         </mat-card-subtitle>
                         <mat-card-content>
-                            {{888888 | bytes}}
+                            {{providerInfo.providerFree | bytes}}
                         </mat-card-content>
                     </section>
                     <section>
@@ -36,46 +44,11 @@
                             Total Contracts
                         </mat-card-subtitle>
                         <mat-card-content>
-                            {{11}}
+                            {{providerInfo.providerContracts}}
                         </mat-card-content>
                     </section>
                 </mat-card>
             </section>
-        </div>
-
-        <div class="column">
-            <mat-list>
-                <mat-list-item>GET block AKHUN@KLM$((joi</mat-list-item>
-                <mat-list-item>DEL block AKHUN@KLM$((joi</mat-list-item>
-                <mat-list-item>NEW CONTRACT FROM SLJF@*U)J</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-                <mat-list-item>Item 1</mat-list-item>
-                <mat-list-item>Item 2</mat-list-item>
-                <mat-list-item>Item 3</mat-list-item>
-            </mat-list>
-            <!--<html>-->
-            <!--<body>-->
-
-            <!--<textarea rows="4" cols="50">-->
-<!--Provider X deleted block ASAJFLKJALKSJL:KFJ:AL-->
-<!--</textarea>-->
-
-            <!--</body>-->
-            <!--</html>-->
         </div>
     </mat-tab>
 
