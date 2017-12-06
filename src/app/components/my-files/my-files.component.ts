@@ -23,6 +23,9 @@ const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
 const TRANSFER_DONE = 'TRANSFER_DONE';
 const TRANSFER_ERROR = 'TRANSFER_ERROR';
 
+// Renter service API address
+const RENTER_ADDR = 'http://127.0.0.1:8002';
+
 @Component({
     selector: 'app-my-files',
     templateUrl: './my-files.component.html',
@@ -52,7 +55,7 @@ export class MyFilesComponent implements OnInit {
     }
 
     loadFiles() {
-        this.http.get<LoadSkyFilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
+        this.http.get<LoadSkyFilesResponse>(`${RENTER_ADDR}/files`).subscribe(response => {
             const files = response['files'];
             if (!files) {
                 console.error('loadFiles: no files returned');
@@ -110,7 +113,7 @@ export class MyFilesComponent implements OnInit {
             destPath,
         };
         const startTime = new Date();
-        this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+        this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -158,7 +161,7 @@ export class MyFilesComponent implements OnInit {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `http://127.0.0.1:8002/files/${file.id}/download`;
+            const url = `${RENTER_ADDR}/files/${file.id}/download`;
             const body = {
                 destination: destPath
             };
@@ -200,7 +203,7 @@ export class MyFilesComponent implements OnInit {
             const body = {
                 destPath: folderPath
             };
-            this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+            this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
@@ -225,7 +228,7 @@ export class MyFilesComponent implements OnInit {
         if (!file) {
             return;
         }
-        this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
+        this.http.delete(`${RENTER_ADDR}/files/` + file.id).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
             this.ref.detectChanges();
