@@ -23,7 +23,7 @@ export class ProvideStorageComponent implements OnInit {
     private myContracts: Contract[] = [];
 
     // TODO convert to structure as opposed to any object
-    private providerInfo: any = {};
+    providerInfo: any = {};
     displayedColumns = ['action', 'name', 'size', 'date'];
     dataSource = new MatTableDataSource<Info>(DATA);
 
