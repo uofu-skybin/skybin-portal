@@ -17,11 +17,12 @@ import {
     MatCheckboxModule,
     MatDialogModule,
     MatListModule,
+    MatMenuModule,
     MatOptionModule,
     MatProgressBarModule,
     MatSelectModule, MatSortModule,
     MatTableModule,
-    MatTabsModule
+    MatTabsModule,
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSliderModule } from '@angular/material/slider';
@@ -69,12 +70,13 @@ import { BytesPipe } from './pipes/bytes.pipe';
         MatCheckboxModule,
         MatDialogModule,
         MatInputModule,
-        MatSortModule,
         MatListModule,
+        MatMenuModule,
         MatOptionModule,
         MatProgressBarModule,
         MatSelectModule,
         MatSliderModule,
+        MatSortModule,
         MatTableModule,
         MatTabsModule,
         NgxElectronModule,

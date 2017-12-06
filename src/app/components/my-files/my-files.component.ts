@@ -1,13 +1,14 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger } from '@angular/material';
 import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
+import { MatMenu } from '@angular/material/menu/typings/menu-directive';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -29,6 +30,7 @@ const TRANSFER_ERROR = 'TRANSFER_ERROR';
     encapsulation: ViewEncapsulation.None,
 })
 export class MyFilesComponent implements OnInit {
+    @ViewChild(MatMenuTrigger) ctxtMenuTrigger: MatMenuTrigger;
     allFiles: SkyFile[] = [];
     filteredFiles: SkyFile[] = [];
     selectedFile: SkyFile = null;
@@ -64,17 +66,21 @@ export class MyFilesComponent implements OnInit {
         });
     }
 
-    launchFileMenu(file) {
-        const menu = new this.electronService.remote.Menu();
-        const deleteMenuItem = new this.electronService.remote.MenuItem({
-            label: 'Delete',
-            click: () => {
-                this.deleteFile(file);
-            }
-        });
-        menu.append(deleteMenuItem);
-        menu.popup(this.electronService.remote.getCurrentWindow());
-    }
+    // Triggered when a file has been right clicked in the filebrowser.
+    onContextClick(event: MouseEvent) {
+        this.ctxtMenuTrigger.openMenu();
+
+        // Position the file context menu over the selected file
+        const elem: any = document.querySelector('.mat-menu-panel');
+        if (!elem) {
+            console.error('Unable to select context menu');
+            return;
+        }
+
+        elem.style.position = 'fixed';
+        elem.style.left = `${event.clientX}px`;
+        elem.style.top = `${event.clientY}px`;
+   }
 
     // Returns the last element of a file path.
     // e.g. "/users/a.txt" -> "a.txt"
@@ -138,6 +144,9 @@ export class MyFilesComponent implements OnInit {
     }
 
     downloadFile(file) {
+        if (!file) {
+            return;
+        }
         this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
             if (!destPath) {
                 return;
@@ -159,7 +168,7 @@ export class MyFilesComponent implements OnInit {
                 const endTime = new Date();
                 const elapsedMs = endTime.getTime() - startTime.getTime();
                 setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-           }, (error) => {
+            }, (error) => {
                 console.error(error);
                 download.state = TRANSFER_ERROR;
                 this.ref.detectChanges();
@@ -213,6 +222,9 @@ export class MyFilesComponent implements OnInit {
     }
 
     deleteFile(file) {
+        if (!file) {
+            return;
+        }
         this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();

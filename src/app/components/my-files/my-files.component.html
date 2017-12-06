@@ -26,13 +26,26 @@
         </div>
     </div>
 
+    <!-- File context menu. Typically hidden. -->
+    <div id="context-menu-container">
+        <!-- This button triggers context menu opens/closes but is not displayed -->
+        <button id="context-menu-trigger" mat-button #ctxtMenuTrigger [matMenuTriggerFor]="menu"></button>
+        <div id="context-menu">
+             <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="downloadFile(selectedFile)">Download</button>
+                <button mat-menu-item (click)="shareClicked()">Share</button>
+                <button mat-menu-item (click)="deleteFile(selectedFile)">Delete</button>
+            </mat-menu>
+        </div>
+    </div>
+
     <app-filebrowser
         [filesToDisplay]="filteredFiles"
         (onPathChanged)="onPathChanged($event)"
         (onFileSelected)="onFileSelected($event)"
-        (onFileMenu)="launchFileMenu($event)"></app-filebrowser>
+        (onFileContextClick)="onContextClick($event)"></app-filebrowser>
 
-    <!-- Uploads popup -->
+   <!-- Uploads popup -->
     <div id="popups-container">
         <div *ngIf="showUploads" id="uploads-overlay" class="modal in" tabindex="-1" type="dialog" data-show="true">
             <div class="modal-dialog modal-sm" role="document">

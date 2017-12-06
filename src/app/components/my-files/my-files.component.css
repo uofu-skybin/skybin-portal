@@ -8,6 +8,10 @@
     border-bottom: 1px solid #d5d5fa
 }
 
+#context-menu-trigger {
+    display: none;
+}
+
 #popups-container {
     position: fixed;
     bottom: 20px;

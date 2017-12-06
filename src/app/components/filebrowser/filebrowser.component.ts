@@ -20,7 +20,7 @@ export class FilebrowserComponent {
     selectedFile: SkyFile = null;
     @Output() onPathChanged = new EventEmitter<string>();
     @Output() onFileSelected = new EventEmitter<SkyFile>();
-    @Output() onFileMenu = new EventEmitter<File>();
+    @Output() onFileContextClick = new EventEmitter<MouseEvent>();
 
 
     constructor(private ref: ChangeDetectorRef) { }
@@ -71,11 +71,11 @@ export class FilebrowserComponent {
         this.changeDir(newPath.join('/'));
     }
 
-    onFileMenuContextClick(event, file) {
+    onContextClick(event, file) {
         if (file !== this.selectedFile) {
             this.selectFile(file);
         }
-        this.onFileMenu.emit(file);
+        this.onFileContextClick.emit(event);
     }
 
     getLongestName(filter) {
