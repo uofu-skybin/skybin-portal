@@ -1,3 +1,8 @@
+#shared-with-me-container {
+    height: 100%;
+    overflow: hidden;
+}
+
 #shared-with-me-buttons {
     min-width: 434px;
     padding: 15px;

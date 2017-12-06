@@ -2,7 +2,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 html, body {
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
 }
 
 .skybin-btn-primary {
