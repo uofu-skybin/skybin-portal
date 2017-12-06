@@ -9,9 +9,6 @@ nav {
     height: 50px;
 }
 
-#content-row {
-}
-
 a {
     color: #658798;
 }
@@ -23,6 +20,7 @@ a {
 
 #nav-container {
     width: 10em;
+    max-width: 20%;
     padding-left: 0;
     padding-right: 0;
     height: calc(100vh - 81px);
