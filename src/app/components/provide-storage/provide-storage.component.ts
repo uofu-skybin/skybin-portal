@@ -13,6 +13,9 @@ interface ContractsResponse {
     contracts: Contract[];
 }
 
+// The provider API address to access
+const PROVIDER_ADDR = "http://localhost:8003";
+
 @Component({
     selector: 'app-provide-storage',
     templateUrl: './provide-storage.component.html',
@@ -50,7 +53,7 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     private loadContracts() {
-        this.http.get<ContractsResponse>('http://127.0.0.1:8003/contracts').subscribe(response => {
+        this.http.get<ContractsResponse>(`${PROVIDER_ADDR}/contracts`).subscribe(response => {
             console.log(response);
             if (response.contracts) {
                 response.contracts.forEach(contract => {
@@ -61,7 +64,7 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     updateProviderInfo() {
-        this.http.get('http://localhost:8003/info')
+        this.http.get(`${PROVIDER_ADDR}/info`)
             .subscribe((resp: any) => {
                 this.providerInfo = resp;
             }, (error: HttpErrorResponse) => {
