@@ -1,6 +1,7 @@
 <mat-tab-group class='provider-tab-group'>
     <mat-tab label='Summary' id='provide-storage-container'>
         <div class='row'>
+
             <div class='col-sm-4' id='provide-storage-summary-container'>
                 <section>
                     <mat-card>
@@ -12,7 +13,15 @@
                                 Storage Allocated
                             </mat-card-subtitle>
                             <mat-card-content>
-                                {{999999 | bytes}}
+                                {{providerInfo.providerAllocated | bytes}}
+                            </mat-card-content>
+                        </section>
+                        <section>
+                            <mat-card-subtitle>
+                                Storage Reserved
+                            </mat-card-subtitle>
+                            <mat-card-content>
+                                {{providerInfo.providerReserved | bytes}}
                             </mat-card-content>
                         </section>
                         <section>
@@ -20,15 +29,15 @@
                                 Storage Used
                             </mat-card-subtitle>
                             <mat-card-content>
-                                {{111111 | bytes}}
+                                {{providerInfo.providerUsed | bytes}}
                             </mat-card-content>
                         </section>
                         <section>
                             <mat-card-subtitle>
-                                Storage Remaining
+                                Storage Free
                             </mat-card-subtitle>
                             <mat-card-content>
-                                {{888888 | bytes}}
+                                {{providerInfo.providerFree | bytes}}
                             </mat-card-content>
                         </section>
                         <section>
@@ -36,12 +45,13 @@
                                 Total Contracts
                             </mat-card-subtitle>
                             <mat-card-content>
-                                {{11}}
+                                {{providerInfo.providerContracts}}
                             </mat-card-content>
                         </section>
                     </mat-card>
                 </section>
             </div>
+
 
             <div class='col-sm-8' id='provide-storage-activity-container'>
                 <section>
@@ -86,58 +96,6 @@
                 </section>
 
             </div>
-        </div>
-<mat-tab-group class="provider-tab-group">
-    <mat-tab label="Summary">
-
-        <div class="column" id='provide-storage-container'>
-            <section>
-                <mat-card>
-                    <mat-card-title>
-                        Summary
-                    </mat-card-title>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Allocated
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{providerInfo.providerAllocated | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Reserved
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{providerInfo.providerReserved | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Used
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{providerInfo.providerUsed | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Storage Free
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{providerInfo.providerFree | bytes}}
-                        </mat-card-content>
-                    </section>
-                    <section>
-                        <mat-card-subtitle>
-                            Total Contracts
-                        </mat-card-subtitle>
-                        <mat-card-content>
-                            {{providerInfo.providerContracts}}
-                        </mat-card-content>
-                    </section>
-                </mat-card>
-            </section>
         </div>
     </mat-tab>
 
