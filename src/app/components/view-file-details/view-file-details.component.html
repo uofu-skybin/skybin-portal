@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>{{ baseName(file.name) }}</h2>
+<hr>
+<p>File size: {{ file.size | bytes }}</p>
+<p>Last modified: {{ formatModTime(file.modTime) }}</p>
+<p>Approximate cost to store: $0.0002 per month</p>
+<p>Shared with: <span *ngIf="file.accessList.length === 0">nobody :(</span></p>
+<ul *ngIf="file.accessList.length > 0">
+  <li *ngFor="let permission of file.accessList">permission.userId</li>
+</ul>

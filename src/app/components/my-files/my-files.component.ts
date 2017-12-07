@@ -9,6 +9,7 @@ import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 import { MatMenu } from '@angular/material/menu/typings/menu-directive';
+import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -339,5 +340,14 @@ export class MyFilesComponent implements OnInit {
 
         this.filteredFiles = filteredFiles;
         this.ref.detectChanges();
+    }
+
+    viewDetails(file) {
+        const dialogRef = this.dialog.open(ViewFileDetailsComponent, {
+            // width: '325px'
+            data: {
+                file: file
+            }
+        });
     }
 }
