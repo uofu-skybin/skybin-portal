@@ -41,8 +41,10 @@ export class ProvideStorageComponent implements OnInit {
     ngOnInit() {
         this.updateProviderInfo();
         this.loadContracts();
+
         this.loadActivity();
-        // this.updateProviderActivity()
+        // this.loadTestActivityData();
+        this.updateProviderActivity()
     }
 
     private loadContracts() {
@@ -81,6 +83,17 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     private loadActivity() {
+        this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
+            .subscribe(response => {
+                console.log(response.activity);
+                response.activity.forEach(activity => {
+                    this.activityFeed.push(activity);
+                });
+                this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+            });
+    }
+
+    private loadTestActivityData() {
         this.activityFeed.push(
             {
                 requestType: 'NEGOTIATE CONTRACT',
@@ -102,17 +115,8 @@ export class ProvideStorageComponent implements OnInit {
                     renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
                 }
             },
-
-            );
+        );
         this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-        // this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
-        //     .subscribe(response => {
-        //         console.log(response.activity);
-        //         response.activity.forEach(activity => {
-        //             this.activityFeed.push(activity);
-        //         });
-        //         this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-        //     });
     }
 }
 

@@ -2,10 +2,13 @@
     <mat-tab label='Summary' id='provide-storage-container'>
         <div class='col-sm-12' id='provide-storage-summary-container'>
             <section>
+                <mat-card-title class='summary-card-title'>
+                    Summary
+                </mat-card-title>
                 <mat-card>
-                    <mat-card-title>
-                        Summary
-                    </mat-card-title>
+                    <!--<mat-card-title>-->
+                        <!--Summary-->
+                    <!--</mat-card-title>-->
                     <div class='row'>
                         <div class='col-sm-4'>
                             <mat-card-subtitle>
@@ -55,7 +58,7 @@
         </div>
         <div class='col-sm-12' id='provide-storage-activity-container'>
             <section>
-                <mat-card-title id='activity-title-container'>
+                <mat-card-title class='summary-card-title'>
                     Activity
                 </mat-card-title>
                 <div id='provide-storage-activity-feed-container' class='example-container mat-elevation-z8'>
@@ -95,7 +98,7 @@
                         <!-- Color Column -->
                         <ng-container matColumnDef='Contract'>
                             <mat-header-cell *matHeaderCellDef mat-sort-header> Contract</mat-header-cell>
-                            <mat-cell *matCellDef='let element'> {{element.contract}}</mat-cell>
+                            <mat-cell *matCellDef='let element'> {{element.contract ? element.contract : ' - '}}</mat-cell>
                         </ng-container>
 
                         <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
@@ -180,5 +183,3 @@
         </div>
     </mat-tab>
 </mat-tab-group>
-
-
