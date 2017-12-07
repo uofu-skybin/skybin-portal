@@ -35,12 +35,14 @@ import { FilebrowserComponent } from './components/filebrowser/filebrowser.compo
 import { NewFolderDialogComponent } from './components/new-folder-dialog/new-folder-dialog.component';
 import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 import { BytesPipe } from './pipes/bytes.pipe';
+import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
     entryComponents: [
         NewFolderDialogComponent,
-        ShareDialogComponent
+        ShareDialogComponent,
+        ViewFileDetailsComponent
     ],
     declarations: [
         AppComponent,
@@ -58,6 +60,7 @@ import { TruncatePipe } from './pipes/truncate.pipe';
         ShareDialogComponent,
         SharedWithMeComponent,
         TruncatePipe,
+        ViewFileDetailsComponent,
     ],
     imports: [
         BrowserAnimationsModule,

@@ -9,6 +9,7 @@ import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 import { MatMenu } from '@angular/material/menu/typings/menu-directive';
+import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -22,6 +23,9 @@ interface Transfer {
 const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
 const TRANSFER_DONE = 'TRANSFER_DONE';
 const TRANSFER_ERROR = 'TRANSFER_ERROR';
+
+// Renter service API address
+const RENTER_ADDR = 'http://127.0.0.1:8002';
 
 @Component({
     selector: 'app-my-files',
@@ -52,7 +56,7 @@ export class MyFilesComponent implements OnInit {
     }
 
     loadFiles() {
-        this.http.get<LoadSkyFilesResponse>('http://127.0.0.1:8002/files').subscribe(response => {
+        this.http.get<LoadSkyFilesResponse>(`${RENTER_ADDR}/files`).subscribe(response => {
             const files = response['files'];
             if (!files) {
                 console.error('loadFiles: no files returned');
@@ -77,10 +81,14 @@ export class MyFilesComponent implements OnInit {
             return;
         }
 
+        const left = event.clientX;
+        const top = Math.min(event.clientY,
+            window.innerHeight - elem.clientHeight - 10);
+
         elem.style.position = 'fixed';
-        elem.style.left = `${event.clientX}px`;
-        elem.style.top = `${event.clientY}px`;
-   }
+        elem.style.left = `${left}px`;
+        elem.style.top = `${top}px`;
+    }
 
     // Returns the last element of a file path.
     // e.g. "/users/a.txt" -> "a.txt"
@@ -110,7 +118,7 @@ export class MyFilesComponent implements OnInit {
             destPath,
         };
         const startTime = new Date();
-        this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+        this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -158,7 +166,7 @@ export class MyFilesComponent implements OnInit {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `http://127.0.0.1:8002/files/${file.id}/download`;
+            const url = `${RENTER_ADDR}/files/${file.id}/download`;
             const body = {
                 destination: destPath
             };
@@ -184,6 +192,13 @@ export class MyFilesComponent implements OnInit {
         this.downloadFile(this.selectedFile);
     }
 
+    showFinishedDownload(download: Transfer) {
+        const ok = this.electronService.shell.showItemInFolder(download.destPath);
+        if (!ok) {
+            console.error('Unable to show downloaded file. Download:', download);
+        }
+    }
+
     newFolderClicked() {
         const dialogRef = this.dialog.open(NewFolderDialogComponent, {
             width: '325px'
@@ -200,7 +215,7 @@ export class MyFilesComponent implements OnInit {
             const body = {
                 destPath: folderPath
             };
-            this.http.post('http:/127.0.0.1:8002/files', body).subscribe((file: any) => {
+            this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
@@ -225,7 +240,7 @@ export class MyFilesComponent implements OnInit {
         if (!file) {
             return;
         }
-        this.http.delete('http://127.0.0.1:8002/files/' + file.id).subscribe(response => {
+        this.http.delete(`${RENTER_ADDR}/files/` + file.id).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
             this.ref.detectChanges();
@@ -325,5 +340,14 @@ export class MyFilesComponent implements OnInit {
 
         this.filteredFiles = filteredFiles;
         this.ref.detectChanges();
+    }
+
+    viewDetails(file) {
+        const dialogRef = this.dialog.open(ViewFileDetailsComponent, {
+            // width: '325px'
+            data: {
+                file: file
+            }
+        });
     }
 }

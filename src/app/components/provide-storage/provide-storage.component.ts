@@ -7,6 +7,9 @@ import {HttpErrorResponse} from '@angular/common/http/src/response';
 const PROVIDER_ADDR = 'http://127.0.0.1:8003';
 
 
+// The provider API address to access
+const PROVIDER_ADDR = "http://localhost:8003";
+
 @Component({
     selector: 'app-provide-storage',
     templateUrl: './provide-storage.component.html',

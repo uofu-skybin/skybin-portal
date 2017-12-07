@@ -22,7 +22,7 @@
                 [(ngModel)]="currentSearch"
                 (input)="onSearchChanged()"
                 type="text" class="form-control"
-                placeholder="&#xf002; Search for..." aria-label="Search for...">
+                placeholder="&#xf002; Search..." aria-label="Search...">
         </div>
     </div>
 
@@ -35,6 +35,7 @@
                 <button mat-menu-item (click)="downloadFile(selectedFile)">Download</button>
                 <button mat-menu-item (click)="shareClicked()">Share</button>
                 <button mat-menu-item (click)="deleteFile(selectedFile)">Delete</button>
+                <button mat-menu-item (click)="viewDetails(selectedFile)">View details</button>
             </mat-menu>
         </div>
     </div>
@@ -58,7 +59,11 @@
                     </div>
                     <div class="modal-body">
                         <div *ngFor="let upload of uploads" class="upload-item">
-                            <div>{{baseName(upload.destPath)}}</div>
+                            <div>
+                                {{baseName(upload.destPath)}}
+                                <i *ngIf="upload.state === 'TRANSFER_DONE'" class="fa fa-check-circle transfer-icon" aria-hidden="true"></i>
+                                <i *ngIf="upload.state === 'TRANSFER_ERROR'" class="fa fa-exclamation-circle transfer-icon" aria-hidden="true"></i>
+                            </div>
                             <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </div>
@@ -78,7 +83,11 @@
                     </div>
                     <div class="modal-body">
                         <div *ngFor="let download of downloads" class="upload-item">
-                            <div>{{download.destPath}}</div>
+                            <div>
+                                {{download.destPath}}
+                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)="showFinishedDownload(download)" class="fa fa-search transfer-icon" aria-hidden="true"></i>
+                                <i *ngIf="download.state === 'TRANSFER_ERROR'" class="fa fa-exclamation-circle transfer-icon" aria-hidden="true"></i>
+                            </div>
                             <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </div>
