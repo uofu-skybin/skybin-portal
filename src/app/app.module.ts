@@ -35,6 +35,7 @@ import { FilebrowserComponent } from './components/filebrowser/filebrowser.compo
 import { NewFolderDialogComponent } from './components/new-folder-dialog/new-folder-dialog.component';
 import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 import { BytesPipe } from './pipes/bytes.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
     entryComponents: [
@@ -56,6 +57,7 @@ import { BytesPipe } from './pipes/bytes.pipe';
         RentStorageComponent,
         ShareDialogComponent,
         SharedWithMeComponent,
+        TruncatePipe,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -82,7 +84,7 @@ import { BytesPipe } from './pipes/bytes.pipe';
         NgxElectronModule,
         RoutingModule,
     ],
-    providers: [],
+    providers: [TruncatePipe],
     bootstrap: [AppComponent]
 })
 export class AppModule {

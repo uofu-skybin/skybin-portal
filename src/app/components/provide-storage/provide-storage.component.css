@@ -1,12 +1,9 @@
 .provider-tab-group {
     border: 1px solid #e8e8e8;
 }
-mat-list {
-    flex-grow: 1;
-    border: 3px solid green;
-}
 
 #provide-storage-summary-container {
+    margin-top: 1em;
     /*padding-right: 0px;*/
 }
 

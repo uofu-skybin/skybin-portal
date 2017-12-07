@@ -1,17 +1,11 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MatSort, MatTableDataSource} from '@angular/material';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
+import {HttpErrorResponse} from '@angular/common/http/src/response';
 
+// const PROVIDER_ADDR = "http://165.227.15.136:8003";
+const PROVIDER_ADDR = 'http://127.0.0.1:8003';
 
-interface Contract {
-    storageSpace: string;
-    renterID: string;
-}
-
-interface ContractsResponse {
-    contracts: Contract[];
-}
 
 @Component({
     selector: 'app-provide-storage',
@@ -23,9 +17,10 @@ export class ProvideStorageComponent implements OnInit {
     private myContracts: Contract[] = [];
 
     // TODO convert to structure as opposed to any object
-    providerInfo: any = {};
-    displayedColumns = ['action', 'name', 'size', 'date'];
-    dataSource = new MatTableDataSource<Info>(DATA);
+    providerInfo: InfoResponse = {};
+    activityFeed: Activity[] = [];
+    displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp', 'Contract'];
+    dataSource = new MatTableDataSource<Activity>();
 
     @ViewChild(MatSort) sort: MatSort;
 
@@ -35,9 +30,9 @@ export class ProvideStorageComponent implements OnInit {
 
     // TODO make dynamic
     wallets = [
-        { value: 'wallet-0', viewValue: 'Wallet 1' },
-        { value: 'wallet-1', viewValue: 'Wallet 2' },
-        { value: 'wallet-2', viewValue: 'Wallet 3' }
+        {value: 'wallet-0', viewValue: 'Wallet 1'},
+        {value: 'wallet-1', viewValue: 'Wallet 2'},
+        {value: 'wallet-2', viewValue: 'Wallet 3'}
     ];
 
     constructor(private http: HttpClient) {
@@ -46,11 +41,12 @@ export class ProvideStorageComponent implements OnInit {
     ngOnInit() {
         this.updateProviderInfo();
         this.loadContracts();
+        this.loadActivity();
         // this.updateProviderActivity()
     }
 
     private loadContracts() {
-        this.http.get<ContractsResponse>('http://127.0.0.1:8003/contracts').subscribe(response => {
+        this.http.get<ContractsResponse>(`${PROVIDER_ADDR}/contracts`).subscribe(response => {
             console.log(response);
             if (response.contracts) {
                 response.contracts.forEach(contract => {
@@ -61,7 +57,7 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     updateProviderInfo() {
-        this.http.get('http://localhost:8003/info')
+        this.http.get(`${PROVIDER_ADDR}/info`)
             .subscribe((resp: any) => {
                 this.providerInfo = resp;
             }, (error: HttpErrorResponse) => {
@@ -84,30 +80,68 @@ export class ProvideStorageComponent implements OnInit {
         // console.log(this.providerInfo);
     }
 
+    private loadActivity() {
+        // requestType?: string;
+        // blockId?: string;
+        // renterId?: string;
+        // time?: Date;
+        // contract?: Contract;
+        // export interface Contract {
+        //     storageSpace: string;
+        //     renterID: string;
+        // }
+        this.activityFeed.push({
+            requestType: "NEGOTIATE CONTRACT",
+            blockId: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF",
+            renterId: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF",
+            time: new Date(),
+            contract: {
+                storageSpace: "10 GB",
+                renterID: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF"
+            }
+        });
+        this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+        // this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
+        //     .subscribe(response => {
+        //         console.log(response.activity);
+        //         response.activity.forEach(activity => {
+        //             this.activityFeed.push(activity);
+        //         });
+        //         this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+        //     });
+    }
 }
 
-export interface Info {
-    action: string;
-    name: string;
-    size: number;
-    date: string;
+export interface InfoResponse {
+    providerAllocated?: number;
+    providerReserved?: number;
+    providerUsed?: number;
+    providerFree?: number;
+    providerContracts?: number;
 }
 
-const DATA: Info[] = [
-    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
-    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
-    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
-    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
-    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
-    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
-    {action: 'GET', name: 'GetBlock', size: 100, date: '12-12-12'},
-    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
-    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
-    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
-    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
-    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
-    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
-    {action: 'POST', name: 'PostBlock', size: 23, date: '1-23-17'},
-    {action: 'PUT', name: 'PutBlock', size: 3, date: '4-1-15'},
-    {action: 'DELETE', name: 'DeleteBlock', size: 88, date: '11-01-15'},
-]
+export interface Contract {
+    storageSpace: string;
+    renterID: string;
+}
+
+export interface ContractsResponse {
+    contracts: Contract[];
+}
+
+export interface ActivityResponse {
+    activity: Activity[];
+}
+
+export interface Activity {
+    requestType?: string;
+    blockId?: string;
+    renterId?: string;
+    time?: Date;
+    contract?: Contract;
+}
+
+// displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Time Stamp', 'Contract'];
+const DATA: Activity[] = [
+    {requestType: 'GET', blockId: '1', renterId: '1', time: new Date(), contract: {storageSpace: '100 KB', renterID: '1'}}
+];
