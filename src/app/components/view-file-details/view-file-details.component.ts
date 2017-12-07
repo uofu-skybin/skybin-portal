@@ -13,6 +13,7 @@ export class ViewFileDetailsComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) { 
     this.file = data.file;
+    console.log(this.file.blocks[0]);
   }
 
   ngOnInit() {
@@ -26,5 +27,17 @@ export class ViewFileDetailsComponent implements OnInit {
   formatModTime(modString) {
     const date = new Date(modString);
     return date.toLocaleDateString().replace(/\//g, '-');
+  }
+
+  getFileLocations() {
+    const locations = [];
+    for (let block of this.file.blocks) {
+      for (let location of block.locations) {
+        if (locations.indexOf(location.address) === -1) {
+          locations.push(location.address)          
+        }
+      }
+    }
+    return locations;
   }
 }
