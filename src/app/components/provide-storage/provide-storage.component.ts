@@ -3,12 +3,9 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import {HttpErrorResponse} from '@angular/common/http/src/response';
 
-// const PROVIDER_ADDR = "http://165.227.15.136:8003";
-const PROVIDER_ADDR = 'http://127.0.0.1:8003';
-
 
 // The provider API address to access
-const PROVIDER_ADDR = "http://localhost:8003";
+const PROVIDER_ADDR = 'http://localhost:8003';
 
 @Component({
     selector: 'app-provide-storage',
@@ -84,25 +81,29 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     private loadActivity() {
-        // requestType?: string;
-        // blockId?: string;
-        // renterId?: string;
-        // time?: Date;
-        // contract?: Contract;
-        // export interface Contract {
-        //     storageSpace: string;
-        //     renterID: string;
-        // }
-        this.activityFeed.push({
-            requestType: "NEGOTIATE CONTRACT",
-            blockId: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF",
-            renterId: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF",
-            time: new Date(),
-            contract: {
-                storageSpace: "10 GB",
-                renterID: "4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF"
-            }
-        });
+        this.activityFeed.push(
+            {
+                requestType: 'NEGOTIATE CONTRACT',
+                blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                time: new Date(),
+                contract: {
+                    storageSpace: '10 GB',
+                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+                }
+            },
+            {
+                requestType: 'PUT BLOCK',
+                blockId: null,
+                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                time: new Date(),
+                contract: {
+                    storageSpace: '1 GB',
+                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+                }
+            },
+
+            );
         this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
         // this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
         //     .subscribe(response => {
