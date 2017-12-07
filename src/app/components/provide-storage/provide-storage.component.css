@@ -4,23 +4,32 @@
 
 #provide-storage-summary-container {
     margin-top: 1em;
+    /* max-height: 250px; */
     /*padding-right: 0px;*/
 }
 
+.tab-container {
+    max-height: calc(100vh - 132px);
+    overflow-y: auto;
+    margin: 0;
+}
+
 #provide-storage-activity-feed-container {
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    max-height: 470px;
+    overflow-y: auto;
 }
 
 #provide-storage-activity-container {
     /*padding-left: 0px;*/
-    height: 470px;
-    overflow: overlay;
+    /* height: 470px; */
+    /* overflow: auto; */
     /*overflow-y: scroll;*/
     /*overflow-x: hidden;*/
 }
 
 #provide-storage-container {
-    /*height: calc(100vh - 5px);*/
+    /* height: calc(100vh - 5px); */
 }
 
 #mat-tab-content-0-0 > div {
