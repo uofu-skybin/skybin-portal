@@ -1,7 +1,8 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import {HttpErrorResponse} from '@angular/common/http/src/response';
+import Timer = NodeJS.Timer;
 
 
 // The provider API address to access
@@ -13,7 +14,7 @@ const PROVIDER_ADDR = 'http://localhost:8003';
     styleUrls: ['./provide-storage.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProvideStorageComponent implements OnInit {
+export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit {
     private myContracts: Contract[] = [];
 
     // TODO convert to structure as opposed to any object
@@ -21,11 +22,19 @@ export class ProvideStorageComponent implements OnInit {
     activityFeed: Activity[] = [];
     displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp', 'Contract'];
     dataSource = new MatTableDataSource<Activity>();
+    activityPollId: Timer = null;
 
     @ViewChild(MatSort) sort: MatSort;
 
+    // Necessary for the mat-table column sorting.
     ngAfterViewInit() {
         this.dataSource.sort = this.sort;
+    }
+
+    // Delete the polling service in memory when leaving this tab view.
+    ngOnDestroy(): void {
+        console.log('destroying poll service. . .');
+        clearInterval(this.activityPollId);
     }
 
     // TODO make dynamic
@@ -44,7 +53,7 @@ export class ProvideStorageComponent implements OnInit {
 
         this.loadActivity();
         // this.loadTestActivityData();
-        this.updateProviderActivity()
+        this.updateProviderActivity();
     }
 
     private loadContracts() {
@@ -85,38 +94,67 @@ export class ProvideStorageComponent implements OnInit {
     private loadActivity() {
         this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
             .subscribe(response => {
-                console.log(response.activity);
+                // console.log(response.activity);
+                console.log('polled data with response ', response.activity);
                 response.activity.forEach(activity => {
                     this.activityFeed.push(activity);
                 });
                 this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
             });
+        console.log('starting poll service. . .');
+        this.activityPollId = setInterval(() => {
+            this.activityFeed = [];
+            this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
+                .subscribe(response => {
+                    // console.log(response.activity);
+                    console.log('polled data with response ', response.activity);
+                    response.activity.forEach(activity => {
+                        this.activityFeed.push(activity);
+                    });
+                    this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+                });
+        }, 5 * 1000);
+
     }
 
     private loadTestActivityData() {
-        this.activityFeed.push(
-            {
-                requestType: 'NEGOTIATE CONTRACT',
-                blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                time: new Date(),
-                contract: {
-                    storageSpace: '10 GB',
-                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-                }
-            },
-            {
-                requestType: 'PUT BLOCK',
-                blockId: null,
-                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                time: new Date(),
-                contract: {
-                    storageSpace: '1 GB',
-                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-                }
-            },
-        );
-        this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+        // setInterval(() => {
+        //     this.activityFeed.push(
+        //         {
+        //             requestType: 'NEGOTIATE CONTRACT',
+        //             blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+        //             renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+        //             time: new Date(),
+        //             contract: {
+        //                 storageSpace: '10 GB',
+        //                 renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+        //             }
+        //         }
+        //     );
+        //     this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+        // }, 3 * 1000);
+        // this.activityFeed.push(
+        //     {
+        //         requestType: 'NEGOTIATE CONTRACT',
+        //         blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+        //         renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+        //         time: new Date(),
+        //         contract: {
+        //             storageSpace: '10 GB',
+        //             renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+        //         }
+        //     },
+        //     {
+        //         requestType: 'PUT BLOCK',
+        //         blockId: null,
+        //         renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+        //         time: new Date(),
+        //         contract: {
+        //             storageSpace: '1 GB',
+        //             renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+        //         }
+        //     },
+        // );
     }
 }
 
