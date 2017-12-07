@@ -13,7 +13,6 @@ export class ViewFileDetailsComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) { 
     this.file = data.file;
-    console.log(this.file);
   }
 
   ngOnInit() {
