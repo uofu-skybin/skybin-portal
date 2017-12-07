@@ -80,9 +80,13 @@ export class MyFilesComponent implements OnInit {
             return;
         }
 
+        const left = event.clientX;
+        const top = Math.min(event.clientY,
+            window.innerHeight - elem.clientHeight - 10);
+
         elem.style.position = 'fixed';
-        elem.style.left = `${event.clientX}px`;
-        elem.style.top = `${event.clientY}px`;
+        elem.style.left = `${left}px`;
+        elem.style.top = `${top}px`;
     }
 
     // Returns the last element of a file path.
