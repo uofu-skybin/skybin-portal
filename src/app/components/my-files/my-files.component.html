@@ -58,7 +58,11 @@
                     </div>
                     <div class="modal-body">
                         <div *ngFor="let upload of uploads" class="upload-item">
-                            <div>{{baseName(upload.destPath)}}</div>
+                            <div>
+                                {{baseName(upload.destPath)}}
+                                <i *ngIf="upload.state === 'TRANSFER_DONE'" class="fa fa-check-circle transfer-icon" aria-hidden="true"></i>
+                                <i *ngIf="upload.state === 'TRANSFER_ERROR'" class="fa fa-exclamation-circle transfer-icon" aria-hidden="true"></i>
+                            </div>
                             <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </div>
