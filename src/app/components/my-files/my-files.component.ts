@@ -83,7 +83,7 @@ export class MyFilesComponent implements OnInit {
         elem.style.position = 'fixed';
         elem.style.left = `${event.clientX}px`;
         elem.style.top = `${event.clientY}px`;
-   }
+    }
 
     // Returns the last element of a file path.
     // e.g. "/users/a.txt" -> "a.txt"
@@ -185,6 +185,13 @@ export class MyFilesComponent implements OnInit {
             return;
         }
         this.downloadFile(this.selectedFile);
+    }
+
+    showFinishedDownload(download: Transfer) {
+        const ok = this.electronService.shell.showItemInFolder(download.destPath);
+        if (!ok) {
+            console.error('Unable to show downloaded file. Download:', download);
+        }
     }
 
     newFolderClicked() {

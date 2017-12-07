@@ -78,7 +78,11 @@
                     </div>
                     <div class="modal-body">
                         <div *ngFor="let download of downloads" class="upload-item">
-                            <div>{{download.destPath}}</div>
+                            <div>
+                                {{download.destPath}}
+                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)="showFinishedDownload(download)" class="fa fa-search transfer-icon" aria-hidden="true"></i>
+                                <i *ngIf="download.state === 'TRANSFER_ERROR'" class="fa fa-exclamation-circle transfer-icon" aria-hidden="true"></i>
+                            </div>
                             <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'" mode="indeterminate"></mat-progress-bar>
                         </div>
                     </div>
