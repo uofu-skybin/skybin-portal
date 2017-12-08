@@ -1,11 +1,6 @@
-.provider-tab-group {
-    border: 1px solid #e8e8e8;
-}
 
 #provide-storage-summary-container {
     margin-top: 1em;
-    /* max-height: 250px; */
-    /*padding-right: 0px;*/
 }
 
 .tab-container {
@@ -20,18 +15,6 @@
     overflow-y: auto;
 }
 
-#provide-storage-activity-container {
-    /*padding-left: 0px;*/
-    /* height: 470px; */
-    /* overflow: auto; */
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
-}
-
-#provide-storage-container {
-    /* height: calc(100vh - 5px); */
-}
-
 #mat-tab-content-0-0 > div {
     overflow: hidden;
 }
@@ -40,7 +23,28 @@
     overflow: hidden;
 }
 
-.summary-card-title {
+#activity-card-title {
     padding-top: 24px;
+    padding-bottom: 10px;
+}
+
+.summary-card-title {
     padding-left: 24px;
+    margin-bottom: 0px !important;
+}
+
+#node-id-span {
+    font-size: .75em;
+}
+
+#node-status {
+    text-indent: 50px;
+    color: black;
+    margin: 0px 0px 20px 0px;
+}
+
+#node-status-icon {
+    color: green;
+    font-size: 1.5em;
+    display: inline;
 }

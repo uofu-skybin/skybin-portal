@@ -4,9 +4,13 @@
             <div class='col-sm-12' id='provide-storage-summary-container'>
                 <section>
                     <mat-card-title class='summary-card-title'>
-                        Summary
+                        Node ID: <span id="node-id-span">KDDUEBAKDUAQE</span> 
                     </mat-card-title>
-                    <mat-card>
+                    <mat-card-subtitle id="node-status">
+                        Status: Running
+                        <i id="node-status-icon" class="fa fa-check-circle"></i>
+                    </mat-card-subtitle>
+                    <mat-card class="mat-elevation-z1">
                         <!--<mat-card-title>-->
                             <!--Summary-->
                         <!--</mat-card-title>-->
@@ -59,7 +63,7 @@
             </div>
             <div class='col-sm-12' id='provide-storage-activity-container'>
                 <section>
-                    <mat-card-title class='summary-card-title'>
+                    <mat-card-title id="activity-card-title" class='summary-card-title'>
                         Activity
                     </mat-card-title>
                     <div id='provide-storage-activity-feed-container' class='example-container mat-elevation-z8'>
