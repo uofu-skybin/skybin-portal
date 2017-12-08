@@ -38,9 +38,9 @@
 }
 
 #node-status {
-    text-indent: 50px;
+    margin-top: 5px;
+    margin-left: 24px;
     color: black;
-    margin: 0px 0px 20px 0px;
 }
 
 #node-status-icon {

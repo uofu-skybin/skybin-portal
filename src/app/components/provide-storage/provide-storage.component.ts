@@ -6,7 +6,7 @@ import Timer = NodeJS.Timer;
 
 
 // The provider API address to access
-const PROVIDER_ADDR = 'http://localhost:8003';
+const PROVIDER_ADDR = 'http://165.227.15.136:8002';
 
 // Activity feed update interval (ms)
 const ACTIVITY_INTERVAL = 5 * 1000;
@@ -102,43 +102,43 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     private loadTestActivityData() {
-        // setInterval(() => {
-        //     this.activityFeed.push(
-        //         {
-        //             requestType: 'NEGOTIATE CONTRACT',
-        //             blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-        //             renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-        //             time: new Date(),
-        //             contract: {
-        //                 storageSpace: '10 GB',
-        //                 renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-        //             }
-        //         }
-        //     );
-        //     this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-        // }, 3 * 1000);
-        // this.activityFeed.push(
-        //     {
-        //         requestType: 'NEGOTIATE CONTRACT',
-        //         blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-        //         renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-        //         time: new Date(),
-        //         contract: {
-        //             storageSpace: '10 GB',
-        //             renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-        //         }
-        //     },
-        //     {
-        //         requestType: 'PUT BLOCK',
-        //         blockId: null,
-        //         renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-        //         time: new Date(),
-        //         contract: {
-        //             storageSpace: '1 GB',
-        //             renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-        //         }
-        //     },
-        // );
+        setInterval(() => {
+            this.activityFeed.push(
+                {
+                    requestType: 'NEGOTIATE CONTRACT',
+                    blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                    renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                    time: new Date(),
+                    contract: {
+                        storageSpace: '10 GB',
+                        renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+                    }
+                }
+            );
+            this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+        }, 3 * 1000);
+        this.activityFeed.push(
+            {
+                requestType: 'NEGOTIATE CONTRACT',
+                blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                time: new Date(),
+                contract: {
+                    storageSpace: '10 GB',
+                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+                }
+            },
+            {
+                requestType: 'PUT BLOCK',
+                blockId: null,
+                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
+                time: new Date(),
+                contract: {
+                    storageSpace: '1 GB',
+                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
+                }
+            },
+        );
     }
 }
 
