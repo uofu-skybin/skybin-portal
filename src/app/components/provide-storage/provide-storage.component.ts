@@ -73,8 +73,8 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
 
     loadProviderInfo() {
         this.http.get(`${PROVIDER_ADDR}/info`)
-            .subscribe((resp: any) => {
-                this.providerInfo = resp;
+            .subscribe((response: any) => {
+                this.providerInfo = response;
             }, (error: HttpErrorResponse) => {
                 console.error('Unable to load provider info.');
                 console.error('Error:', error);
@@ -84,11 +84,16 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     private loadActivity() {
         this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
             .subscribe(response => {
-                // console.log(response.activity);
-                console.log('polled data with response ', response.activity);
-                response.activity.forEach(activity => {
-                    this.activityFeed.push(activity);
-                });
+                const activity = response['activity'];
+                if (!activity) {
+                    console.error('Error: GET /activity returned no activity.');
+                    console.error('Response:', response);
+                    return;
+                }
+                console.log('polled data with response ', activity);
+
+                // Only take up to five most recent items.
+                this.activityFeed = response.activity.reverse().slice(0, 5);
                 this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
             }, (error) => {
                 console.error('Unable to load provider activity feed.');
