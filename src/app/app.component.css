@@ -21,6 +21,7 @@ a {
 #nav-container {
     width: 10em;
     max-width: 20%;
+    min-width: 200px;
     padding-left: 0;
     padding-right: 0;
     height: calc(100vh - 81px);

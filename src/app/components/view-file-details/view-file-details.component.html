@@ -3,28 +3,27 @@
 
 <mat-dialog-content>
 
-  <p>File size: {{ file.size | bytes }}</p>
+    <p>Size: {{ file.size | bytes }}</p>
 
-  <p>Last modified: {{ formatModTime(file.modTime) }}</p>
+    <p>Last Modified: {{ formatModTime(file.modTime) }}</p>
 
-  <p>Approximate cost to store: $0.0002 per month</p>
+    <p>Storage Cost: $0.0002 per month</p>
 
-  <div class="detail-content">
-    Shared with: <span *ngIf="file.accessList.length === 0">nobody :(</span>
+    <div class="detail-content">
+        Shared With:
+        <span *ngIf="file.accessList.length === 0">Nobody</span>
 
-    <ul *ngIf="file.accessList.length > 0">
-      <li *ngFor="let permission of file.accessList">permission.userId</li>
-    </ul>
-  </div>
+        <li *ngFor="let permission of file.accessList">permission.userId</li>
+    </div>
 
-  <div class="detail-content">
-    Storage locations:
-    <ul>
-      <li *ngFor="let location of getFileLocations()">{{ location }}</li>
-    </ul>
-  </div>
+    <div class="detail-content">
+        Storage Locations:
+        <ul>
+            <li *ngFor="let location of getFileLocations()">{{ location }}</li>
+        </ul>
+    </div>
 </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true" tabindex="2">Done</button>
+<mat-dialog-actions align="center">
+    <button mat-button [mat-dialog-close]="true" tabindex="2">Done</button>
 </mat-dialog-actions>

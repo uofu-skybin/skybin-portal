@@ -1,26 +1,18 @@
-.provider-tab-group {
-    border: 1px solid #e8e8e8;
-}
 
 #provide-storage-summary-container {
     margin-top: 1em;
-    /*padding-right: 0px;*/
+}
+
+.tab-container {
+    max-height: calc(100vh - 132px);
+    overflow-y: auto;
+    margin: 0;
 }
 
 #provide-storage-activity-feed-container {
-    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12)
-}
-
-#provide-storage-activity-container {
-    /*padding-left: 0px;*/
-    height: 470px;
-    overflow: overlay;
-    /*overflow-y: scroll;*/
-    /*overflow-x: hidden;*/
-}
-
-#provide-storage-container {
-    /*height: calc(100vh - 5px);*/
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+    max-height: 470px;
+    overflow-y: auto;
 }
 
 #mat-tab-content-0-0 > div {
@@ -31,7 +23,28 @@
     overflow: hidden;
 }
 
-.summary-card-title {
+#activity-card-title {
     padding-top: 24px;
+    padding-bottom: 10px;
+}
+
+.summary-card-title {
     padding-left: 24px;
+    margin-bottom: 0px !important;
+}
+
+#node-id-span {
+    font-size: .7em;
+}
+
+#node-status {
+    text-indent: 50px;
+    color: black;
+    margin: 0px 0px 20px 0px;
+}
+
+#node-status-icon {
+    color: green;
+    font-size: 1.5em;
+    display: inline;
 }
