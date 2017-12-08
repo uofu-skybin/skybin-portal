@@ -27,10 +27,10 @@
     </div>
 
     <!-- File context menu. Typically hidden. -->
-    <div id="context-menu-container">
+    <div id="context-menu-container" class="context-menu-trigger">
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button id="context-menu-trigger" mat-button #ctxtMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"></button>
-        <div id="context-menu">
+        <button class="context-menu-trigger" mat-button #ctxtMenuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"></button>
+        <div class="context-menu">
             <mat-menu #menu="matMenu">
                 <button mat-menu-item (click)="downloadFile(selectedFile)">Download</button>
                 <button mat-menu-item (click)="shareClicked()">Share</button>
@@ -41,10 +41,10 @@
     </div>
 
     <!-- Folder context menu. Typically hidden. -->    
-    <div id="folder-context-menu-container">
+    <div id="folder-context-menu-container" class="context-menu-trigger">
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button id="folder-context-menu-trigger" mat-button #ctxtMenuTriggerFolder="matMenuTrigger" [matMenuTriggerFor]="menuFolder"></button>        
-        <div id="folder-context-menu">
+        <button class="context-menu-trigger" mat-button #ctxtMenuTriggerFolder="matMenuTrigger" [matMenuTriggerFor]="menuFolder"></button>        
+        <div class="context-menu">
             <mat-menu #menuFolder="matMenu">
                 <button mat-menu-item (click)="deleteFile(selectedFile)">Delete</button>
             </mat-menu>
