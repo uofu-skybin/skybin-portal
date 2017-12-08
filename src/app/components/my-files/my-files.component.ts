@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation, ViewChild } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger } from '@angular/material';
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar } from '@angular/material';
 import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
@@ -50,7 +50,8 @@ export class MyFilesComponent implements OnInit {
     constructor(private http: HttpClient,
         private electronService: ElectronService,
         public dialog: MatDialog,
-        private ref: ChangeDetectorRef) {
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar) {
     }
 
     ngOnInit() {
@@ -245,6 +246,22 @@ export class MyFilesComponent implements OnInit {
     deleteFile(file) {
         if (!file) {
             return;
+        }
+        // If the file is a directory, make sure it is empty
+        if (file.isDir) {
+            let folderCount = 0;
+            for (const otherFile of this.allFiles) {
+                if (otherFile.name.indexOf(file.name) !== -1) {
+                    folderCount++;
+                }
+            }
+            if (folderCount > 1) {
+                this.snackBar.open("That folder isn't empty!", null,
+            {
+                duration: 2000
+            });
+                return;
+            }
         }
         this.http.delete(`${RENTER_ADDR}/files/` + file.id).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);

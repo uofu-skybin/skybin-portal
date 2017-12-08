@@ -23,6 +23,8 @@ import {
     MatSelectModule, MatSortModule,
     MatTableModule,
     MatTabsModule,
+    MatSnackBarModule,
+    MatSnackBar
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSliderModule } from '@angular/material/slider';
@@ -81,6 +83,7 @@ import { TruncatePipe } from './pipes/truncate/truncate.pipe';
         MatProgressBarModule,
         MatSelectModule,
         MatSliderModule,
+        MatSnackBarModule,
         MatSortModule,
         MatTableModule,
         MatTabsModule,
