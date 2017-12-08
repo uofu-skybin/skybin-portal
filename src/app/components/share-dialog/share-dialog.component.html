@@ -1,8 +1,8 @@
-<h2 mat-dialog-title>Share File</h2>
+<h2 id="share-dialog-title" mat-dialog-title>Share File</h2>
 
 <mat-dialog-content>
   <mat-list dense>
-    <mat-list-item *ngFor="let name of names">{{ name }}</mat-list-item>
+    <mat-list-item *ngFor="let name of names" class="user-name">{{ name }}</mat-list-item>
   </mat-list>
 
   <mat-form-field>
