@@ -23,7 +23,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     // TODO convert to structure as opposed to any object
     providerInfo: InfoResponse = {};
     activityFeed: Activity[] = [];
-    displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp', 'Contract'];
+    displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp'];
     dataSource = new MatTableDataSource<Activity>();
     activityPollId: Timer = null;
 
