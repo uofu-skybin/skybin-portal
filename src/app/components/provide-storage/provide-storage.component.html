@@ -182,7 +182,7 @@
                         <tbody>
                         <tr *ngFor='let contract of myContracts'>
                             <td>{{contract.renterID}}</td>
-                            <td>{{contract.storageSpace}}</td>
+                            <td>{{contract.storageSpace | bytes}}</td>
                         </tr>
                         </tbody>
                     </table>
