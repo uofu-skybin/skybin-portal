@@ -37,7 +37,10 @@
     <div id="file-list-container">
         <table class="table">
             <tbody>
-                <tr *ngFor='let dir of getDirsInCurrentDirectory()' (click)="changeDir(dir.name)">
+                <tr *ngFor='let dir of getDirsInCurrentDirectory()' 
+                (click)="changeDir(dir.name)"
+                (contextmenu)="onContextClick($event, dir)"
+                [class.selected]="dir === selectedFile">
                     <td>
                         <i class="fa fa-folder" aria-hidden="true"></i>
                         {{baseName(dir.name)}}

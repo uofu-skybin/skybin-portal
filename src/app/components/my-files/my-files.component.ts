@@ -34,7 +34,9 @@ const RENTER_ADDR = 'http://127.0.0.1:8002';
     encapsulation: ViewEncapsulation.None,
 })
 export class MyFilesComponent implements OnInit {
-    @ViewChild(MatMenuTrigger) ctxtMenuTrigger: MatMenuTrigger;
+    @ViewChild('ctxtMenuTrigger') ctxtMenuTrigger: MatMenuTrigger;
+    @ViewChild('ctxtMenuTriggerFolder') ctxtMenuTriggerFolder: MatMenuTrigger;
+    
     allFiles: SkyFile[] = [];
     filteredFiles: SkyFile[] = [];
     selectedFile: SkyFile = null;
@@ -72,7 +74,11 @@ export class MyFilesComponent implements OnInit {
 
     // Triggered when a file has been right clicked in the filebrowser.
     onContextClick(event: MouseEvent) {
-        this.ctxtMenuTrigger.openMenu();
+        if (!this.selectedFile.isDir) {
+            this.ctxtMenuTrigger.openMenu();
+        } else {
+            this.ctxtMenuTriggerFolder.openMenu();
+        }
 
         // Position the file context menu over the selected file
         const elem: any = document.querySelector('.mat-menu-panel');
@@ -152,7 +158,7 @@ export class MyFilesComponent implements OnInit {
     }
 
     downloadFile(file) {
-        if (!file) {
+        if (!file || file.isDir) {
             return;
         }
         this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
