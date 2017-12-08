@@ -143,6 +143,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
 }
 
 export interface InfoResponse {
+    providerId?: string;
     providerAllocated?: number;
     providerReserved?: number;
     providerUsed?: number;
