@@ -36,7 +36,7 @@ import { NewFolderDialogComponent } from './components/new-folder-dialog/new-fol
 import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 import { BytesPipe } from './pipes/bytes.pipe';
 import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
-import { TruncatePipe } from './pipes/truncate.pipe';
+import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 
 @NgModule({
     entryComponents: [
