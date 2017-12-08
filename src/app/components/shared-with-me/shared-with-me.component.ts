@@ -20,18 +20,12 @@ export class SharedWithMeComponent implements OnInit {
         private electronService: ElectronService,
         public dialog: MatDialog,
         private ref: ChangeDetectorRef) {
-        const file1 = new SkyFile(null, null, '1', false, '11-29-2017', 'file 1', 30);
-        const file2 = new SkyFile(null, null, '2', false, '01-02-2015', 'file 2', 1);
-        const file3= new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file4 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file5 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file6 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file7 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file8 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file9 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const file10 = new SkyFile(null, null, '1', false, '04-13-2020', 'file 3', 15);
-        const dir1 = new SkyFile(null, null, '1', false, '08-08-2008', 'dir 1', 256);
-        this.myFiles = [file1, file2, file3, file4, file5, file6, file7, file8, file9, file10, dir1];
+        this.myFiles = [
+            new SkyFile(null, null, '1', false, '11-29-2017', 'report.doc', 30),
+            new SkyFile(null, null, '2', false, '01-02-2015', 'notes.txt', 1),
+            new SkyFile(null, null, '1', false, '04-13-2017', 'sosb.pdf', 15),
+            new SkyFile(null, null, '1', false, '04-27-2017', 'pip.py', 15),
+        ];
     }
 
     ngOnInit() {
