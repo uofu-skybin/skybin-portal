@@ -13,21 +13,27 @@ a {
     color: #658798;
 }
 
+.row {
+    flex-wrap: nowrap;
+}
+
 .active {
     color: #116eac;
     font-weight: bold;
 }
 
 #nav-container {
-    width: 10em;
-    max-width: 20%;
-    min-width: 200px;
+    width: 12em;
+    max-width: 12em;
+    min-width: 12em;
+    min-height: 200px;
     padding-left: 0;
     padding-right: 0;
     height: calc(100vh - 81px);
 }
 
 #main-content {
+    min-width: 600px;
     padding-left: 0;
     padding-right: 0;
     max-height: calc(100vh - 81px);
