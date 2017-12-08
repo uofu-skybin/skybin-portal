@@ -10,6 +10,8 @@ import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 import { MatMenu } from '@angular/material/menu/typings/menu-directive';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
+import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -33,10 +35,10 @@ const RENTER_ADDR = 'http://127.0.0.1:8002';
     styleUrls: ['./my-files.component.css'],
     encapsulation: ViewEncapsulation.None,
 })
-export class MyFilesComponent implements OnInit {
+export class MyFilesComponent implements OnInit, OnDestroy {
     @ViewChild('ctxtMenuTrigger') ctxtMenuTrigger: MatMenuTrigger;
     @ViewChild('ctxtMenuTriggerFolder') ctxtMenuTriggerFolder: MatMenuTrigger;
-    
+
     allFiles: SkyFile[] = [];
     filteredFiles: SkyFile[] = [];
     selectedFile: SkyFile = null;
@@ -46,6 +48,7 @@ export class MyFilesComponent implements OnInit {
     showUploads = false;
     showDownloads = false;
     currentSearch = '';
+    subscriptions: Subscription[] = [];
 
     constructor(private http: HttpClient,
         private electronService: ElectronService,
@@ -56,6 +59,10 @@ export class MyFilesComponent implements OnInit {
 
     ngOnInit() {
         this.loadFiles();
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.forEach(e => e.unsubscribe());
     }
 
     loadFiles() {
@@ -125,7 +132,7 @@ export class MyFilesComponent implements OnInit {
             destPath,
         };
         const startTime = new Date();
-        this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
+        const sub = this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -144,6 +151,7 @@ export class MyFilesComponent implements OnInit {
             console.error(error);
             upload.state = TRANSFER_ERROR;
         });
+        this.subscriptions.push(sub);
     }
 
     uploadClicked() {
@@ -178,7 +186,7 @@ export class MyFilesComponent implements OnInit {
                 destination: destPath
             };
             const startTime = new Date();
-            this.http.post(url, body).subscribe(response => {
+            const sub = this.http.post(url, body).subscribe(response => {
                 download.state = TRANSFER_DONE;
                 const endTime = new Date();
                 const elapsedMs = endTime.getTime() - startTime.getTime();
@@ -188,6 +196,7 @@ export class MyFilesComponent implements OnInit {
                 download.state = TRANSFER_ERROR;
                 this.ref.detectChanges();
             });
+            this.subscriptions.push(sub);
             this.ref.detectChanges();
         });
     }
