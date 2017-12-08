@@ -1,12 +1,15 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {MatSort, MatTableDataSource} from '@angular/material';
-import {HttpErrorResponse} from '@angular/common/http/src/response';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { MatSort, MatTableDataSource } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http/src/response';
 import Timer = NodeJS.Timer;
 
 
 // The provider API address to access
 const PROVIDER_ADDR = 'http://localhost:8003';
+
+// Activity feed update interval (ms)
+const ACTIVITY_INTERVAL = 5 * 1000;
 
 @Component({
     selector: 'app-provide-storage',
@@ -24,7 +27,26 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     dataSource = new MatTableDataSource<Activity>();
     activityPollId: Timer = null;
 
+    // TODO make dynamic
+    wallets = [
+        { value: 'wallet-0', viewValue: 'Wallet 1' },
+        { value: 'wallet-1', viewValue: 'Wallet 2' },
+        { value: 'wallet-2', viewValue: 'Wallet 3' }
+    ];
+
     @ViewChild(MatSort) sort: MatSort;
+
+    constructor(private http: HttpClient) {
+    }
+
+    ngOnInit() {
+        this.loadProviderInfo();
+        this.loadContracts();
+        // this.loadTestActivityData();
+        this.loadActivity();
+        console.log('starting poll service...');
+        this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
+    }
 
     // Necessary for the mat-table column sorting.
     ngAfterViewInit() {
@@ -37,58 +59,26 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         clearInterval(this.activityPollId);
     }
 
-    // TODO make dynamic
-    wallets = [
-        {value: 'wallet-0', viewValue: 'Wallet 1'},
-        {value: 'wallet-1', viewValue: 'Wallet 2'},
-        {value: 'wallet-2', viewValue: 'Wallet 3'}
-    ];
-
-    constructor(private http: HttpClient) {
-    }
-
-    ngOnInit() {
-        this.updateProviderInfo();
-        this.loadContracts();
-
-        this.loadActivity();
-        // this.loadTestActivityData();
-        this.updateProviderActivity();
-    }
-
     private loadContracts() {
         this.http.get<ContractsResponse>(`${PROVIDER_ADDR}/contracts`).subscribe(response => {
-            console.log(response);
-            if (response.contracts) {
-                response.contracts.forEach(contract => {
-                    this.myContracts.push(contract);
-                });
+            const contracts = response['contracts'];
+            if (!contracts) {
+                console.error('Error: GET /contracts returned no contracts.');
+                console.error('Response:', response);
+                return;
             }
+            this.myContracts.push(...contracts);
         });
     }
 
-    updateProviderInfo() {
+    loadProviderInfo() {
         this.http.get(`${PROVIDER_ADDR}/info`)
             .subscribe((resp: any) => {
                 this.providerInfo = resp;
             }, (error: HttpErrorResponse) => {
-                console.error(error);
+                console.error('Unable to load provider info.');
+                console.error('Error:', error);
             });
-        console.log(this.providerInfo);
-    }
-
-    updateProviderSettings() {
-        // TODO: set some stuff here
-    }
-
-    updateProviderActivity() {
-        // this.http.get('http://localhost:8003/activity')
-        //     .subscribe((resp: any) => {
-        //         this.providerInfo = resp;
-        //     }, (error: HttpErrorResponse) => {
-        //         console.error(error);
-        //     });
-        // console.log(this.providerInfo);
     }
 
     private loadActivity() {
@@ -100,21 +90,10 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
                     this.activityFeed.push(activity);
                 });
                 this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
+            }, (error) => {
+                console.error('Unable to load provider activity feed.');
+                console.error('Error:', error);
             });
-        console.log('starting poll service. . .');
-        this.activityPollId = setInterval(() => {
-            this.activityFeed = [];
-            this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
-                .subscribe(response => {
-                    // console.log(response.activity);
-                    console.log('polled data with response ', response.activity);
-                    response.activity.forEach(activity => {
-                        this.activityFeed.push(activity);
-                    });
-                    this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-                });
-        }, 5 * 1000);
-
     }
 
     private loadTestActivityData() {
@@ -189,5 +168,5 @@ export interface Activity {
 
 // displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Time Stamp', 'Contract'];
 const DATA: Activity[] = [
-    {requestType: 'GET', blockId: '1', renterId: '1', time: new Date(), contract: {storageSpace: '100 KB', renterID: '1'}}
+    { requestType: 'GET', blockId: '1', renterId: '1', time: new Date(), contract: { storageSpace: '100 KB', renterID: '1' } }
 ];
