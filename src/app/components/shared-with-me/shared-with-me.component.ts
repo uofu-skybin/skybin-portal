@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
-import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
+import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ElectronService } from 'ngx-electron';
 import { HttpClient } from '@angular/common/http';

@@ -1,59 +1,64 @@
-<div id="rent-storage-container">
-  <mat-tab-group>
-    <mat-tab label="Summary">
-      <mat-card>
-        <mat-card-title>Storage</mat-card-title>
-        <section>
-          <mat-card-subtitle>Reserved Space</mat-card-subtitle>
-          <mat-card-content>{{renterInfo.reservedStorage | bytes}}</mat-card-content>
-        </section>
-        <section>
-          <mat-card-subtitle>Free Space</mat-card-subtitle>
-          <mat-card-content>{{renterInfo.freeStorage | bytes}}</mat-card-content>
-        </section>
-        <section>
-          <mat-card-subtitle>Cost Per Month</mat-card-subtitle>
-          <mat-card-content>$2.63</mat-card-content>
-        </section>
-        <section>
-          <mat-card-subtitle>Total Storage Contracts</mat-card-subtitle>
-          <mat-card-content>{{renterInfo.totalContracts}}</mat-card-content>
-        </section>
-        <section>
-          <mat-card-title>Reserve More Space</mat-card-title>
-          <mat-card-content>
-            <mat-form-field>
-              <input matInput [(ngModel)]="storageAmount" placeholder="Amount" type="number">
-            </mat-form-field>
-            <br>
-            <button mat-raised-button class="skybin-btn-primary" (click)="reserveClicked()">Reserve</button>
-          </mat-card-content>
-        </section>
-      </mat-card>
-    </mat-tab>
-    <mat-tab label="Settings">
-      <mat-card>
-        <mat-card-content>
-          <mat-form-field>
-            <input matInput [(ngModel)]="settings.redundancy" placeholder="Storage Redundancy" type="number">
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-form-field>
-            <input matInput [(ngModel)]="settings.minContractDuration" placeholder="Min Contract Duration" type="number">
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-form-field>
-            <input matInput [(ngModel)]="settings.maxContractDuration" placeholder="Max Contract Duration" type="number">
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-form-field>
-            <input matInput [(ngModel)]="settings.maxPricePerGbPerMonth" placeholder="Max Price/GB/Month" type="number">
-          </mat-form-field>
-        </mat-card-content>
-        <button mat-raised-button class="skybin-btn-primary" >Update Settings</button>
-      </mat-card>
-    </mat-tab>
-  </mat-tab-group>
+<div id='rent-storage-container'>
+    <mat-tab-group>
+        <mat-tab label='Summary'>
+            <mat-card>
+                <mat-card-title>Storage</mat-card-title>
+                <section>
+                    <mat-card-subtitle>Reserved Space</mat-card-subtitle>
+                    <mat-card-content>{{renterInfo.reservedStorage | bytes}}</mat-card-content>
+                </section>
+                <section>
+                    <mat-card-subtitle>Free Space</mat-card-subtitle>
+                    <mat-card-content>{{renterInfo.freeStorage | bytes}}</mat-card-content>
+                </section>
+                <section>
+                    <mat-card-subtitle>Cost Per Month</mat-card-subtitle>
+                    <mat-card-content>$2.63</mat-card-content>
+                </section>
+                <section>
+                    <mat-card-subtitle>Total Storage Contracts</mat-card-subtitle>
+                    <mat-card-content>{{renterInfo.totalContracts}}</mat-card-content>
+                </section>
+                <section>
+                    <mat-card-title>Reserve More Space</mat-card-title>
+                    <mat-card-content>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]='storageAmount' placeholder='Amount' type='number'>
+                        </mat-form-field>
+                        <br>
+                        <button mat-raised-button class='skybin-btn-primary' (click)='reserveClicked()'>Reserve</button>
+                    </mat-card-content>
+                </section>
+            </mat-card>
+        </mat-tab>
+        <mat-tab label='Settings'>
+            <mat-card>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]='settings.redundancy' placeholder='Storage Redundancy'
+                               type='number'>
+                    </mat-form-field>
+                </mat-card-content>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]='settings.minContractDuration' placeholder='Min Contract Duration'
+                               type='number'>
+                    </mat-form-field>
+                </mat-card-content>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]='settings.maxContractDuration' placeholder='Max Contract Duration'
+                               type='number'>
+                    </mat-form-field>
+                </mat-card-content>
+                <mat-card-content>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]='settings.maxPricePerGbPerMonth' placeholder='Max Price/GB/Month'
+                               type='number'>
+                    </mat-form-field>
+                </mat-card-content>
+                <button mat-raised-button class='skybin-btn-primary'>Update Settings</button>
+            </mat-card>
+        </mat-tab>
+    </mat-tab-group>
+</div>

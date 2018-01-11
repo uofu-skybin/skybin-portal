@@ -89,3 +89,21 @@
 #my-files-search {
     font-family: FontAwesome, Arial;
 }
+
+#my-files-storage-management-container {
+    float: right;
+    margin-right: 1em;
+}
+
+#reserve-space-button, #configure-space-button {
+    margin-left: 0.5em;
+    background-color: white;
+}
+
+#plus-icon, #settings-icon {
+    color: #00A7F3;
+}
+
+#available-space-container {
+    color: #6ab6f3;
+}

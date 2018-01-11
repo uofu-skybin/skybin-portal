@@ -33,7 +33,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         { value: 'wallet-1', viewValue: 'Wallet 2' },
         { value: 'wallet-2', viewValue: 'Wallet 3' }
     ];
-
+    //
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private http: HttpClient) {

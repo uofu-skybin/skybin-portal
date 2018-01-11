@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject, ViewEncapsulation, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar } from '@angular/material';
-import { NewFolderDialogComponent } from '../new-folder-dialog/new-folder-dialog.component';
+import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
@@ -12,6 +12,8 @@ import { MatMenu } from '@angular/material/menu/typings/menu-directive';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 import { Subscription } from 'rxjs/Subscription';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
+import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -49,6 +51,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     showDownloads = false;
     currentSearch = '';
     subscriptions: Subscription[] = [];
+    // Renter info object returned from the renter service.
+    private renterInfo: any = {};
 
     constructor(private http: HttpClient,
         private electronService: ElectronService,
@@ -58,11 +62,21 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.updateRenterInfo();
         this.loadFiles();
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(e => e.unsubscribe());
+    }
+
+    updateRenterInfo() {
+        this.http.get('http://localhost:8002/info')
+            .subscribe((resp: any) => {
+                this.renterInfo = resp;
+            }, (error: HttpErrorResponse) => {
+                console.error(error);
+            });
     }
 
     loadFiles() {
@@ -242,6 +256,22 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }, (error) => {
                 console.error(error);
             });
+        });
+    }
+
+    addStorageClicked() {
+        const storageDialog = this.dialog.open(AddStorageComponent, {
+            width: '600px'
+        });
+
+        storageDialog.afterClosed().subscribe(result => {
+            this.updateRenterInfo();
+        });
+    }
+
+    configureStorageClicked() {
+        const storageDialog = this.dialog.open(ConfigureStorageComponent, {
+            width: '600px'
         });
     }
 

@@ -3,9 +3,9 @@
          <div class='col-sm-4'>
         <img id="app-logo" src="assets/skybin-logo.png">
         </div>
-    </div> 
+    </div>
     <div id='content-row' class='row'>
-        <div id="nav-container" class='col-sm-3'>
+        <div id="nav-container" class='col'>
             <nav class='nav flex-column'>
                 <!--TODO: later implementations will have login/register as the first views -->
                 <!--<a routerLink="/login" routerLinkActive="active">Login</a>-->
@@ -13,7 +13,7 @@
 
                 <div class='row'>
                     <a class='nav-link' routerLink='/my-files' routerLinkActive='active'>
-                        <i class="fa fa-file" aria-hidden="true"></i>                        
+                        <i class="fa fa-file" aria-hidden="true"></i>
                         My Files
                     </a>
                 </div>
@@ -21,12 +21,6 @@
                     <a class='nav-link' routerLink='/shared-with-me' routerLinkActive='active'>
                         <i class="fa fa-share-alt" aria-hidden="true"></i>
                         Shared With Me
-                    </a>
-                </div>
-                <div class='row'>
-                    <a class='nav-link' routerLink='/rent-storage' routerLinkActive='active'>
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                        Rent Storage
                     </a>
                 </div>
                 <div class='row'>
@@ -43,7 +37,7 @@
                 </div>
             </nav>
         </div>
-        <div id="main-content" class='col-sm-9'>
+        <div id="main-content" class='col'>
             <router-outlet></router-outlet>
         </div>
     </div>

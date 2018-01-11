@@ -34,15 +34,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FilebrowserComponent } from './components/filebrowser/filebrowser.component';
-import { NewFolderDialogComponent } from './components/new-folder-dialog/new-folder-dialog.component';
+import { NewFolderDialogComponent } from './components/dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
 import { BytesPipe } from './pipes/bytes.pipe';
 import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
+import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
+import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 
 @NgModule({
     entryComponents: [
         NewFolderDialogComponent,
+        AddStorageComponent,
+        ConfigureStorageComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent
     ],
@@ -63,6 +67,8 @@ import { TruncatePipe } from './pipes/truncate/truncate.pipe';
         SharedWithMeComponent,
         TruncatePipe,
         ViewFileDetailsComponent,
+        AddStorageComponent,
+        ConfigureStorageComponent,
     ],
     imports: [
         BrowserAnimationsModule,
