@@ -11,11 +11,12 @@
 </head>
 <body>
 <app-root></app-root>
-<script>
-    if (typeof module === 'object') {
-        window.module = module;
-        module = undefined;
-    }
+<script>if (typeof module === 'object') {
+    window.module = module;
+    module = undefined;
+}
+// Expose the electron apis to Angular components.
+var electron=require("electron");
 </script>
 
 <!---->
