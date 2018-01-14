@@ -1,0 +1,9 @@
+a {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.3;
+}
+
+#app-logo {
+    opacity: 0.3;
+}

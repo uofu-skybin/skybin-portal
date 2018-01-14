@@ -14,7 +14,10 @@
 <script>if (typeof module === 'object') {
     window.module = module;
     module = undefined;
-}</script>
+}
+// Expose the electron apis to Angular components.
+var electron=require("electron");
+</script>
 
 <!---->
 <script src='https://code.jquery.com/jquery-3.2.1.slim.min.js'
