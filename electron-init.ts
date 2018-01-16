@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const {exec, spawn} = require('child_process');
 const fs = require('fs');
 let win;
@@ -16,11 +16,20 @@ function createWindow() {
     // Uncomment to enable the menu bar.
     win.setMenu(null);
 
+    // Add event handlers for comm. from the renderer process.
+    ipcMain.on('chan1', (event, ...args) => {
+        for (const arg of args) {
+            console.log(arg);
+        }
+    });
+
     // Check if the .skybin directory exists and create it if it doesn't.
     fs.access(process.env.HOME + '/.skybin', (err => {
         if (err) {
             console.log('Skybin directory not found. Calling init.');
             const init = spawn('/home/mischfire/Repositories/go/src/skybin/skybin', ['init']);
+        } else {
+            ipcMain.send('skybin', 'Skybin identity located!');
         }
     }));
 
