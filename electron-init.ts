@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const {exec, spawn} = require('child_process');
 const fs = require('fs');
+const SKYBIN_PATH = `${process.env.GOPATH}/src/skybin/skybin`;
 let win;
 
 function createWindow() {
@@ -16,26 +17,56 @@ function createWindow() {
     // Uncomment to enable the menu bar.
     win.setMenu(null);
 
-    // Add event handlers for comm. from the renderer process.
-    ipcMain.on('chan1', (event, ...args) => {
-        for (const arg of args) {
-            console.log(arg);
-        }
+    //// uncomment below to open the DevTools.
+    win.webContents.openDevTools();
+    // Event when the window is closed.
+    win.on('closed', function () {
+        win = null;
     });
 
+}
+
+function initDaemons() {
+    const proc = exec('pgrep skybin');
+
+    proc.stdout.on('data', pids => {
+        console.log(pids);
+        let skybinPids = pids.split('\n');
+        console.log(skybinPids);
+        // const kill = exec(`kill ${pids}`);
+        //
+        // kill.stdout.on('data', data => {
+        //     console.log(data);
+        // });
+        //
+        // kill.stderr.on('data', data => {
+        //     console.log(data);
+        // });
+    });
+    proc.stderr.on('data', data => {
+        console.log(data);
+    });
+
+    // Add event handlers for communication from the renderer process.
+    ipcMain
+        .on('metaserverChannel', (event, ...args) => {
+            for (const arg of args) {
+                console.log(arg);
+            }
+        })
+        .on('providerChannel', (event, ...args) => {
+            for (const arg of args) {
+                console.log(arg);
+            }
+        });
+
     // Check if the .skybin directory exists and create it if it doesn't.
-    fs.access(process.env.HOME + '/.skybin', (err => {
+    fs.access(`${process.env.HOME}/.skybin`, (err => {
         if (err) {
             console.log('Skybin directory not found. Calling init.');
-            const init = spawn('/home/mischfire/Repositories/go/src/skybin/skybin', ['init']);
-        } else {
-            ipcMain.send('skybin', 'Skybin identity located!');
+            const init = spawn(SKYBIN_PATH, ['init']);
         }
     }));
-
-    // Bootstrap the skybin daemons.
-    const renter = spawn('/home/mischfire/Repositories/go/src/skybin/skybin', ['renter']);
-    const metaserver = spawn('/home/mischfire/Repositories/go/src/skybin/skybin', ['metaserver']);
 
     renter.stderr.on('data', (data) => {
         console.log(data.toString('utf8'));
@@ -43,25 +74,27 @@ function createWindow() {
 
     metaserver.stderr.on('data', (data) => {
         console.log(data.toString('utf8'));
-        const provider = spawn('/home/mischfire/Repositories/go/src/skybin/skybin', ['provider']);
+        const provider = spawn(SKYBIN_PATH, ['provider']);
         provider.stderr.on('data', (res) => {
             console.log(res.toString('utf8'));
         });
     });
 
-
-    //// uncomment below to open the DevTools.
-    win.webContents.openDevTools();
-    // Event when the window is closed.
-    win.on('closed', function () {
-        win = null;
-    });
+    // Launch the GUI window(s).
+    createWindow();
 }
 
-// Create window on electron intialization
-app.on('ready', createWindow);
+// Bootstrap the skybin daemons.
+const renter = spawn(SKYBIN_PATH, ['renter']);
+const metaserver = spawn(SKYBIN_PATH, ['metaserver']);
+
+// Create window on electron initialization.
+app.on('ready', initDaemons);
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
+    renter.kill();
+    metaserver.kill();
+
     // On macOS specific close process
     if (process.platform !== 'darwin') {
         app.quit();
@@ -70,6 +103,6 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
     // macOS specific close process
     if (win === null) {
-        createWindow();
+        initDaemons();
     }
 });

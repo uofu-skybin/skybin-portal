@@ -10,8 +10,12 @@ import {ElectronService} from 'ngx-electron';
     encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent implements OnInit {
+    private metaserverRunning : boolean;
+    private providerRunning : boolean;
 
     constructor(private electronService: ElectronService) {
+        this.metaserverRunning = false;
+        this.providerRunning = false;
     }
 
     ngOnInit() {
@@ -30,11 +34,15 @@ export class LoginComponent implements OnInit {
             });
     }
 
-    runMetaserver() {
-        this.electronService.ipcRenderer.send('chan1', 'run metaserver');
+    toggleMetaserver() {
+        let newRunningState: boolean = !this.metaserverRunning;
+        this.metaserverRunning = newRunningState;
+        this.electronService.ipcRenderer.send('metaserverChannel', newRunningState);
     }
 
-    runProvider() {
-        this.electronService.ipcRenderer.send('chan1', 'run provider');
+    toggleProvider() {
+        let newRunningState: boolean = !this.providerRunning;
+        this.providerRunning = newRunningState;
+        this.electronService.ipcRenderer.send('providerChannel', newRunningState);
     }
 }
