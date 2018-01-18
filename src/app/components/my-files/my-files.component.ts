@@ -1,19 +1,18 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ViewChild } from '@angular/core';
+import {Component, OnInit, Inject, ViewEncapsulation, ViewChild} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import { ElectronService } from 'ngx-electron';
-import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar } from '@angular/material';
-import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import { ChangeDetectorRef } from '@angular/core';
-import { SkyFile } from '../../models/sky-file';
-import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
-import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
-import { MatMenu } from '@angular/material/menu/typings/menu-directive';
-import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
-import { Subscription } from 'rxjs/Subscription';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import {ElectronService} from 'ngx-electron';
+import {MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar} from '@angular/material';
+import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import {ChangeDetectorRef} from '@angular/core';
+import {SkyFile} from '../../models/sky-file';
+import {LoadSkyFilesResponse} from '../../models/load-sky-files-response';
+import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
+import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
+import {Subscription} from 'rxjs/Subscription';
+import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
 import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
 import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
+import OpenDialogOptions = Electron.OpenDialogOptions;
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -55,10 +54,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     private renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        private electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar) {
+        this.updateRenterInfo();
+        this.loadFiles();
     }
 
     ngOnInit() {
@@ -169,50 +170,58 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadClicked() {
-        this.electronService.remote.dialog.showOpenDialog(files => {
-            if (!files) {
-                return;
+        const options: OpenDialogOptions = {
+            properties: ['openFile']
+        };
+        this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
+            for (const file of files) {
+                this.uploadFile(file);
             }
-            files.forEach(sourcePath => {
-                this.uploadFile(sourcePath);
-            });
             this.ref.detectChanges();
         });
+
+        // console.log(this.electronService.remote.dialog.showOpenDialog(
+        //     {properties: ['openFile']}),
+        //     (filePath: string) => {
+        //         console.log(filePath);
+        //         this.uploadFile(filePath);
+        //         this.ref.detectChanges();
+        //     });
     }
 
     downloadFile(file) {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
-            if (!destPath) {
-                return;
-            }
-            const download = {
-                sourcePath: file.name,
-                destPath,
-                state: TRANSFER_RUNNING,
-            };
-            this.downloads.unshift(download);
-            this.showDownloads = true;
-            const url = `${RENTER_ADDR}/files/${file.id}/download`;
-            const body = {
-                destination: destPath
-            };
-            const startTime = new Date();
-            const sub = this.http.post(url, body).subscribe(response => {
-                download.state = TRANSFER_DONE;
-                const endTime = new Date();
-                const elapsedMs = endTime.getTime() - startTime.getTime();
-                setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-            }, (error) => {
-                console.error(error);
-                download.state = TRANSFER_ERROR;
-                this.ref.detectChanges();
-            });
-            this.subscriptions.push(sub);
-            this.ref.detectChanges();
-        });
+        // this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
+        //     if (!destPath) {
+        //         return;
+        //     }
+        //     const download = {
+        //         sourcePath: file.name,
+        //         destPath,
+        //         state: TRANSFER_RUNNING,
+        //     };
+        //     this.downloads.unshift(download);
+        //     this.showDownloads = true;
+        //     const url = `${RENTER_ADDR}/files/${file.id}/download`;
+        //     const body = {
+        //         destination: destPath
+        //     };
+        //     const startTime = new Date();
+        //     const sub = this.http.post(url, body).subscribe(response => {
+        //         download.state = TRANSFER_DONE;
+        //         const endTime = new Date();
+        //         const elapsedMs = endTime.getTime() - startTime.getTime();
+        //         setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+        //     }, (error) => {
+        //         console.error(error);
+        //         download.state = TRANSFER_ERROR;
+        //         this.ref.detectChanges();
+        //     });
+        //     this.subscriptions.push(sub);
+        //     this.ref.detectChanges();
+        // });
     }
 
     downloadClicked() {
@@ -296,9 +305,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
             if (folderCount > 1) {
                 this.snackBar.open("That folder isn't empty!", null,
-            {
-                duration: 2000
-            });
+                    {
+                        duration: 2000
+                    });
                 return;
             }
         }
