@@ -9,7 +9,8 @@ import { ProvideStorageComponent } from '../../components/provide-storage/provid
 import { MyWalletComponent } from '../../components/my-wallet/my-wallet.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'login', pathMatch: 'full' },
+    // { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '', redirectTo: 'my-files', pathMatch: 'full' },
     // { path: '', redirectTo: '', pathMatch: 'full' },
     // { path: '', redirectTo: 'my-files', pathMatch: 'full' },
     { path: 'my-files', redirectTo: 'my-files', pathMatch: 'full' },
