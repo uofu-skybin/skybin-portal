@@ -3,123 +3,65 @@ const {spawn} = require('child_process');
 const fs = require('fs');
 
 let win;
-let metaserver, renter, provider;
+let skybinInit, metaserver, renter, provider;
+let skybinPath = `${process.env.GOPATH}/src/skybin/skybin`;
+let homeDir;
 
 function init() {
-    let SKYBIN_HOME;
-    let SKYBIN_PATH;
-
-    let homedir = `${process.env.HOME}/.skybin`;
+    homeDir = `${process.env.HOME}/.skybin`;
     if (process.env.SKYBIN_HOME) {
-        homedir = process.env.SKYBIN_HOME;
+        homeDir = process.env.SKYBIN_HOME;
     }
 
     let homedirExists = false;
     try {
-        fs.accessSync(homedir);
+        fs.accessSync(homeDir);
         homedirExists = true;
     } catch (err) {
-
+        console.log('Skybin directory not found. Continuing with init process.');
     }
+
     if (!homedirExists) {
         // First time!
         // launch GUI in first-time mode
+        createWindow();
         // wait for RPC telling us to "init" and possibly giving us a keyfile
         return;
     }
-        // TREE:
-        //  .skybin/
-        //     /provider/
-        //        config.json
-        //          {haveTheySetUpProviderOrNAWT!!!!!!: false}
-        //     /renter/
-        //        config.json
-        //        lockfile
+    // TREE:
+    //  .skybin/
+    //     /provider/
+    //        config.json
+    //          {haveTheySetUpProviderOrNAWT!!!!!!: false}
+    //     /renter/
+    //        config.json
+    //        lockfile
 
-        // open up the config for the renter
-        // check the api address
-        // try to connect to that address OR check if a pidfile exists
-        // if it's not running, run it
-        let renterAddress = "http://localhost:8002";
-        let exists = false;
-        try {
-            fs.accessSync(homedir + "/renter/lockfile");
-            exists = true;
-        } catch (err) {
-        }
-        if (!exists) {
-            // start up renter
-        }
-
-        // open up provider config
-        // check the api address
-        // see if it's running at that address OR check if pidfile exists
-        //
-
-
-
-    if (process.env.SKYBIN_HOME) {
-        SKYBIN_HOME = process.env.SKYBIN_HOME;
-    } else {
-        // Check for the .skybin directory create it if it doesn't exist.
-        fs.access(`${process.env.HOME}/.skybin`, (err => {
-            if (err) {
-                console.log('Skybin directory not found. Calling init.');
-                const skybinInit = spawn(SKYBIN_PATH, ['init']);
-            } else {
-                console.log('Skybin directory found. Launching as normal.');
-                SKYBIN_HOME = `${process.env.HOME}/.skybin`;
-                // win.send('loginStatus', true);
-            }
-        }));
+    // open up the config for the renter
+    // check the api address
+    // try to connect to that address OR check if a pidfile exists
+    // if it's not running, run it
+    let renterAddress = "http://localhost:8002";
+    let exists = false;
+    try {
+        fs.accessSync(homeDir + "/renter/lockfile");
+        exists = true;
+    } catch (err) {
+        console.log(`Accessing renter lockfile produced error: ${err}`);
     }
 
-    if (process.env.GOPATH) {
-        SKYBIN_PATH = `${process.env.GOPATH}/src/skybin/skybin`;
-    } else {
-        console.error('$GOPATH not found. Exiting. . .');
-        process.exit(1);
-    }
-
-    // Bootstrap the skybin daemons.
-    renter = spawn(SKYBIN_PATH, ['renter']);
-    metaserver = spawn(SKYBIN_PATH, ['metaserver']);
-
-    renter.stderr.on('data', (data) => {
-        console.log(data.toString('utf8'));
-        metaserver.stderr.on('data', (data) => {
+    // Start the renter service if it isn't running.
+    if (!exists) {
+        renter = spawn(skybinPath, ['renter']);
+        renter.stderr.on('data', (data) => {
             console.log(data.toString('utf8'));
-            provider = spawn(SKYBIN_PATH, ['provider']);
-            provider.stderr.on('data', (res) => {
-                console.log(res.toString('utf8'));
-                createWindow();
-                win.send('loginStatus', false);
-            });
         });
-    });
 
-    ipcMain
-        // Handlers for toggling skybin daemons. Placeholders for now.
-        .on('metaserverChannel', (event, ...args) => {
-            for (const arg of args) {
-                console.log(arg);
-            }
-        })
-        .on('providerChannel', (event, ...args) => {
-            for (const arg of args) {
-                console.log(arg);
-            }
-        })
-        .on('loginStatus', (event, ...args) => {
-            for (const arg of args) {
-                console.log(arg);
-            }
-        })
-        .on('register', (event, ...args) => {
-           let keyFilePath = null;
-           // run skybin init (possibly passing in keyFilePath)
-            // start renter for first time
-        })
+        // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
+        runServices();
+    }
+
+    createWindow();
 }
 
 function createWindow() {
@@ -143,16 +85,78 @@ function createWindow() {
     });
 }
 
+// Handlers for toggling skybin daemons. Placeholders for now.
+ipcMain
+    .on('login', (event, ...args) => {
+        let skybinInit;
+        if (args[0]) {
+            const keyFile = args[0];
+            // Init skybin with default home directory and existing key identity.
+            skybinInit = spawn(skybinPath, ['init', '-keyfile', keyFile]);
+        } else {
+            // Init skybin with default home directory and new key identity.
+            skybinInit = spawn(skybinPath, ['init']);
+        }
+
+        skybinInit.on('exit', (code, signal) => {
+            // Run the renter service.
+            renter = spawn(skybinPath, ['renter']);
+            renter.stderr.on('data', (data) => {
+                console.log(data.toString('utf8'));
+            });
+
+            // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
+            runServices();
+        });
+
+
+    })
+    .on('startProvider', (event, ...args) => {
+        for (const arg of args) {
+            if (args) {
+            }
+        }
+    })
+    .on('startMetaserver', (event, ...args) => {
+        for (const arg of args) {
+            if (args) {
+
+            }
+        }
+    });
+
+function runServices() {
+    metaserver = spawn(skybinPath, ['metaserver']);
+    metaserver.stderr.on('data', (res) => {
+        console.log(res.toString('utf8'));
+        // Stall provider until metaserver is live.
+        provider = spawn(skybinPath, ['provider']);
+        provider.stderr.on('data', (provRes) => {
+            console.log(provRes.toString('utf8'));
+        });
+    });
+}
+
 // Create window on electron initialization.
 app.on('ready', init);
 
 // Clean up background services upon application shutdown.
 app.on('quit', () => {
     console.log('quitting. . .');
+
+    // TODO: for testing
+    // let killDir = spawn('rm', ['-rf', homeDir]);
+
     // Kill the skybin daemons on shutdown.
-    metaserver.kill();
-    renter.kill();
-    provider.kill();
+    if (metaserver) {
+        metaserver.kill();
+    }
+    if (renter) {
+        renter.kill();
+    }
+    if (provider) {
+        provider.kill();
+    }
 });
 
 // Quit when all windows are closed.
