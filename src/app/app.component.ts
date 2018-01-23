@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {ElectronService} from 'ngx-electron';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -10,19 +10,21 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class AppComponent implements OnInit {
     constructor(private electronService: ElectronService,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private zone: NgZone) {
         // Dynamic routing. Go to my-files if auth'd, login view if not.
         this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
             let userExists: boolean = args[0];
             if (userExists) {
-                this.router.navigate(['my-files']);
+                this.zone.run(() => {
+                    this.router.navigate(['my-files']);
+                });
             } else if (!userExists) {
-                this.router.navigate(['login']);
+                this.zone.run(() => {
+                    this.router.navigate(['login']);
+                });
             }
         });
-
-        // TODO: navigation works synchronously, but not async
-        // this.router.navigate(['my-files']);
 
         this.electronService.ipcRenderer.send('viewReady', true);
     }

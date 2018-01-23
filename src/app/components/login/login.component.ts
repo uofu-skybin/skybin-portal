@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
 import {ElectronService} from 'ngx-electron';
 import {Router} from '@angular/router';
 
@@ -11,10 +11,16 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
 
     constructor(private electronService: ElectronService,
-                private router: Router) {
+                private router: Router,
+                private zone: NgZone) {
     }
 
     ngOnInit() {
+        this.electronService.ipcRenderer.on('registered', (event, ...args) => {
+            this.zone.run(() => {
+                this.router.navigate(['my-files']);
+            });
+        });
     }
 
     /**

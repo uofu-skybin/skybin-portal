@@ -56,16 +56,23 @@ function init() {
         renter = spawn(skybinPath, ['renter']);
         renter.stderr.on('data', (data) => {
             console.log(data.toString('utf8'));
+
+            // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
+            runServices();
+
+            createWindow();
         });
 
+
+    } else { // Renter service already running. Launch GUI.
         // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
         runServices();
+
+        createWindow();
     }
 
     // Enables view to route to my-files.
     userExists = true;
-
-    createWindow();
 }
 
 function createWindow() {
@@ -109,10 +116,11 @@ ipcMain
                 console.log(data.toString('utf8'));
             });
 
+            win.send('registered', true);
+
             // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
             runServices();
         });
-
 
     })
     .on('startProvider', (event, ...args) => {
@@ -149,7 +157,7 @@ app.on('quit', () => {
     console.log('quitting. . .');
 
     // TODO: for testing
-    // let killDir = spawn('rm', ['-rf', homeDir]);
+    let killDir = spawn('rm', ['-rf', homeDir]);
 
     // Kill the skybin daemons on shutdown.
     if (metaserver) {

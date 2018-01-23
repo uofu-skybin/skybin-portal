@@ -14,6 +14,7 @@ import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component'
 import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
 import {ActivatedRoute, Router} from '@angular/router';
+import Timer = NodeJS.Timer;
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -51,6 +52,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     showDownloads = false;
     currentSearch = '';
     subscriptions: Subscription[] = [];
+    renterInfoPollId: Timer = null;
     // Renter info object returned from the renter service.
     private renterInfo: any = {};
 
@@ -63,18 +65,22 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute) {
         this.updateRenterInfo();
         this.loadFiles();
-        // console.log(this.router.url);
     }
 
     ngOnInit() {
         this.updateRenterInfo();
         this.loadFiles();
-        // console.log(this.router.url);
-        // console.log(this.route);
+
+        // TODO: not sure if we want polling here
+        // this.renterInfoPollId = setInterval(() => {
+        //     this.updateRenterInfo();
+        //     this.loadFiles();
+        // }, 5 * 1000);
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(e => e.unsubscribe());
+        // clearInterval(this.renterInfoPollId);
     }
 
     updateRenterInfo() {
