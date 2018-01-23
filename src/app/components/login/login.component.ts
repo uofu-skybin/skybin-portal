@@ -16,6 +16,11 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.electronService.ipcRenderer.on('registered', (event, ...args) => {
+            this.zone.run(() => {
+                this.router.navigate(['my-files']);
+            });
+        });
     }
 
     /**
