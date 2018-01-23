@@ -1,5 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ElectronService} from 'ngx-electron';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -9,7 +10,8 @@ import {ElectronService} from 'ngx-electron';
 })
 export class LoginComponent implements OnInit {
 
-    constructor(private electronService: ElectronService) {
+    constructor(private electronService: ElectronService,
+                private router: Router) {
     }
 
     ngOnInit() {

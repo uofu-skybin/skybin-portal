@@ -13,6 +13,7 @@ import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
 import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
 import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
+import {ActivatedRoute, Router} from '@angular/router';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -57,14 +58,19 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 public electronService: ElectronService,
                 public dialog: MatDialog,
                 private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar) {
+                public snackBar: MatSnackBar,
+                private router: Router,
+                private route: ActivatedRoute) {
         this.updateRenterInfo();
         this.loadFiles();
+        // console.log(this.router.url);
     }
 
     ngOnInit() {
         this.updateRenterInfo();
         this.loadFiles();
+        // console.log(this.router.url);
+        // console.log(this.route);
     }
 
     ngOnDestroy() {

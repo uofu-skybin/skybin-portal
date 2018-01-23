@@ -11,27 +11,22 @@ export class AppComponent implements OnInit {
     constructor(private electronService: ElectronService,
                 private router: Router,
                 private route: ActivatedRoute) {
-        // console.log('here yo');
+        // Dynamic routing. Go to my-files if auth'd, login view if not.
+        this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
+            let userExists: boolean = args[0];
+            if (userExists) {
+                this.router.navigate(['my-files']);
+            } else if (!userExists) {
+                this.router.navigate(['login']);
+            }
+        });
+
+        // TODO: navigation works synchronously, but not async
+        // this.router.navigate(['my-files']);
+
+        this.electronService.ipcRenderer.send('viewReady', true);
     }
 
     ngOnInit(): void {
-        // TODO: IPC handling probably should move to login or some other component. Leaving in app component seems to be causing issues.
-        // this.electronService.ipcRenderer
-        //     .on('skybin', (event, ...args) => {
-        //         for (const arg of args) {
-        //             console.log(arg);
-        //         }
-        //     })
-        //     .on('loginStatus', (even, ...args) => {
-        //         const loginStatus: boolean = args[0];
-        //         if (loginStatus) {
-        //             this.router.navigate(['/my-files'], {relativeTo: this.route});
-        //         } else {
-        //             this.router.navigate(['/register']);
-        //         }
-        //     });
-		//
-        // // Notify the Electron main process that GUI is launched and ready for IPC.
-        // this.electronService.ipcRenderer.send('viewLaunch', true);
     }
 }

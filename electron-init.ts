@@ -6,6 +6,7 @@ let win;
 let skybinInit, metaserver, renter, provider;
 let skybinPath = `${process.env.GOPATH}/src/skybin/skybin`;
 let homeDir;
+let userExists = false;
 
 function init() {
     homeDir = `${process.env.HOME}/.skybin`;
@@ -61,6 +62,9 @@ function init() {
         runServices();
     }
 
+    // Enables view to route to my-files.
+    userExists = true;
+
     createWindow();
 }
 
@@ -113,15 +117,15 @@ ipcMain
     })
     .on('startProvider', (event, ...args) => {
         for (const arg of args) {
-            if (args) {
-            }
         }
     })
     .on('startMetaserver', (event, ...args) => {
         for (const arg of args) {
-            if (args) {
-
-            }
+        }
+    })
+    .on('viewReady', (event, ...args) => {
+        if (args[0]) {
+            win.send('loginStatus', userExists);
         }
     });
 
