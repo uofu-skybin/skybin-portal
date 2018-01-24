@@ -62,8 +62,6 @@ function init() {
 
             createWindow();
         });
-
-
     } else { // Renter service already running. Launch GUI.
         // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
         runServices();

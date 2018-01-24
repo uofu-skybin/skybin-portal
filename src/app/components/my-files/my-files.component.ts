@@ -205,35 +205,35 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file || file.isDir) {
             return;
         }
-        // this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
-        //     if (!destPath) {
-        //         return;
-        //     }
-        //     const download = {
-        //         sourcePath: file.name,
-        //         destPath,
-        //         state: TRANSFER_RUNNING,
-        //     };
-        //     this.downloads.unshift(download);
-        //     this.showDownloads = true;
-        //     const url = `${RENTER_ADDR}/files/${file.id}/download`;
-        //     const body = {
-        //         destination: destPath
-        //     };
-        //     const startTime = new Date();
-        //     const sub = this.http.post(url, body).subscribe(response => {
-        //         download.state = TRANSFER_DONE;
-        //         const endTime = new Date();
-        //         const elapsedMs = endTime.getTime() - startTime.getTime();
-        //         setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-        //     }, (error) => {
-        //         console.error(error);
-        //         download.state = TRANSFER_ERROR;
-        //         this.ref.detectChanges();
-        //     });
-        //     this.subscriptions.push(sub);
-        //     this.ref.detectChanges();
-        // });
+        this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
+            if (!destPath) {
+                return;
+            }
+            const download = {
+                sourcePath: file.name,
+                destPath,
+                state: TRANSFER_RUNNING,
+            };
+            this.downloads.unshift(download);
+            this.showDownloads = true;
+            const url = `${RENTER_ADDR}/files/${file.id}/download`;
+            const body = {
+                destination: destPath
+            };
+            const startTime = new Date();
+            const sub = this.http.post(url, body).subscribe(response => {
+                download.state = TRANSFER_DONE;
+                const endTime = new Date();
+                const elapsedMs = endTime.getTime() - startTime.getTime();
+                setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+            }, (error) => {
+                console.error(error);
+                download.state = TRANSFER_ERROR;
+                this.ref.detectChanges();
+            });
+            this.subscriptions.push(sub);
+            this.ref.detectChanges();
+        });
     }
 
     downloadClicked() {
