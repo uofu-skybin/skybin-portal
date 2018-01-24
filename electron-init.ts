@@ -155,7 +155,7 @@ app.on('quit', () => {
     console.log('quitting. . .');
 
     // TODO: for testing
-    let killDir = spawn('rm', ['-rf', homeDir]);
+    // let killDir = spawn('rm', ['-rf', homeDir]);
 
     // Kill the skybin daemons on shutdown.
     if (metaserver) {

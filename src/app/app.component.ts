@@ -12,6 +12,9 @@ export class AppComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private zone: NgZone) {
+    }
+
+    ngOnInit(): void {
         // Dynamic routing. Go to my-files if auth'd, login view if not.
         this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
             let userExists: boolean = args[0];
@@ -27,8 +30,5 @@ export class AppComponent implements OnInit {
         });
 
         this.electronService.ipcRenderer.send('viewReady', true);
-    }
-
-    ngOnInit(): void {
     }
 }
