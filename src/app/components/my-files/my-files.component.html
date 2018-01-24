@@ -78,6 +78,15 @@
         </div>
     </div>
 
+
+    <div id='insufficient-storage-alert' class="alert alert-danger alert-dismissible fade show" role="alert">
+        <a class="close" onclick="$('#insufficient-storage-alert').hide()">×</a>
+        <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+        <!--</button>-->
+        <strong>You don't have enough storage reserved to upload.</strong>
+    </div>
+
     <app-filebrowser
         [filesToDisplay]='filteredFiles'
         (onPathChanged)='onPathChanged($event)'

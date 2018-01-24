@@ -15,6 +15,7 @@ import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-
 import OpenDialogOptions = Electron.OpenDialogOptions;
 import {ActivatedRoute, Router} from '@angular/router';
 import Timer = NodeJS.Timer;
+import * as $ from 'jquery';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -175,7 +176,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const elapsedMs = endTime.getTime() - startTime.getTime();
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
-            console.error(error);
+            if (error.error.error === 'Cannot find enough storage. Be sure to reserve storage before uploading files.') {
+                // TODO: notification of not enough storage
+                // $('insufficient-storage-alert').css('display', 'inline');
+                document.getElementById('insufficient-storage-alert').style.display = 'block';
+               console.log('not enough storage');
+            }
             upload.state = TRANSFER_ERROR;
         });
         this.subscriptions.push(sub);
@@ -183,7 +189,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
     uploadClicked() {
         const options: OpenDialogOptions = {
-            properties: ['openFile']
+            properties: [
+                'openFile',
+                'multiSelections'
+            ],
         };
         this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
             for (const file of files) {
@@ -191,21 +200,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
             this.ref.detectChanges();
         });
-
-        // console.log(this.electronService.remote.dialog.showOpenDialog(
-        //     {properties: ['openFile']}),
-        //     (filePath: string) => {
-        //         console.log(filePath);
-        //         this.uploadFile(filePath);
-        //         this.ref.detectChanges();
-        //     });
     }
 
     downloadFile(file) {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({}, (destPath: string) => {
             if (!destPath) {
                 return;
             }

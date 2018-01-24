@@ -107,3 +107,11 @@
 #available-space-container {
     color: #6ab6f3;
 }
+
+#insufficient-storage-alert {
+    display: none;
+}
+
+.close:hover {
+    cursor: pointer;
+}
