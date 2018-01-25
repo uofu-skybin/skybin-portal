@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject, ViewEncapsulation, ViewChild} from '@angular/core';
+import {Component, OnInit, Inject, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {ElectronService} from 'ngx-electron';
 import {MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar} from '@angular/material';
@@ -16,6 +16,7 @@ import OpenDialogOptions = Electron.OpenDialogOptions;
 import {ActivatedRoute, Router} from '@angular/router';
 import Timer = NodeJS.Timer;
 import * as $ from 'jquery';
+import {NotificationComponent} from '../notification/notification.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -63,7 +64,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 private ref: ChangeDetectorRef,
                 public snackBar: MatSnackBar,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                public zone: NgZone) {
         this.updateRenterInfo();
         this.loadFiles();
     }
@@ -140,6 +142,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath) {
+        const scope = this;
         const baseName = this.baseName(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
@@ -179,8 +182,22 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             if (error.error.error === 'Cannot find enough storage. Be sure to reserve storage before uploading files.') {
                 // TODO: notification of not enough storage
                 // $('insufficient-storage-alert').css('display', 'inline');
-                document.getElementById('insufficient-storage-alert').style.display = 'block';
-               console.log('not enough storage');
+                // document.getElementById('insufficient-storage-alert').style.display = 'block';
+                this.zone.run(() => {
+                    // scope.snackbar.open("insufficient storage", 'dismiss',
+                    //     {
+                    //         duration: 10000,
+                    //         horizontalposition: 'center',
+                    //         verticalposition: 'top'
+                    //     });
+                    scope.snackBar.openFromComponent(NotificationComponent, {
+                        duration: 10000,
+                        horizontalPosition: 'center',
+                        verticalPosition: 'top'
+                    });
+                });
+                console.log('not enough storage');
+                return;
             }
             upload.state = TRANSFER_ERROR;
         });
@@ -317,10 +334,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 }
             }
             if (folderCount > 1) {
-                this.snackBar.open("That folder isn't empty!", null,
-                    {
-                        duration: 2000
-                    });
+                // this.snackBar.open("That folder isn't empty!", null,
+                //     {
+                //         duration: 2000
+                //     });
                 return;
             }
         }
