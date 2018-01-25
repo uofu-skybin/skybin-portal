@@ -19,15 +19,15 @@
         <!-- Group storage info views. -->
         <span id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
-            <span id='available-space-container'>
+            <span id='available-space-container' mat-tooltip='tooltip'>
                 <b>Available:</b> {{renterInfo.reservedStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
-            <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()'
+            <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()' matTooltip="Tooltip!"
                     name='my-files-new-folder-button'>
                 <i id='plus-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
-            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary' (click)='configureStorageClicked()'
+            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary' (click)='configureStorageClicked()' matTooltip='Configure your renter settings!'
                     name='my-files-new-folder-button'>
                 <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
             </button>
