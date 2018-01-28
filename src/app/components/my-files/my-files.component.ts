@@ -17,6 +17,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import Timer = NodeJS.Timer;
 import * as $ from 'jquery';
 import {NotificationComponent} from '../notification/notification.component';
+import {LoginComponent} from '../login/login.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -66,19 +67,29 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private route: ActivatedRoute,
                 public zone: NgZone) {
-        this.updateRenterInfo();
-        this.loadFiles();
     }
 
     ngOnInit() {
-        this.updateRenterInfo();
-        this.loadFiles();
+        this.electronService.ipcRenderer.send('viewReady', true);
 
-        // TODO: not sure if we want polling here
-        // this.renterInfoPollId = setInterval(() => {
-        //     this.updateRenterInfo();
-        //     this.loadFiles();
-        // }, 5 * 1000);
+        let storageDialog;
+
+        this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
+            const userExists: boolean = args[0];
+            if (!userExists) {
+                this.electronService.ipcRenderer.on('registered', (event, ...args) => {
+                    this.zone.run(() => {
+                        this.updateRenterInfo();
+                        this.loadFiles();
+                        storageDialog.close();
+                    });
+                });
+                storageDialog = this.dialog.open(LoginComponent, {
+                    disableClose: true
+                });
+            }
+        });
+
     }
 
     ngOnDestroy() {
@@ -334,10 +345,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 }
             }
             if (folderCount > 1) {
-                // this.snackBar.open("That folder isn't empty!", null,
-                //     {
-                //         duration: 2000
-                //     });
+                this.snackBar.open("That folder isn't empty!", null,
+                    {
+                        duration: 2000
+                    });
                 return;
             }
         }

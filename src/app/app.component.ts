@@ -15,20 +15,6 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        // Dynamic routing. Go to my-files if auth'd, login view if not.
-        this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
-            let userExists: boolean = args[0];
-            if (userExists) {
-                this.zone.run(() => {
-                    this.router.navigate(['my-files']);
-                });
-            } else if (!userExists) {
-                this.zone.run(() => {
-                    this.router.navigate(['login']);
-                });
-            }
-        });
-
-        this.electronService.ipcRenderer.send('viewReady', true);
+        this.router.navigate(['my-files']);
     }
 }

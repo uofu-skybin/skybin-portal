@@ -1,15 +1,17 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
-const {spawn} = require('child_process');
+const {spawn, exec} = require('child_process');
 const fs = require('fs');
 
 let win;
 let skybinInit, metaserver, renter, provider;
-let skybinPath = `${process.env.GOPATH}/src/skybin/skybin`;
+let skybinPath;
 let homeDir;
 let userExists = false;
 
 function init() {
     homeDir = `${process.env.HOME}/.skybin`;
+    skybinPath = `${process.env.GOPATH}/src/skybin/skybin`;
+
     if (process.env.SKYBIN_HOME) {
         homeDir = process.env.SKYBIN_HOME;
     }
@@ -19,37 +21,38 @@ function init() {
         fs.accessSync(homeDir);
         homedirExists = true;
     } catch (err) {
-        console.log('Skybin directory not found. Continuing with init process.');
+        homeDir = `${process.env.GOPATH}/src/skybin/integration/repo`;
+        try {
+            fs.accessSync(homeDir);
+            homedirExists = true;
+        } catch (err) {
+            console.log('Skybin directory not found. Continuing with the init process.');
+        }
     }
 
     if (!homedirExists) {
-        // First time!
-        // launch GUI in first-time mode
         createWindow();
-        // wait for RPC telling us to "init" and possibly giving us a keyfile
         return;
     }
-    // TREE:
-    //  .skybin/
-    //     /provider/
-    //        config.json
-    //          {haveTheySetUpProviderOrNAWT!!!!!!: false}
-    //     /renter/
-    //        config.json
-    //        lockfile
 
+    // TODO:
     // open up the config for the renter
     // check the api address
     // try to connect to that address OR check if a pidfile exists
     // if it's not running, run it
-    let renterAddress = "http://localhost:8002";
+    // let renterAddress = "http://localhost:8002";
+    // Enables view to route to my-files.
+
     let exists = false;
     try {
-        fs.accessSync(homeDir + "/renter/lockfile");
+        fs.accessSync(homeDir + '/renter/lockfile');
         exists = true;
     } catch (err) {
         console.log(`Accessing renter lockfile produced error: ${err}`);
     }
+
+    // Enables view to route to my-files.
+    userExists = true;
 
     // Start the renter service if it isn't running.
     if (!exists) {
@@ -58,19 +61,16 @@ function init() {
             console.log(data.toString('utf8'));
 
             // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
-            runServices();
+            // runServices();
 
             createWindow();
         });
     } else { // Renter service already running. Launch GUI.
         // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
-        runServices();
+        // runServices();
 
         createWindow();
     }
-
-    // Enables view to route to my-files.
-    userExists = true;
 }
 
 function createWindow() {
@@ -97,37 +97,17 @@ function createWindow() {
 // Handlers for toggling skybin daemons. Placeholders for now.
 ipcMain
     .on('login', (event, ...args) => {
-        let skybinInit;
-        if (args[0]) {
-            const keyFile = args[0];
-            // Init skybin with default home directory and existing key identity.
-            skybinInit = spawn(skybinPath, ['init', '-keyfile', keyFile]);
-        } else {
-            // Init skybin with default home directory and new key identity.
-            skybinInit = spawn(skybinPath, ['init']);
-        }
+        const initArgs = (args[0]) ? ['init', '-keyfile', args[0]] : ['init'];
 
-        skybinInit.on('exit', (code, signal) => {
-            // Run the renter service.
-            renter = spawn(skybinPath, ['renter']);
-            renter.stderr.on('data', (data) => {
-                console.log(data.toString('utf8'));
+        const skybinInit = spawn(skybinPath, initArgs)
+            .on('exit', (code, signal) => {
+                // Run the renter service.
+                renter = spawn(skybinPath, ['renter']);
+                renter.stderr.on('data', (data) => {
+                    console.log(data.toString('utf8'));
+                    // runServices();
+                });
             });
-
-            win.send('registered', true);
-
-            // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
-            runServices();
-        });
-
-    })
-    .on('startProvider', (event, ...args) => {
-        for (const arg of args) {
-        }
-    })
-    .on('startMetaserver', (event, ...args) => {
-        for (const arg of args) {
-        }
     })
     .on('viewReady', (event, ...args) => {
         if (args[0]) {
