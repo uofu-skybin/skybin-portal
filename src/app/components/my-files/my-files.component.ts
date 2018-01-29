@@ -13,8 +13,6 @@ import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import { ActivatedRoute, Router } from '@angular/router';
-import Timer = NodeJS.Timer;
 import { NotificationComponent } from '../notification/notification.component';
 import { LoginComponent } from '../login/login.component';
 

@@ -1,7 +1,6 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const {spawn, exec} = require('child_process');
 const fs = require('fs');
-const Sync = require('sync');
 
 let win;
 let skybinInit, metaserver, renter, provider;
