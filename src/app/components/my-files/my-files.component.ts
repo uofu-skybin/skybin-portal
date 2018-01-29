@@ -1,23 +1,22 @@
-import {Component, OnInit, Inject, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {ElectronService} from 'ngx-electron';
-import {MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar} from '@angular/material';
-import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import {ChangeDetectorRef} from '@angular/core';
-import {SkyFile} from '../../models/sky-file';
-import {LoadSkyFilesResponse} from '../../models/load-sky-files-response';
-import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
-import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
-import {Subscription} from 'rxjs/Subscription';
-import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
-import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
-import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
+import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ElectronService } from 'ngx-electron';
+import { MatDialog, MatMenuTrigger, MatSnackBar } from '@angular/material';
+import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import { ChangeDetectorRef } from '@angular/core';
+import { SkyFile } from '../../models/sky-file';
+import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
+import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
+import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
+import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
+import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Timer = NodeJS.Timer;
-import * as $ from 'jquery';
-import {NotificationComponent} from '../notification/notification.component';
-import {LoginComponent} from '../login/login.component';
+import { NotificationComponent } from '../notification/notification.component';
+import { LoginComponent } from '../login/login.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -55,32 +54,35 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     showDownloads = false;
     currentSearch = '';
     subscriptions: Subscription[] = [];
-    renterInfoPollId: Timer = null;
     // Renter info object returned from the renter service.
     private renterInfo: any = {};
 
     constructor(private http: HttpClient,
-                public electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar,
-                private router: Router,
-                private route: ActivatedRoute,
-                public zone: NgZone) {
+        public electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar,
+        public zone: NgZone) {
     }
 
     ngOnInit() {
-        this.electronService.ipcRenderer.send('viewReady', true);
-
         let storageDialog;
 
-        this.electronService.ipcRenderer.on('loginStatus', (event, ...args) => {
-            const userExists: boolean = args[0];
+        // Only poll for file/renter information if Main process is running services.
+        // TODO: switch channel name
+        this.electronService.ipcRenderer.on('servicesRunning', () => {
+            this.zone.run(() => {
+                this.updateRenterInfo();
+                this.loadFiles();
+            });
+        });
+
+        // Conditionally show the login/register modal if user ID is found.
+        // TODO: rename loginStatus channel
+        this.electronService.ipcRenderer.on('userExists', (loginEvent, userExists) => {
             if (!userExists) {
-                this.electronService.ipcRenderer.on('registered', (event, ...args) => {
+                this.electronService.ipcRenderer.on('registered', () => {
                     this.zone.run(() => {
-                        this.updateRenterInfo();
-                        this.loadFiles();
                         storageDialog.close();
                     });
                 });
@@ -90,11 +92,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
         });
 
+        // Tell Main the Angular view is ready for signals.
+        this.electronService.ipcRenderer.send('viewReady');
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(e => e.unsubscribe());
-        // clearInterval(this.renterInfoPollId);
     }
 
     updateRenterInfo() {
@@ -115,7 +118,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
             this.allFiles = files;
-            this.onSearchChanged();
+            // this.onSearchChanged();
         }, (error) => {
             console.error(error);
         });
@@ -345,7 +348,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 }
             }
             if (folderCount > 1) {
-                this.snackBar.open("That folder isn't empty!", null,
+                this.snackBar.open('That folder isn\'t empty!', null,
                     {
                         duration: 2000
                     });

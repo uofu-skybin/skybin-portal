@@ -1,12 +1,14 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const {spawn, exec} = require('child_process');
 const fs = require('fs');
+const Sync = require('sync');
 
 let win;
 let skybinInit, metaserver, renter, provider;
 let skybinPath;
 let homeDir;
 let userExists = false;
+let isFirstViewLoad = false;
 
 function init() {
     homeDir = `${process.env.HOME}/.skybin`;
@@ -30,99 +32,73 @@ function init() {
         }
     }
 
-    if (!homedirExists) {
-        createWindow();
-        return;
+    if (homedirExists) {
+        userExists = true;
+        // createWindow();
+        // return;
     }
 
-    // TODO:
-    // open up the config for the renter
-    // check the api address
-    // try to connect to that address OR check if a pidfile exists
-    // if it's not running, run it
-    // let renterAddress = "http://localhost:8002";
-    // Enables view to route to my-files.
+    createWindow();
 
-    let exists = false;
-    try {
-        fs.accessSync(homeDir + '/renter/lockfile');
-        exists = true;
-    } catch (err) {
-        console.log(`Accessing renter lockfile produced error: ${err}`);
-    }
-
-    // Enables view to route to my-files.
-    userExists = true;
-
-    // Start the renter service if it isn't running.
-    if (!exists) {
-        renter = spawn(skybinPath, ['renter']);
-        renter.stderr.on('data', (data) => {
-            console.log(data.toString('utf8'));
-
-            // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
-            // runServices();
-
-            createWindow();
-        });
-    } else { // Renter service already running. Launch GUI.
-        // TODO: For dev purposes launch provider and metaserver, this should not exist in production.
-        // runServices();
-
-        createWindow();
-    }
+    // let renterRunning = false;
+    // try {
+    //     fs.accessSync(homeDir + '/renter/lockfile');
+    //     renterRunning = true;
+    // } catch (err) {
+    //     console.log(`Accessing renter lockfile produced error: ${err}`);
+    // }
+    //
+    // // Start the renter service if it isn't running.
+    // if (!renterRunning) {
+    //     renter = spawn(skybinPath, ['renter']);
+    //     renter.stderr.on('data', (data) => {
+    //         console.log(data.toString('utf8'));
+    //         createWindow();
+    //     });
+    // } else { // Renter service already running. Launch GUI.
+    //     createWindow();
+    // }
 }
 
-function createWindow() {
-    // Create the browser window.
-    win = new BrowserWindow({
-        width: 1440,
-        height: 900,
-        backgroundColor: '#ffffff',
-        icon: `file://${__dirname}/dist/assets/logo.png`
-    });
-    win.loadURL(`file://${__dirname}/dist/index.html`);
-
-    // Uncomment to enable the menu bar.
-    win.setMenu(null);
-
-    //// uncomment below to open the DevTools.
-    win.webContents.openDevTools();
-    // Event when the window is closed.
-    win.on('closed', function () {
-        win = null;
-    });
-}
 
 // Handlers for toggling skybin daemons. Placeholders for now.
 ipcMain
+    .on('viewReady', (event) => {
+        // Don't run services when my-files component is generated after the first time.
+        if (!isFirstViewLoad) {
+            if (userExists) {
+                runServices();
+            }
+            win.send('userExists', userExists);
+            isFirstViewLoad = true;
+        } else {
+            win.send('servicesRunning');
+        }
+    })
     .on('login', (event, ...args) => {
         const initArgs = (args[0]) ? ['init', '-keyfile', args[0]] : ['init'];
 
-        const skybinInit = spawn(skybinPath, initArgs)
+        skybinInit = spawn(skybinPath, initArgs)
             .on('exit', (code, signal) => {
-                // Run the renter service.
-                renter = spawn(skybinPath, ['renter']);
-                renter.stderr.on('data', (data) => {
-                    console.log(data.toString('utf8'));
-                    // runServices();
-                });
+                runServices();
+                win.send('registered');
             });
-    })
-    .on('viewReady', (event, ...args) => {
-        if (args[0]) {
-            win.send('loginStatus', userExists);
-        }
     });
 
+// Run renter, metaserver, provider in that order. Production code likely just runs the renter here.
 function runServices() {
-    metaserver = spawn(skybinPath, ['metaserver']);
-    metaserver.stderr.on('data', (res) => {
-        console.log(res.toString('utf8'));
-        // Stall provider until metaserver is live.
-        provider = spawn(skybinPath, ['provider']);
-        provider.stderr.on('data', (provRes) => {
-            console.log(provRes.toString('utf8'));
+    renter = spawn(skybinPath, ['renter']);
+    renter.stderr.on('data', (data) => {
+        console.log(data.toString('utf8'));
+        metaserver = spawn(skybinPath, ['metaserver']);
+        metaserver.stderr.on('data', (res) => {
+            console.log(res.toString('utf8'));
+            // Stall provider until metaserver is live.
+            provider = spawn(skybinPath, ['provider']);
+            provider.stderr.on('data', (provRes) => {
+                console.log(provRes.toString('utf8'));
+                win.send('servicesRunning');
+            });
         });
     });
 }
@@ -134,8 +110,7 @@ app.on('ready', init);
 app.on('quit', () => {
     console.log('quitting. . .');
 
-    // TODO: for testing
-    // let killDir = spawn('rm', ['-rf', homeDir]);
+    // const killDir = spawn('rm', ['-rf', homeDir]);
 
     // Kill the skybin daemons on shutdown.
     if (metaserver) {
@@ -163,3 +138,27 @@ app.on('activate', function () {
         init();
     }
 });
+
+function createWindow() {
+    // Create the browser window.
+    win = new BrowserWindow({
+        width: 1440,
+        height: 900,
+        backgroundColor: '#ffffff',
+        icon: `file://${__dirname}/dist/assets/logo.png`
+    });
+    win.loadURL(`file://${__dirname}/dist/index.html`);
+
+    // Uncomment to enable the menu bar.
+    win.setMenu(null);
+
+    win.maximize();
+
+    //// uncomment below to open the DevTools.
+    win.webContents.openDevTools();
+    // Event when the window is closed.
+    win.on('closed', function () {
+        win = null;
+    });
+
+}
