@@ -8,7 +8,6 @@ import { MyWalletComponent } from './components/my-wallet/my-wallet.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
-import { RentStorageComponent } from './components/rent-storage/rent-storage.component';
 import { ProvideStorageComponent } from './components/provide-storage/provide-storage.component';
 import { RoutingModule } from './modules/routing/routing.module';
 import { HttpClientModule } from '@angular/common/http';
@@ -64,7 +63,6 @@ import { NotificationComponent } from './components/notification/notification.co
         ProvideStorageComponent,
         ProvideStorageComponent,
         RegisterComponent,
-        RentStorageComponent,
         ShareDialogComponent,
         SharedWithMeComponent,
         TruncatePipe,

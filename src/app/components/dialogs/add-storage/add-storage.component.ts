@@ -39,7 +39,7 @@ export class AddStorageComponent implements OnInit {
         const params = {
             amount: this.storageAmount
         };
-        this.http.post('http://localhost:8002/storage', params)
+        this.http.post('http://localhost:8002/reserve-storage', params)
             .subscribe((resp: any) => {
                 this.updateRenterInfo();
             }, (error: HttpErrorResponse) => {

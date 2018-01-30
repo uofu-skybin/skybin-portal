@@ -99,7 +99,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     updateRenterInfo() {
-        this.http.get('http://localhost:8002/info')
+        this.http.get(`${RENTER_ADDR}/info`)
             .subscribe((resp: any) => {
                 this.renterInfo = resp;
             }, (error: HttpErrorResponse) => {
@@ -175,7 +175,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             destPath,
         };
         const startTime = new Date();
-        const sub = this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
+        const sub = this.http.post(`${RENTER_ADDR}/files/upload`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -246,9 +246,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `${RENTER_ADDR}/files/${file.id}/download`;
+            const url = `${RENTER_ADDR}/files/download`;
             const body = {
-                destination: destPath
+                fileId: file.id,
+                destPath
             };
             const startTime = new Date();
             const sub = this.http.post(url, body).subscribe(response => {
@@ -294,9 +295,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 folderPath = folderPath.slice(1);
             }
             const body = {
-                destPath: folderPath
+                name: folderPath
             };
-            this.http.post(`${RENTER_ADDR}/files`, body).subscribe((file: any) => {
+            this.http.post(`${RENTER_ADDR}/files/create-folder`, body).subscribe((file: any) => {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
@@ -353,7 +354,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
         }
-        this.http.delete(`${RENTER_ADDR}/files/` + file.id).subscribe(response => {
+        const body = {
+            fileId: file.id,
+        };
+        this.http.post(`${RENTER_ADDR}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
             this.ref.detectChanges();
