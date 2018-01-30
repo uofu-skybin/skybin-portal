@@ -115,3 +115,7 @@
 .close:hover {
     cursor: pointer;
 }
+
+#cdk-overlay-0 > mat-dialog-container, #cdk-overlay-1 > mat-dialog-container {
+    padding: 0;
+}

@@ -53,7 +53,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     currentSearch = '';
     subscriptions: Subscription[] = [];
     // Renter info object returned from the renter service.
-    private renterInfo: any = {};
+    renterInfo: any = {};
 
     constructor(private http: HttpClient,
         public electronService: ElectronService,
