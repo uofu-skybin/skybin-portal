@@ -357,8 +357,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             this.onSearchChanged();
             this.ref.detectChanges();
         }, (error) => {
-            console.error('Unable to delete file');
-            console.error('Error:', error);
+            if (error.message !== 'Http failure during parsing for http://127.0.0.1:8002/files/remove') {
+                console.error('Unable to delete file');
+                console.error('Error:', error);
+            } else {
+                this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+                this.onSearchChanged();
+                this.ref.detectChanges();
+            }
         });
     }
 
