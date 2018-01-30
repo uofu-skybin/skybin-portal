@@ -198,7 +198,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 // document.getElementById('insufficient-storage-alert').style.display = 'block';
                 this.zone.run(() => {
                     scope.snackBar.openFromComponent(NotificationComponent, {
-                        duration: 7000,
+                        duration: 3000,
                         horizontalPosition: 'center',
                         verticalPosition: 'top',
                     });

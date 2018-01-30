@@ -22,9 +22,9 @@ function init() {
         fs.accessSync(homeDir);
         homedirExists = true;
     } catch (err) {
-        homeDir = `${process.env.GOPATH}/src/skybin/integration/repo`;
         try {
-            fs.accessSync(homeDir);
+            fs.accessSync(`${process.env.GOPATH}/src/skybin/integration/repo`);
+            homeDir =  `${process.env.GOPATH}/src/skybin/integration/repo`;
             homedirExists = true;
         } catch (err) {
             console.log('Skybin directory not found. Continuing with the init process.');
@@ -33,32 +33,10 @@ function init() {
 
     if (homedirExists) {
         userExists = true;
-        // createWindow();
-        // return;
     }
 
     createWindow();
-
-    // let renterRunning = false;
-    // try {
-    //     fs.accessSync(homeDir + '/renter/lockfile');
-    //     renterRunning = true;
-    // } catch (err) {
-    //     console.log(`Accessing renter lockfile produced error: ${err}`);
-    // }
-    //
-    // // Start the renter service if it isn't running.
-    // if (!renterRunning) {
-    //     renter = spawn(skybinPath, ['renter']);
-    //     renter.stderr.on('data', (data) => {
-    //         console.log(data.toString('utf8'));
-    //         createWindow();
-    //     });
-    // } else { // Renter service already running. Launch GUI.
-    //     createWindow();
-    // }
 }
-
 
 // Handlers for toggling skybin daemons. Placeholders for now.
 ipcMain
@@ -86,20 +64,40 @@ ipcMain
 
 // Run renter, metaserver, provider in that order. Production code likely just runs the renter here.
 function runServices() {
-    renter = spawn(skybinPath, ['renter']);
-    renter.stderr.on('data', (data) => {
-        console.log(data.toString('utf8'));
-        metaserver = spawn(skybinPath, ['metaserver']);
-        metaserver.stderr.on('data', (res) => {
-            console.log(res.toString('utf8'));
-            // Stall provider until metaserver is live.
-            provider = spawn(skybinPath, ['provider']);
-            provider.stderr.on('data', (provRes) => {
-                console.log(provRes.toString('utf8'));
-                win.send('servicesRunning');
-            });
-        });
-    });
+    // let renterRunning = false;
+    // try {
+    //     fs.accessSync(homeDir + '/renter/lockfile');
+    //     renterRunning = true;
+    // } catch (err) {
+    //     console.error(`Accessing renter lockfile produced error: ${err}`);
+    // }
+    //
+    // // Start the renter service if it isn't running.
+    // if (!renterRunning) {
+    //     renter = spawn(skybinPath, ['renter']);
+    //     renter.stderr.on('data', (data) => {
+    //         console.log(data.toString('utf8'));
+    //         fs.mkdir(homeDir + '/renter/lockfile');
+    //         win.send('servicesRunning');
+    //     });
+    // }
+
+    win.send('servicesRunning');
+
+    // renter = spawn(skybinPath, ['renter']);
+    // renter.stderr.on('data', (data) => {
+    //     console.log(data.toString('utf8'));
+        // metaserver = spawn(skybinPath, ['metaserver']);
+        // metaserver.stderr.on('data', (res) => {
+        //     console.log(res.toString('utf8'));
+        //     // Stall provider until metaserver is live.
+        //     provider = spawn(skybinPath, ['provider']);
+        //     provider.stderr.on('data', (provRes) => {
+        //         console.log(provRes.toString('utf8'));
+        //         win.send('servicesRunning');
+            // });
+    //     });
+    // });
 }
 
 // Create window on electron initialization.
