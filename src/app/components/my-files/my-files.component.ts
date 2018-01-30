@@ -56,11 +56,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone) {
     }
 
     ngOnInit() {
@@ -219,10 +219,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             ],
         };
         this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
-            for (const file of files) {
-                this.uploadFile(file);
+            if (files) {
+                for (const file of files) {
+                    this.uploadFile(file);
+                }
+                this.ref.detectChanges();
             }
-            this.ref.detectChanges();
         });
     }
 
@@ -357,14 +359,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             this.onSearchChanged();
             this.ref.detectChanges();
         }, (error) => {
-            if (error.message !== 'Http failure during parsing for http://127.0.0.1:8002/files/remove') {
-                console.error('Unable to delete file');
-                console.error('Error:', error);
-            } else {
-                this.allFiles = this.allFiles.filter(e => e.id !== file.id);
-                this.onSearchChanged();
-                this.ref.detectChanges();
-            }
+            console.error('Unable to delete file');
+            console.error('Error:', error);
         });
     }
 
