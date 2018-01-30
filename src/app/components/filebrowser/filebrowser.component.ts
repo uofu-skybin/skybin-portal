@@ -26,9 +26,9 @@ export class FilebrowserComponent {
     constructor(private ref: ChangeDetectorRef) { }
 
     inCurrentDirectory(path: string) {
-        let currentDir = this.currentPath.join('/');
-        let filePath = path.split('/');
-        let fileDir = filePath.slice(0, filePath.length - 1).join('/');
+        const currentDir = this.currentPath.join('/');
+        const filePath = path.split('/');
+        const fileDir = filePath.slice(0, filePath.length - 1).join('/');
         return fileDir === currentDir;
     }
 

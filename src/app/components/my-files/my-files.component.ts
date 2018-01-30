@@ -197,16 +197,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 // $('insufficient-storage-alert').css('display', 'inline');
                 // document.getElementById('insufficient-storage-alert').style.display = 'block';
                 this.zone.run(() => {
-                    // scope.snackBar.open('insufficient storage', 'dismiss',
-                    //     <MatSnackBarConfig> {
-                    //         duration: 10000,
-                    //         horizontalposition: 'center',
-                    //         verticalposition: 'top'
-                    //     });
                     scope.snackBar.openFromComponent(NotificationComponent, {
-                        duration: 10000,
+                        duration: 7000,
                         horizontalPosition: 'center',
-                        verticalPosition: 'top'
+                        verticalPosition: 'top',
                     });
                 });
                 console.log('not enough storage');
