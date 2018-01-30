@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar } from '@angular/material';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig} from '@angular/material';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
@@ -116,6 +116,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
             this.allFiles = files;
+            this.filteredFiles = files;
             // this.onSearchChanged();
         }, (error) => {
             console.error(error);
@@ -191,13 +192,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const elapsedMs = endTime.getTime() - startTime.getTime();
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
-            if (error.error.error === 'Cannot find enough storage. Be sure to reserve storage before uploading files.') {
-                // TODO: notification of not enough storage
+            if (error.error.error === 'Cannot find enough space') {
+                // Bootstrap alert.
                 // $('insufficient-storage-alert').css('display', 'inline');
                 // document.getElementById('insufficient-storage-alert').style.display = 'block';
                 this.zone.run(() => {
-                    // scope.snackbar.open("insufficient storage", 'dismiss',
-                    //     {
+                    // scope.snackBar.open('insufficient storage', 'dismiss',
+                    //     <MatSnackBarConfig> {
                     //         duration: 10000,
                     //         horizontalposition: 'center',
                     //         verticalposition: 'top'
