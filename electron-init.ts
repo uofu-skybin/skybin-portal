@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, Menu, Tray} = require('electron');
 const {spawn, exec} = require('child_process');
 const fs = require('fs');
 
@@ -8,6 +8,7 @@ let skybinPath;
 let homeDir;
 let userExists = false;
 let isFirstViewLoad = false;
+let tray = null;
 
 function init() {
     homeDir = `${process.env.HOME}/.skybin`;
@@ -34,6 +35,14 @@ function init() {
     if (homedirExists) {
         userExists = true;
     }
+
+    tray = new Tray(`${__dirname}/assets/SkyBin.png`);
+    const contextMenu = Menu.buildFromTemplate([
+        {label: 'Renter', type: 'checkbox'},
+        {label: 'Provider', type: 'checkbox'}
+    ]);
+    tray.setToolTip('');
+    tray.setContextMenu(contextMenu);
 
     createWindow();
 }
@@ -83,21 +92,6 @@ function runServices() {
     // }
 
     win.send('servicesRunning');
-
-    // renter = spawn(skybinPath, ['renter']);
-    // renter.stderr.on('data', (data) => {
-    //     console.log(data.toString('utf8'));
-        // metaserver = spawn(skybinPath, ['metaserver']);
-        // metaserver.stderr.on('data', (res) => {
-        //     console.log(res.toString('utf8'));
-        //     // Stall provider until metaserver is live.
-        //     provider = spawn(skybinPath, ['provider']);
-        //     provider.stderr.on('data', (provRes) => {
-        //         console.log(provRes.toString('utf8'));
-        //         win.send('servicesRunning');
-            // });
-    //     });
-    // });
 }
 
 // Create window on electron initialization.
