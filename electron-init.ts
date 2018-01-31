@@ -53,7 +53,7 @@ ipcMain
         // Don't run services when my-files component is generated after the first time.
         if (!isFirstViewLoad) {
             if (userExists) {
-                runServices();
+                tryRunRenter();
             }
             win.send('userExists', userExists);
             isFirstViewLoad = true;
@@ -66,32 +66,24 @@ ipcMain
 
         skybinInit = spawn(skybinPath, initArgs)
             .on('exit', (code, signal) => {
-                runServices();
-                win.send('registered');
+                tryRunRenter();
             });
     });
 
-// Run renter, metaserver, provider in that order. Production code likely just runs the renter here.
-function runServices() {
-    // let renterRunning = false;
-    // try {
-    //     fs.accessSync(homeDir + '/renter/lockfile');
-    //     renterRunning = true;
-    // } catch (err) {
-    //     console.error(`Accessing renter lockfile produced error: ${err}`);
-    // }
-    //
-    // // Start the renter service if it isn't running.
-    // if (!renterRunning) {
-    //     renter = spawn(skybinPath, ['renter']);
-    //     renter.stderr.on('data', (data) => {
-    //         console.log(data.toString('utf8'));
-    //         fs.mkdir(homeDir + '/renter/lockfile');
-    //         win.send('servicesRunning');
-    //     });
-    // }
-
-    win.send('servicesRunning');
+function tryRunRenter() {
+    try {
+        fs.accessSync(homeDir + '/renter/lockfile');
+    } catch (err) {
+        console.log('Renter service not running. Launching now.');
+        renter = spawn(skybinPath, ['renter'], {
+            detached: true
+        });
+        renter.stderr.on('data', (data) => {
+            console.log(data.toString('utf8'));
+            fs.openSync(`${homeDir}/renter/lockfile`, 'w');
+            win.send('servicesRunning');
+        });
+    }
 }
 
 // Create window on electron initialization.
@@ -100,19 +92,6 @@ app.on('ready', init);
 // Clean up background services upon application shutdown.
 app.on('quit', () => {
     console.log('quitting. . .');
-
-    // const killDir = spawn('rm', ['-rf', homeDir]);
-
-    // Kill the skybin daemons on shutdown.
-    if (metaserver) {
-        metaserver.kill();
-    }
-    if (renter) {
-        renter.kill();
-    }
-    if (provider) {
-        provider.kill();
-    }
 });
 
 // Quit when all windows are closed.
