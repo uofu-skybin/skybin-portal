@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, NgZone, OnInit, ViewEncapsulation} from '@angular/core';
+import {ElectronService} from 'ngx-electron';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,9 +10,28 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+    constructor(private electronService: ElectronService,
+                private router: Router,
+                private zone: NgZone) {
+    }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
+
+    /**
+     * Acts as a "login" method in that it communicates with the Main Electron process and either creates a new directory/keyID or uses
+     * the key passed as an argument.
+     */
+    login(hasKey = false) {
+        if (hasKey) {
+            this.electronService.remote.dialog.showOpenDialog({}, (files: string[]) => {
+                if (files) {
+                    this.electronService.ipcRenderer.send('login', files[0]);
+                }
+            });
+        } else {
+            this.electronService.ipcRenderer.send('login', null);
+        }
+    }
 
 }

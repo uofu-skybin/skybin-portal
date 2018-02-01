@@ -1,3 +1,10 @@
-<p>
-  login works!
-</p>
+<div id='login-container'>
+    <mat-card-title>Login or Register</mat-card-title>
+    <br><br>
+    <button mat-raised-button class='skybin-btn-primary' (click)='login(true)' name='identity-login-button'>
+        Choose identity file
+    </button>
+    <button mat-raised-button class='skybin-btn-primary' (click)='login()' name='register-button'>
+        Register
+    </button>
+</div>

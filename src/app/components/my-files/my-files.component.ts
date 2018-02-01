@@ -1,19 +1,20 @@
-import { Component, OnInit, Inject, ViewEncapsulation, ViewChild } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
-import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatMenuTrigger, MatSnackBar } from '@angular/material';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig} from '@angular/material';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile } from '../../models/sky-file';
 import { LoadSkyFilesResponse } from '../../models/load-sky-files-response';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
-import { MatMenu } from '@angular/material/menu/typings/menu-directive';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 import { Subscription } from 'rxjs/Subscription';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
-import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
+import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
+import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
+import OpenDialogOptions = Electron.OpenDialogOptions;
+import { NotificationComponent } from '../notification/notification.component';
+import { LoginComponent } from '../login/login.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -52,18 +53,45 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     currentSearch = '';
     subscriptions: Subscription[] = [];
     // Renter info object returned from the renter service.
-    private renterInfo: any = {};
+    renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        private electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone) {
     }
 
     ngOnInit() {
-        this.updateRenterInfo();
-        this.loadFiles();
+        let storageDialog;
+
+        // Only poll for file/renter information if Main process is running services.
+        // TODO: switch channel name
+        this.electronService.ipcRenderer.on('servicesRunning', () => {
+            this.zone.run(() => {
+                this.updateRenterInfo();
+                this.loadFiles();
+            });
+        });
+
+        // Conditionally show the login/register modal if user ID is found.
+        // TODO: rename loginStatus channel
+        this.electronService.ipcRenderer.on('userExists', (loginEvent, userExists) => {
+            if (!userExists) {
+                this.electronService.ipcRenderer.on('registered', () => {
+                    this.zone.run(() => {
+                        storageDialog.close();
+                    });
+                });
+                storageDialog = this.dialog.open(LoginComponent, {
+                    disableClose: true
+                });
+            }
+        });
+
+        // Tell Main the Angular view is ready for signals.
+        this.electronService.ipcRenderer.send('viewReady');
     }
 
     ngOnDestroy() {
@@ -88,7 +116,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
             this.allFiles = files;
-            this.onSearchChanged();
+            this.filteredFiles = files;
+            // this.onSearchChanged();
         }, (error) => {
             console.error(error);
         });
@@ -126,6 +155,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath) {
+        const scope = this;
         const baseName = this.baseName(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
@@ -162,21 +192,39 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const elapsedMs = endTime.getTime() - startTime.getTime();
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
-            console.error(error);
+            if (error.error.error === 'Cannot find enough space') {
+                // Bootstrap alert.
+                // $('insufficient-storage-alert').css('display', 'inline');
+                // document.getElementById('insufficient-storage-alert').style.display = 'block';
+                this.zone.run(() => {
+                    scope.snackBar.openFromComponent(NotificationComponent, {
+                        duration: 3000,
+                        horizontalPosition: 'center',
+                        verticalPosition: 'top',
+                    });
+                });
+                console.log('not enough storage');
+                return;
+            }
             upload.state = TRANSFER_ERROR;
         });
         this.subscriptions.push(sub);
     }
 
     uploadClicked() {
-        this.electronService.remote.dialog.showOpenDialog(files => {
-            if (!files) {
-                return;
+        const options: OpenDialogOptions = {
+            properties: [
+                'openFile',
+                'multiSelections'
+            ],
+        };
+        this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
+            if (files) {
+                for (const file of files) {
+                    this.uploadFile(file);
+                }
+                this.ref.detectChanges();
             }
-            files.forEach(sourcePath => {
-                this.uploadFile(sourcePath);
-            });
-            this.ref.detectChanges();
         });
     }
 
@@ -184,7 +232,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog((destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({}, (destPath: string) => {
             if (!destPath) {
                 return;
             }
@@ -296,10 +344,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 }
             }
             if (folderCount > 1) {
-                this.snackBar.open("That folder isn't empty!", null,
-            {
-                duration: 2000
-            });
+                this.snackBar.open('That folder isn\'t empty!', null,
+                    {
+                        duration: 2000
+                    });
                 return;
             }
         }

@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {MatDialogRef} from '@angular/material';
-import {NewFolderDialogComponent} from '../new-folder-dialog/new-folder-dialog.component';
 
 @Component({
     selector: 'app-add-storage',
@@ -22,10 +21,11 @@ export class AddStorageComponent implements OnInit {
     };
 
     // Storage space to reserve with a click to reserve.
-    private storageAmount: number = null;
+    storageAmount: number = null;
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<AddStorageComponent>) {
+        this.updateRenterInfo();
     }
 
     ngOnInit() {

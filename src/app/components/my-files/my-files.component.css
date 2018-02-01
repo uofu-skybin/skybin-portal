@@ -107,3 +107,15 @@
 #available-space-container {
     color: #6ab6f3;
 }
+
+#insufficient-storage-alert {
+    display: none;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+#cdk-overlay-0 > mat-dialog-container, #cdk-overlay-1 > mat-dialog-container {
+    padding: 0 !important;
+}

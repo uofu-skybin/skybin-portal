@@ -24,6 +24,7 @@ export class ConfigureStorageComponent implements OnInit {
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureStorageComponent>) {
+        this.updateRenterInfo();
     }
 
     ngOnInit() {

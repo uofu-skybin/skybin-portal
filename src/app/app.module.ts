@@ -40,6 +40,7 @@ import { ViewFileDetailsComponent } from './components/view-file-details/view-fi
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
+import { NotificationComponent } from './components/notification/notification.component';
 
 @NgModule({
     entryComponents: [
@@ -47,7 +48,8 @@ import { ConfigureStorageComponent } from './components/dialogs/configure-storag
         AddStorageComponent,
         ConfigureStorageComponent,
         ShareDialogComponent,
-        ViewFileDetailsComponent
+        ViewFileDetailsComponent,
+        NotificationComponent
     ],
     declarations: [
         AppComponent,
@@ -67,6 +69,7 @@ import { ConfigureStorageComponent } from './components/dialogs/configure-storag
         ViewFileDetailsComponent,
         AddStorageComponent,
         ConfigureStorageComponent,
+        NotificationComponent,
     ],
     imports: [
         BrowserAnimationsModule,
