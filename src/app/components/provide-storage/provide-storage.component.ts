@@ -100,6 +100,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
             });
     }
 
+    // TODO: remove
     private loadTestActivityData() {
         setInterval(() => {
             this.activityFeed.push(

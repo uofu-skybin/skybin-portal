@@ -44,29 +44,4 @@ export class ConfigureStorageComponent implements OnInit {
         this.dialogRef.close();
     }
 
-    formatBytes(n) {
-        if (!n) {
-            return '';
-        }
-
-        let amt = n;
-        let suffix = 'B';
-
-        if (n > 1e9) {
-            amt = n / 1e9;
-            suffix = 'GB';
-        } else if (n > 1e6) {
-            amt = n / 1e6;
-            suffix = 'MB';
-        } else if (n > 1e3) {
-            amt = n / 1e3;
-            suffix = 'KB';
-        }
-
-        if (amt % 1 !== 0) {
-            amt = amt.toFixed(1);
-        }
-
-        return amt + suffix;
-    }
 }

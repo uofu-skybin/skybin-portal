@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { SkyFile } from '../../models/sky-file';
+import { SkyFile, latestVersion } from '../../models/common';
 import { ChangeDetectorRef } from '@angular/core';
 
 interface FilesResponse {
@@ -96,6 +96,11 @@ export class FilebrowserComponent {
     formatModTime(modString) {
         const date = new Date(modString);
         return date.toLocaleDateString().replace(/\//g, '-');
+    }
+
+    // shim to use latestVersion() from within template
+    latestVersion(file: SkyFile) {
+        return latestVersion(file);
     }
 
 }

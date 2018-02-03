@@ -12,7 +12,8 @@ export class RegisterComponent implements OnInit {
     constructor(private router: Router) { }
 
     ngOnInit() {
-        // TODO: Add UI for indicating to the user that their identity was not found and will be generated automatically.
+        // TODO: Add UI for indicating to the user that their identity was
+        // not found and will be generated automatically.
         this.router.navigate(['/my-files']);
     }
 
