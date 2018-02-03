@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material';
-
+import { SkyFile, latestVersion } from '../../models/common';
 
 @Component({
     selector: 'app-view-file-details',
@@ -9,10 +9,10 @@ import { MAT_DIALOG_DATA } from '@angular/material';
 })
 export class ViewFileDetailsComponent implements OnInit {
 
-    file = null;
+    file: SkyFile = null;
 
     constructor( @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.file = data.file;
+        this.file = <SkyFile> data.file;
     }
 
     ngOnInit() {
@@ -29,7 +29,7 @@ export class ViewFileDetailsComponent implements OnInit {
     }
 
     getFileLocations() {
-        const locations = this.file.blocks
+        const locations = latestVersion(this.file).blocks
             .map(e => e.locations)
 
             // Flatten the location lists.
@@ -37,5 +37,9 @@ export class ViewFileDetailsComponent implements OnInit {
 
         const addrs = locations.map(e => e.address);
         return addrs;
+    }
+
+    latestVersion(file: SkyFile) {
+        return latestVersion(file);
     }
 }

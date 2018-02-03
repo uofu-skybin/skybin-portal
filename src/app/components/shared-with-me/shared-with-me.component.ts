@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { SkyFile } from '../../models/sky-file';
+import { SkyFile } from '../../models/common';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ElectronService } from 'ngx-electron';
@@ -20,12 +20,7 @@ export class SharedWithMeComponent implements OnInit {
         private electronService: ElectronService,
         public dialog: MatDialog,
         private ref: ChangeDetectorRef) {
-        this.myFiles = [
-            new SkyFile(null, null, '1', false, '11-29-2017', 'report.doc', 30),
-            new SkyFile(null, null, '2', false, '01-02-2015', 'notes.txt', 1),
-            new SkyFile(null, null, '1', false, '04-13-2017', 'sosb.pdf', 15),
-            new SkyFile(null, null, '1', false, '04-27-2017', 'pip.py', 15),
-        ];
+        this.myFiles = [];
     }
 
     ngOnInit() {

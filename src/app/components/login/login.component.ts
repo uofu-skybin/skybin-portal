@@ -18,15 +18,13 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
     }
 
-    /**
-     * Acts as a "login" method in that it communicates with the Main Electron process and either creates a new directory/keyID or uses
-     * the key passed as an argument.
-     */
+    // Acts as a "login" method in that it communicates with the Main Electron process
+    // and either creates a new directory/keyID or uses the key passed as an argument.
     login(hasKey = false) {
         if (hasKey) {
-            this.electronService.remote.dialog.showOpenDialog({}, (files: string[]) => {
-                if (files) {
-                    this.electronService.ipcRenderer.send('login', files[0]);
+            this.electronService.remote.dialog.showOpenDialog({}, (keyFiles: string[]) => {
+                if (keyFiles) {
+                    this.electronService.ipcRenderer.send('login', keyFiles[0]);
                 }
             });
         } else {
