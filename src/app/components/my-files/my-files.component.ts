@@ -68,7 +68,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
-        // do to an angular bug: https://github.com/angular/material2/issues/5268
+        // due to an angular bug: https://github.com/angular/material2/issues/5268
         const isSkybinSetup = this.electronService.ipcRenderer.sendSync('isSkybinSetup');
         if (isSkybinSetup) {
             this.updateRenterInfo();
