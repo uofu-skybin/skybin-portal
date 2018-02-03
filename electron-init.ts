@@ -1,86 +1,175 @@
-const {app, BrowserWindow, ipcMain, Menu, Tray} = require('electron');
-const {spawn, exec} = require('child_process');
+const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
+const { spawn, exec, spawnSync } = require('child_process');
 const fs = require('fs');
 
+// window object
 let win;
-let skybinInit, metaserver, renter, provider;
-let skybinPath;
-let homeDir;
-let userExists = false;
-let isFirstViewLoad = false;
-let tray = null;
 
-function init() {
-    homeDir = `${process.env.HOME}/.skybin`;
-    skybinPath = `${process.env.GOPATH}/src/skybin/skybin`;
+let isSkybinSetup = false;
+let skybinHome = null;
+let renterConfig = null;
+let providerConfig = null;
 
-    if (process.env.SKYBIN_HOME) {
-        homeDir = process.env.SKYBIN_HOME;
+// Loads a JSON config file from the given file path.
+function loadConfig(path) {
+    const data = fs.readFileSync(path);
+    return JSON.parse(data);
+}
+
+// Attempts to load the config file for the renter or provider.
+// configType should be 'renter' or 'provider'
+function tryLoadConfig(configType) {
+    console.assert(['renter', 'provider']
+        .some(e => e === configType), 'unknown config type');
+    if (skybinHome === null) {
+        return {
+            'error': 'SkyBin home is not known. Has SkyBin been setup yet?',
+        };
     }
-
-    let homedirExists = false;
     try {
-        fs.accessSync(homeDir);
-        homedirExists = true;
-    } catch (err) {
+        return loadConfig(`${skybinHome}/${configType}/config.json`);
+    } catch (error) {
+        return {
+            'error': `Error loading config. Error: ${error}`,
+        };
+    }
+}
+
+// Register IPC handlers for main<->renderer process communication.
+ipcMain
+    .on('isSkybinSetup', (event) => {
+        event.returnValue = isSkybinSetup;
+    })
+    .on('setupSkybin', (event, setupOptions) => {
         try {
-            fs.accessSync(`${process.env.GOPATH}/src/skybin/integration/repo`);
-            homeDir =  `${process.env.GOPATH}/src/skybin/integration/repo`;
-            homedirExists = true;
-        } catch (err) {
-            console.log('Skybin directory not found. Continuing with the init process.');
+            event.returnValue = setupSkybin(setupOptions);
+        } catch (error) {
+            console.error('error setting up skybin', error);
+            event.returnValue = {
+                wasSuccessful: false,
+                errorMessage: `setup exception: ${error}`,
+                errorReason: 'unknown error',
+            };
         }
+    })
+    .on('loadRenterConfig', (event) => {
+       event.returnValue = tryLoadConfig('renter');
+    })
+    .on('loadProviderConfig', (event) => {
+        event.returnValue = tryLoadConfig('provider');
+    });
+
+// Setup skybin for the first time using 'skybin init'.
+// Returns an object describing the attempted setup's result.
+function setupSkybin(setupOptions) {
+    const skybinCmd = 'skybin';
+    const args = ['init'];
+    if (setupOptions.keyFile !== null) {
+        args.push('-keyfile', setupOptions.keyFile);
+    }
+    if (setupOptions.homeFolder !== null) {
+        args.push('-home', setupOptions.homeFolder);
+    }
+    if (setupOptions.renterAlias !== null) {
+        args.push('-renter-alias', setupOptions.renterAlias);
+    }
+    console.log('running skybin init');
+    console.log('arguments:', args);
+
+    const result = spawnSync(skybinCmd, args);
+
+    console.log('skybin init complete');
+    console.log('return code:', result.status);
+    console.log('standard out: ', result.stdout.toString());
+    console.log('standard error:', result.stderr.toString());
+
+    if (result.status === 0) {
+
+        // Yay! Registration completed successfully.
+        // Now we need to start the services...
+        // .... ALTERNATIVELY skybin init can do that :)
+        return {
+            wasSuccessful: true,
+        };
     }
 
-    if (homedirExists) {
-        userExists = true;
+    // Something went wrong!
+    const setupResult = {
+        wasSuccessful: false,
+        errorMessage: result.stderr.toString(),
+        errorReason: '',
+    };
+    const errorMap = {
+        1: 'homedir exists',
+        2: 'duplicate alias',
+        3: 'bad key file'
+    };
+    setupResult.errorReason = errorMap[result.status];
+    if (setupResult.errorReason) {
+        setupResult.errorReason = 'unknown error';
+    }
+    return setupResult;
+}
+
+// Application entry point
+function init() {
+    skybinHome = `${process.env.HOME}/.skybin`;
+    if (process.env.SKYBIN_HOME) {
+        skybinHome = process.env.SKYBIN_HOME;
     }
 
-    tray = new Tray(`${__dirname}/assets/SkyBin.png`);
-    const contextMenu = Menu.buildFromTemplate([
-        {label: 'Renter', type: 'checkbox'},
-        {label: 'Provider', type: 'checkbox'}
-    ]);
-    tray.setToolTip('');
-    tray.setContextMenu(contextMenu);
+    console.log('looking for skybin home folder at', skybinHome);
 
-    createWindow();
+    isSkybinSetup = fs.existsSync(skybinHome);
+    if (isSkybinSetup) {
+        console.log('skybin homefolder found');
+
+        // TODO: check that services are running. If not, find out why, attempt to run them, etc.
+
+    } else {
+        console.log('no skybin homefolder found');
+    }
+
+    launchApp();
+}
+
+// Launches the app window.
+function launchApp() {
+
+    // Create the browser window.
+    win = new BrowserWindow({
+        width: 1440,
+        height: 900,
+        backgroundColor: '#ffffff',
+        icon: `file://${__dirname}/dist/assets/logo.png`
+    });
+    win.loadURL(`file://${__dirname}/dist/index.html`);
+
+    // Uncomment to enable the menu bar.
+    win.setMenu(null);
+
+    win.maximize();
+
+    // uncomment below to open the DevTools.
+    // win.webContents.openDevTools();
+    win.on('closed', function () {
+        win = null;
+    });
 }
 
 // Handlers for toggling skybin daemons. Placeholders for now.
-ipcMain
-    .on('viewReady', (event) => {
-        // Don't run services when my-files component is generated after the first time.
-        if (!isFirstViewLoad) {
-            if (userExists) {
-                tryRunRenter();
-            }
-            win.send('userExists', userExists);
-            isFirstViewLoad = true;
-        } else {
-            win.send('servicesRunning');
-        }
-    })
-    .on('login', (event, ...args) => {
-        const initArgs = (args[0]) ? ['init', '-keyfile', args[0]] : ['init'];
-
-        skybinInit = spawn(skybinPath, initArgs)
-            .on('exit', (code, signal) => {
-                tryRunRenter();
-            });
-    });
-
+// TODO: remove
 function tryRunRenter() {
     try {
-        fs.accessSync(homeDir + '/renter/lockfile');
+        fs.accessSync(skybinHome + '/renter/lockfile');
     } catch (err) {
         console.log('Renter service not running. Launching now.');
-        renter = spawn(skybinPath, ['renter'], {
+        const renter = spawn(skybinPath, ['renter'], {
             detached: true
         });
         renter.stderr.on('data', (data) => {
             console.log(data.toString('utf8'));
-            fs.openSync(`${homeDir}/renter/lockfile`, 'w');
+            fs.openSync(`${skybinHome}/renter/lockfile`, 'w');
             win.send('servicesRunning');
         });
     }
@@ -108,27 +197,3 @@ app.on('activate', function () {
         init();
     }
 });
-
-function createWindow() {
-    // Create the browser window.
-    win = new BrowserWindow({
-        width: 1440,
-        height: 900,
-        backgroundColor: '#ffffff',
-        icon: `file://${__dirname}/dist/assets/logo.png`
-    });
-    win.loadURL(`file://${__dirname}/dist/index.html`);
-
-    // Uncomment to enable the menu bar.
-    win.setMenu(null);
-
-    win.maximize();
-
-    //// uncomment below to open the DevTools.
-    win.webContents.openDevTools();
-    // Event when the window is closed.
-    win.on('closed', function () {
-        win = null;
-    });
-
-}
