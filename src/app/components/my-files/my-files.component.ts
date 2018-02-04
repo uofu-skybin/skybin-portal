@@ -55,11 +55,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -185,14 +185,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
             if (error.error.error === 'Cannot find enough space') {
-                // Bootstrap alert.
-                // $('insufficient-storage-alert').css('display', 'inline');
-                // document.getElementById('insufficient-storage-alert').style.display = 'block';
                 this.zone.run(() => {
                     scope.snackBar.openFromComponent(NotificationComponent, {
+                        data: 'You need to reserve more storage.',
                         duration: 3000,
-                        horizontalPosition: 'center',
-                        verticalPosition: 'top',
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
                     });
                 });
                 console.log('not enough storage');
@@ -330,7 +328,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const hasChild = this.allFiles.some(e =>
                 e.name.startsWith(file.name) && e.id !== file.id);
             if (hasChild) {
-                this.snackBar.open("That folder isn't empty!", null, { duration: 2000 });
+                this.zone.run(() => {
+                    this.snackBar.openFromComponent(NotificationComponent, {
+                        data: 'That folder isn\'t empty!',
+                        duration: 3000,
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
+                    });
+                });
                 return;
             }
         }
