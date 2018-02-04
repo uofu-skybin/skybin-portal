@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile, latestVersion, LoadSkyFilesResponse } from '../../models/common';
@@ -60,37 +60,30 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         private ref: ChangeDetectorRef,
         public snackBar: MatSnackBar,
         public zone: NgZone) {
-    }
 
-    ngOnInit() {
-        let storageDialog;
+        // Check if this is the first time launching the app.
+        // I do this in the constructor instead of ngOnInit()
+        // due to an angular bug: https://github.com/angular/material2/issues/5268
+        const isSkybinSetup = this.electronService.ipcRenderer.sendSync('isSkybinSetup');
+        if (isSkybinSetup) {
+            this.updateRenterInfo();
+            this.loadFiles();
+        } else {
 
-        // Only poll for file/renter information if Main process is running services.
-        // TODO: switch channel name
-        this.electronService.ipcRenderer.on('servicesRunning', () => {
-            this.zone.run(() => {
+            // First time setup. Show the setup dialog.
+            console.log('showing setup dialog');
+            const loginDialog = this.dialog.open(LoginComponent, {
+                disableClose: true,
+            });
+            loginDialog.afterClosed().subscribe(() => {
                 this.updateRenterInfo();
                 this.loadFiles();
             });
-        });
+        }
+    }
 
-        // Conditionally show the login/register modal if user ID is found.
-        // TODO: rename loginStatus channel
-        this.electronService.ipcRenderer.on('userExists', (loginEvent, userExists) => {
-            if (!userExists) {
-                this.electronService.ipcRenderer.on('registered', () => {
-                    this.zone.run(() => {
-                        storageDialog.close();
-                    });
-                });
-                storageDialog = this.dialog.open(LoginComponent, {
-                    disableClose: true
-                });
-            }
-        });
+    ngOnInit() {
 
-        // Tell Main the Angular view is ready for signals.
-        this.electronService.ipcRenderer.send('viewReady');
     }
 
     ngOnDestroy() {
