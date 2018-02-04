@@ -155,6 +155,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         destPath += baseName;
 
+        // Make sure there are no files with the given name.
+        while (true) {
+            let nameChanged = false
+            for (let file of this.allFiles) {
+                if (file.name == destPath) {
+                    destPath += '.copy'
+                    nameChanged = true;
+                }
+            }
+            if (!nameChanged) {
+                break;
+            }
+        }
+
         const upload = {
             sourcePath,
             destPath,
@@ -452,5 +466,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 file: file
             }
         });
+    }
+
+    onDrop(e) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+        e.preventDefault();
+
+        let dt = e.dataTransfer;
+        if (dt.items) {
+            for (let i = 0; i < dt.items.length; i++) {
+                if (dt.items[i].kind == 'file') {
+                    let file = dt.items[i].getAsFile();
+                    this.uploadFile(file.path);
+                }
+            }
+        }
+    }
+
+    onDragOver(e) {
+        e.preventDefault();
     }
 }
