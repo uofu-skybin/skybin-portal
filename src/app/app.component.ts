@@ -14,7 +14,25 @@ export class AppComponent implements OnInit {
                 private zone: NgZone) {
     }
 
+    currentPage = 'My Files';
+
     ngOnInit(): void {
         this.router.navigate(['my-files']);
     }
+
+    myFilesClicked(e) {
+        this.router.navigate(['my-files']);
+        this.currentPage = 'My Files';
+    }
+
+    sharedWithMeClicked(e) {
+        this.router.navigate(['shared-with-me']);
+        this.currentPage = 'Shared With Me';
+    }
+
+    provideStorageClicked(e) {
+        this.router.navigate(['provide-storage']);
+        this.currentPage = 'Provide Storage';
+    }
+
 }

@@ -4,13 +4,24 @@ nav {
     padding-left: 15px;
 }
 
+#navmenu {
+    color: #00A7F3;
+    font-size: 1.8em;
+    line-height: 50px;
+    font-weight: bold;
+}
+
+#logo-container {
+    text-align: center;
+}
+
 #app-logo {
-    margin-left: 15px;
+    /* margin-left: 15px; */
     height: 50px;
 }
 
 a {
-    color: #658798;
+    /* color: #658798; */
 }
 
 .row {
@@ -18,8 +29,8 @@ a {
 }
 
 .active {
-    color: #116eac;
-    font-weight: bold;
+    /* color: #116eac; */
+    /* font-weight: bold; */
 }
 
 #nav-container {
