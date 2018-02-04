@@ -183,7 +183,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
             upload.state = TRANSFER_DONE;
             this.allFiles.push(file);
-            this.updateRenterInfo();
 
             // Force change detection to re-render files and uploads.
             // If the upload completed quickly, show the progress bar
@@ -219,13 +218,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             ],
         };
         this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
-            if (files) {
-                for (const file of files) {
-                    this.uploadFile(file);
-                }
-                this.ref.detectChanges();
-            }
-        });
+            if (!files) return;
+            files.forEach(e => this.uploadFile(e));
+            this.updateRenterInfo();
+            this.ref.detectChanges();
+       });
     }
 
     downloadFile(file) {
