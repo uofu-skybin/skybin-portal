@@ -23,11 +23,13 @@
                 <b>Available:</b> {{renterInfo.freeStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
-            <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()' matTooltip="Tooltip!"
+            <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()'
+                    matTooltip="Tooltip!"
                     name='my-files-new-folder-button'>
                 <i id='plus-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
-            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary' (click)='configureStorageClicked()' matTooltip='Configure your renter settings!'
+            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary'
+                    (click)='configureStorageClicked()' matTooltip='Configure your renter settings!'
                     name='my-files-new-folder-button'>
                 <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
             </button>
@@ -80,11 +82,11 @@
 
 
     <!--<div id='insufficient-storage-alert' class="alert alert-danger alert-dismissible fade show" role="alert">-->
-        <!--<a class="close" onclick="$('#insufficient-storage-alert').hide()">×</a>-->
-        <!--&lt;!&ndash;<button type="button" class="close" data-dismiss="alert" aria-label="Close">&ndash;&gt;-->
-            <!--&lt;!&ndash;<span aria-hidden="true">&times;</span>&ndash;&gt;-->
-        <!--&lt;!&ndash;</button>&ndash;&gt;-->
-        <!--<strong>Error!</strong> You don't have enough storage reserved to upload.-->
+    <!--<a class="close" onclick="$('#insufficient-storage-alert').hide()">×</a>-->
+    <!--&lt;!&ndash;<button type="button" class="close" data-dismiss="alert" aria-label="Close">&ndash;&gt;-->
+    <!--&lt;!&ndash;<span aria-hidden="true">&times;</span>&ndash;&gt;-->
+    <!--&lt;!&ndash;</button>&ndash;&gt;-->
+    <!--<strong>Error!</strong> You don't have enough storage reserved to upload.-->
     <!--</div>-->
 
     <app-filebrowser
@@ -94,7 +96,7 @@
         (onFileContextClick)='onContextClick($event)'
         (drop)="onDrop($event)"
         (dragover)="onDragOver($event)"
-        ></app-filebrowser>
+    ></app-filebrowser>
 
     <!-- Uploads popup -->
     <div id='popups-container'>

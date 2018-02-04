@@ -41,7 +41,8 @@ import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 import { NotificationComponent } from './components/notification/notification.component';
-import {FileService} from './services/file.service';
+import {RenterService} from './services/renter.service';
+import {ToHtmlPipe} from './pipes/to-html/to-html.pipe';
 
 @NgModule({
     entryComponents: [
@@ -71,6 +72,7 @@ import {FileService} from './services/file.service';
         AddStorageComponent,
         ConfigureStorageComponent,
         NotificationComponent,
+        ToHtmlPipe,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -99,8 +101,7 @@ import {FileService} from './services/file.service';
         RoutingModule,
     ],
     providers: [
-        TruncatePipe,
-        FileService
+        RenterService
     ],
     bootstrap: [AppComponent]
 })

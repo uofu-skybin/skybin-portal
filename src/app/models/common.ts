@@ -1,6 +1,6 @@
 
 // Metadata for a file stored in skybin.
-export interface SkyFile {
+export class SkyFile {
     id: string;
     ownerId: string;
     name: string;
@@ -20,14 +20,14 @@ export function latestVersion(file: SkyFile): Version {
 
 // Permission grants the ability to access a file to a
 // non-owning user.
-export interface Permission {
+export class Permission {
     renterId: string;
     aesKey: string;
     aesIV: string;
 }
 
 // A block of a stored file.
-export interface Block {
+export class Block {
     id: string;
     num: number;
     size: number;
@@ -36,7 +36,7 @@ export interface Block {
 }
 
 // Metadata for a single version of a file.
-export interface Version {
+export class Version {
     num: number;
     size: number;
     modTime: string;
@@ -49,4 +49,19 @@ export interface Version {
 
 export class GetFilesResponse {
     files: SkyFile[];
+}
+
+export class RenterInfo {
+    id: string;
+    reservedStorage: number;
+    freeStorage: number;
+    totalContracts: number;
+}
+
+// An upload or download.
+// 'sourcePath' and 'destPath' are full path names.
+export class Transfer {
+    sourcePath: string;
+    destPath: string;
+    state: string;
 }

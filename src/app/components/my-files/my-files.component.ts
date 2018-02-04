@@ -4,7 +4,7 @@ import {ElectronService} from 'ngx-electron';
 import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
 import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import {ChangeDetectorRef} from '@angular/core';
-import {SkyFile, latestVersion, GetFilesResponse} from '../../models/common';
+import {SkyFile, latestVersion, GetFilesResponse, Transfer} from '../../models/common';
 import {appConfig} from '../../models/config';
 import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
 import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
@@ -15,15 +15,8 @@ import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-
 import OpenDialogOptions = Electron.OpenDialogOptions;
 import {NotificationComponent} from '../notification/notification.component';
 import {LoginComponent} from '../login/login.component';
-import {FileService} from '../../services/file.service';
+import {RenterService} from '../../services/renter.service';
 
-// An upload or download.
-// 'sourcePath' and 'destPath' are full path names.
-interface Transfer {
-    sourcePath: string;
-    destPath: string;
-    state: string;
-}
 
 // Transfer states
 const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
@@ -59,15 +52,15 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 private ref: ChangeDetectorRef,
                 public snackBar: MatSnackBar,
                 public zone: NgZone,
-                private fileService: FileService) {
+                private renterService: RenterService) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
         // due to an angular bug: https://github.com/angular/material2/issues/5268
         const isSkybinSetup = this.electronService.ipcRenderer.sendSync('isSkybinSetup');
         if (isSkybinSetup) {
-            this.updateRenterInfo();
-            this.loadFiles();
+            this.getRenterInfo();
+            this.getFiles();
         } else {
 
             // First time setup. Show the setup dialog.
@@ -76,39 +69,81 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 disableClose: true,
             });
             loginDialog.afterClosed().subscribe(() => {
-                this.updateRenterInfo();
-                this.loadFiles();
+                this.getRenterInfo();
+                this.getFiles();
             });
         }
     }
 
     ngOnInit() {
-
     }
 
     ngOnDestroy() {
         this.subscriptions.forEach(e => e.unsubscribe());
     }
 
-    updateRenterInfo() {
-        this.http.get(`${appConfig['renterAddress']}/info`)
-            .subscribe((resp: any) => {
-                this.renterInfo = resp;
-            }, (error: HttpErrorResponse) => {
-                console.error(error);
+    getRenterInfo() {
+        this.renterService.getRenterInfo()
+            .subscribe(res => {
+                this.renterInfo = res;
+
             });
     }
 
-    loadFiles() {
-        this.fileService.getFiles()
-            .subscribe(resp => {
-                for (const file of resp.files) {
+    getFiles() {
+        this.renterService.getFiles()
+            .subscribe(res => {
+                for (const file of res.files) {
                     this.allFiles.push(file);
                 }
                 this.filteredFiles = this.allFiles;
-            }, error => {
-                console.error(`Failed to load files with error: ${JSON.stringify(error)}`);
-                this.showErrorNotification(error.message);
+            });
+    }
+
+    uploadFile(sourcePath) {
+        const baseName = this.baseName(sourcePath);
+        let destPath = this.currentPath;
+        if (destPath.length > 0) {
+            destPath += '/';
+        }
+        destPath += baseName;
+
+        // Make sure there are no files with the given name.
+        while (this.allFiles.some(e => e.name === destPath)) {
+            destPath += '.copy';
+        }
+
+        const upload = {
+            sourcePath,
+            destPath,
+            state: TRANSFER_RUNNING,
+        };
+        this.uploads.unshift(upload);
+        this.showUploads = true;
+
+        const body = {
+            sourcePath,
+            destPath,
+        };
+        const startTime = new Date();
+
+        this.renterService.uploadFile(sourcePath, body)
+            .subscribe((file: SkyFile) => {
+                if (file['id'] === undefined) {
+                    upload.state = TRANSFER_ERROR;
+                    console.error('uploadFile: request did not return file object');
+                    console.error('response: ', file);
+                    return;
+                }
+                upload.state = TRANSFER_DONE;
+                this.allFiles.push(file);
+
+                // Force change detection to re-render files and uploads.
+                // If the upload completed quickly, show the progress bar
+                // a little longer before re-rendering.
+                const endTime = new Date();
+                const elapsedMs = endTime.getTime() - startTime.getTime();
+                setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
             });
     }
 
@@ -143,58 +178,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         return pathElems[pathElems.length - 1];
     }
 
-    uploadFile(sourcePath) {
-        const baseName = this.baseName(sourcePath);
-        let destPath = this.currentPath;
-        if (destPath.length > 0) {
-            destPath += '/';
-        }
-        destPath += baseName;
-
-        // Make sure there are no files with the given name.
-        while (this.allFiles.some(e => e.name === destPath)) {
-            destPath += '.copy';
-        }
-
-        const upload = {
-            sourcePath,
-            destPath,
-            state: TRANSFER_RUNNING,
-        };
-        this.uploads.unshift(upload);
-        this.showUploads = true;
-
-        const body = {
-            sourcePath,
-            destPath,
-        };
-        const startTime = new Date();
-        const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
-            if (file['id'] === undefined) {
-                console.error('uploadFile: request did not return file object');
-                console.error('response: ', file);
-                return;
-            }
-            upload.state = TRANSFER_DONE;
-            this.allFiles.push(file);
-
-            // Force change detection to re-render files and uploads.
-            // If the upload completed quickly, show the progress bar
-            // a little longer before re-rendering.
-            const endTime = new Date();
-            const elapsedMs = endTime.getTime() - startTime.getTime();
-            setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-        }, (error) => {
-            console.error('upload error:', error);
-            let errorMessage = 'upload failed';
-            if (error.error && error.error.error) {
-                errorMessage = error.error.error;
-            }
-            this.showErrorNotification(errorMessage);
-            upload.state = TRANSFER_ERROR;
-        });
-        this.subscriptions.push(sub);
-    }
 
     showErrorNotification(message) {
         const scope = this;
@@ -218,7 +201,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
             if (!files) return;
             files.forEach(e => this.uploadFile(e));
-            this.updateRenterInfo();
+            this.getRenterInfo();
             this.ref.detectChanges();
         });
     }
@@ -293,7 +276,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
-                    this.loadFiles();
+                    this.getFiles();
                     return;
                 }
                 this.allFiles.push(file);
@@ -309,7 +292,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
 
         storageDialog.afterClosed().subscribe(result => {
-            this.updateRenterInfo();
+            this.getRenterInfo();
         });
     }
 
@@ -345,7 +328,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
-            this.updateRenterInfo();
+            this.getRenterInfo();
             this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');
