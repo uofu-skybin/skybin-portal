@@ -11,9 +11,9 @@ import { appConfig } from '../../../models/config';
 })
 export class ConfigureStorageComponent implements OnInit {
     // Renter info object returned from the renter service.
-    private renterInfo: any = {};
+    public renterInfo: any = {};
 
-    private settings: any = {
+    public settings: any = {
         redundancy: 3,
         minContractDuration: 300000,
         maxContractDuration: 300000,
