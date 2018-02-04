@@ -1,29 +1,25 @@
-<mat-card id='rent-storage-container'>
-    <mat-card-title>Storage</mat-card-title>
-    <section>
-        <mat-card-subtitle>Reserved Space</mat-card-subtitle>
-        <mat-card-content>{{renterInfo.reservedStorage | bytes}}</mat-card-content>
-    </section>
-    <section>
-        <mat-card-subtitle>Free Space</mat-card-subtitle>
-        <mat-card-content>{{renterInfo.freeStorage | bytes}}</mat-card-content>
-    </section>
-    <section>
-        <mat-card-subtitle>Cost Per Month</mat-card-subtitle>
-        <mat-card-content>$2.63</mat-card-content>
-    </section>
-    <section>
-        <mat-card-subtitle>Total Storage Contracts</mat-card-subtitle>
-        <mat-card-content>{{renterInfo.totalContracts}}</mat-card-content>
-    </section>
-    <section>
-        <mat-card-title>Reserve More Space</mat-card-title>
-        <mat-card-content>
-            <mat-form-field>
-                <input matInput [(ngModel)]='storageAmount' placeholder='Amount' type='number'>
-            </mat-form-field>
-            <br>
-            <button mat-raised-button class='skybin-btn-primary' (click)='reserveClicked()'>Reserve</button>
-        </mat-card-content>
-    </section>
-</mat-card>
+<mat-list>
+    <h3 matSubheader>Reserved Space</h3>
+    <mat-list-item>{{this.renterInfo.reservedStorage | bytes}}</mat-list-item>
+
+    <h3 matSubheader>Free Space</h3>
+    <mat-list-item>{{renterInfo.freeStorage | bytes}}</mat-list-item>
+
+    <h3 matSubheader>Cost Per Month</h3>
+    <mat-list-item>$2.63</mat-list-item>
+
+    <h3 matSubheader>Total Storage Contracts</h3>
+    <mat-list-item>{{renterInfo.totalContracts}}</mat-list-item>
+
+    <h3 matSubheader>Reserve More Space</h3>
+    <br>
+    <mat-list-item>
+        <mat-form-field>
+            <input matInput [(ngModel)]='storageAmount' placeholder='Amount' type='number'>
+        </mat-form-field>
+    </mat-list-item>
+    <br>
+    <mat-list-item>
+        <button style='margin-bottom: 3em;' mat-raised-button class='skybin-btn-primary' (click)='reserveClicked()'>Reserve</button>
+    </mat-list-item>
+</mat-list>

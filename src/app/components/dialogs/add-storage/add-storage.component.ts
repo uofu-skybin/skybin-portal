@@ -12,7 +12,7 @@ import { appConfig } from '../../../models/config';
 export class AddStorageComponent implements OnInit {
 
     // Renter info object returned from the renter service.
-    private renterInfo: any = {};
+    public renterInfo: any = {};
 
     private settings: any = {
         redundancy: 3,
