@@ -166,24 +166,6 @@ function launchApp() {
     });
 }
 
-// Handlers for toggling skybin daemons. Placeholders for now.
-// TODO: remove
-function tryRunRenter() {
-    try {
-        fs.accessSync(skybinHome + '/renter/lockfile');
-    } catch (err) {
-        console.log('Renter service not running. Launching now.');
-        const renter = spawn(skybinPath, ['renter'], {
-            detached: true
-        });
-        renter.stderr.on('data', (data) => {
-            console.log(data.toString('utf8'));
-            fs.openSync(`${skybinHome}/renter/lockfile`, 'w');
-            win.send('servicesRunning');
-        });
-    }
-}
-
 // Create window on electron initialization.
 app.on('ready', init);
 
