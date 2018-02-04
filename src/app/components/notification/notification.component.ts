@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
+import {MAT_SNACK_BAR_DATA} from '@angular/material';
 
 @Component({
   selector: 'app-notification',
@@ -8,7 +9,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 export class NotificationComponent implements OnInit  {
 
-  constructor() { }
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
 
   ngOnInit() {
   }
