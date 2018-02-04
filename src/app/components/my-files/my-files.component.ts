@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
-import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig} from '@angular/material';
+import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile, latestVersion, LoadSkyFilesResponse } from '../../models/common';
@@ -55,11 +55,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-                public electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar,
-                public zone: NgZone) {
+        public electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar,
+        public zone: NgZone) {
     }
 
     ngOnInit() {
@@ -183,6 +183,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
             upload.state = TRANSFER_DONE;
             this.allFiles.push(file);
+            this.updateRenterInfo();
 
             // Force change detection to re-render files and uploads.
             // If the upload completed quickly, show the progress bar
@@ -336,17 +337,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         // If the file is a directory, make sure it is empty
         if (file.isDir) {
-            let folderCount = 0;
-            for (const otherFile of this.allFiles) {
-                if (otherFile.name.indexOf(file.name) !== -1) {
-                    folderCount++;
-                }
-            }
-            if (folderCount > 1) {
-                this.snackBar.open('That folder isn\'t empty!', null,
-                    {
-                        duration: 2000
-                    });
+            const hasChild = this.allFiles.some(e =>
+                e.name.startsWith(file.name) && e.id !== file.id);
+            if (hasChild) {
+                this.snackBar.open("That folder isn't empty!", null, { duration: 2000 });
                 return;
             }
         }
@@ -356,6 +350,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.http.post(`${RENTER_ADDR}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
+            this.updateRenterInfo();
             this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');

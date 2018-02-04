@@ -20,7 +20,7 @@
         <span id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
             <span id='available-space-container' mat-tooltip='tooltip'>
-                <b>Available:</b> {{renterInfo.reservedStorage | bytes}}
+                <b>Available:</b> {{renterInfo.freeStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
             <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()' matTooltip="Tooltip!"
