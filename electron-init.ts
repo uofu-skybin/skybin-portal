@@ -77,6 +77,14 @@ function setupSkybin(setupOptions) {
     console.log('arguments:', args);
 
     const result = spawnSync(skybinCmd, args);
+    if (result.status === null) {
+        console.error('error: cannot find skybin executable');
+        return {
+            wasSuccessful: false,
+            errorReason: 'cannot find skybin',
+            errorMessage: 'cannot find skybin executable',
+        };
+    }
 
     console.log('skybin init complete');
     console.log('return code:', result.status);
