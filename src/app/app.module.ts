@@ -41,6 +41,7 @@ import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 import { NotificationComponent } from './components/notification/notification.component';
+import {FileService} from './services/file.service';
 
 @NgModule({
     entryComponents: [
@@ -97,7 +98,10 @@ import { NotificationComponent } from './components/notification/notification.co
         NgxElectronModule,
         RoutingModule,
     ],
-    providers: [TruncatePipe],
+    providers: [
+        TruncatePipe,
+        FileService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

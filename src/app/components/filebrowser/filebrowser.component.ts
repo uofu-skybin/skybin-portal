@@ -4,7 +4,7 @@ import { SkyFile, latestVersion } from '../../models/common';
 import { ChangeDetectorRef } from '@angular/core';
 
 interface FilesResponse {
-    files: File[];
+    files: SkyFile[];
 }
 
 @Component({

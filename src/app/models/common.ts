@@ -13,7 +13,7 @@ export interface SkyFile {
 
 export function latestVersion(file: SkyFile): Version {
     if (file.versions.length < 1) {
-        throw new Error('File has no versions');
+        throw new Error('SkyFile has no versions');
     }
     return file.versions[file.versions.length - 1];
 }
@@ -47,6 +47,6 @@ export interface Version {
     blocks: any[];
 }
 
-export class LoadSkyFilesResponse {
+export class GetFilesResponse {
     files: SkyFile[];
 }

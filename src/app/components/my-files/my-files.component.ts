@@ -1,20 +1,21 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
-import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import { ChangeDetectorRef } from '@angular/core';
-import { SkyFile, latestVersion, LoadSkyFilesResponse } from '../../models/common';
-import { appConfig } from '../../models/config';
-import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
-import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
-import { Subscription } from 'rxjs/Subscription';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
-import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
+import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {ElectronService} from 'ngx-electron';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
+import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import {ChangeDetectorRef} from '@angular/core';
+import {SkyFile, latestVersion, GetFilesResponse} from '../../models/common';
+import {appConfig} from '../../models/config';
+import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
+import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
+import {Subscription} from 'rxjs/Subscription';
+import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
+import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
+import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import { NotificationComponent } from '../notification/notification.component';
-import { LoginComponent } from '../login/login.component';
+import {NotificationComponent} from '../notification/notification.component';
+import {LoginComponent} from '../login/login.component';
+import {FileService} from '../../services/file.service';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -53,11 +54,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone,
+                private fileService: FileService) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -98,19 +100,16 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     loadFiles() {
-        this.http.get<LoadSkyFilesResponse>(`${appConfig['renterAddress']}/files`).subscribe(response => {
-            const files = response['files'];
-            if (!files) {
-                console.error('loadFiles: no files returned');
-                console.error('response: ', response);
-                return;
-            }
-            this.allFiles = files;
-            this.filteredFiles = files;
-            // this.onSearchChanged();
-        }, (error) => {
-            console.error(error);
-        });
+        this.fileService.getFiles()
+            .subscribe(resp => {
+                for (const file of resp.files) {
+                    this.allFiles.push(file);
+                }
+                this.filteredFiles = this.allFiles;
+            }, error => {
+                console.error(`Failed to load files with error: ${JSON.stringify(error)}`);
+                this.showErrorNotification(error.message);
+            });
     }
 
     // Triggered when a file has been right clicked in the filebrowser.
