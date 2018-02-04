@@ -160,6 +160,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         destPath += baseName;
 
+        // Make sure there are no files with the given name.
+        while (true) {
+            let nameChanged = false
+            for (let file of this.allFiles) {
+                if (file.name == destPath) {
+                    destPath += '.copy'
+                    nameChanged = true;
+                }
+            }
+            if (!nameChanged) {
+                break;
+            }
+        }
+
         const upload = {
             sourcePath,
             destPath,
