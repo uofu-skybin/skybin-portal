@@ -91,7 +91,10 @@
         [filesToDisplay]='filteredFiles'
         (onPathChanged)='onPathChanged($event)'
         (onFileSelected)='onFileSelected($event)'
-        (onFileContextClick)='onContextClick($event)'></app-filebrowser>
+        (onFileContextClick)='onContextClick($event)'
+        (drop)="onDrop($event)"
+        (dragover)="onDragOver($event)"
+        ></app-filebrowser>
 
     <!-- Uploads popup -->
     <div id='popups-container'>

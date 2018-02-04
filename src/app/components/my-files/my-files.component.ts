@@ -461,4 +461,23 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             }
         });
     }
+
+    onDrop(e) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+        e.preventDefault();
+
+        let dt = e.dataTransfer;
+        if (dt.items) {
+            for (let i = 0; i < dt.items.length; i++) {
+                if (dt.items[i].kind == 'file') {
+                    let file = dt.items[i].getAsFile();
+                    this.uploadFile(file.path);
+                }
+            }
+        }
+    }
+
+    onDragOver(e) {
+        e.preventDefault();
+    }
 }
