@@ -204,14 +204,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
             if (error.error.error === 'Cannot find enough space') {
-                // Bootstrap alert.
-                // $('insufficient-storage-alert').css('display', 'inline');
-                // document.getElementById('insufficient-storage-alert').style.display = 'block';
                 this.zone.run(() => {
                     scope.snackBar.openFromComponent(NotificationComponent, {
+                        data: 'You need to reserve more storage.',
                         duration: 3000,
-                        horizontalPosition: 'center',
-                        verticalPosition: 'top',
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
                     });
                 });
                 console.log('not enough storage');
@@ -230,13 +228,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             ],
         };
         this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
-            if (files) {
-                for (const file of files) {
-                    this.uploadFile(file);
-                }
-                this.ref.detectChanges();
-            }
-        });
+            if (!files) return;
+            files.forEach(e => this.uploadFile(e));
+            this.updateRenterInfo();
+            this.ref.detectChanges();
+       });
     }
 
     downloadFile(file) {
@@ -348,17 +344,17 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         // If the file is a directory, make sure it is empty
         if (file.isDir) {
-            let folderCount = 0;
-            for (const otherFile of this.allFiles) {
-                if (otherFile.name.indexOf(file.name) !== -1) {
-                    folderCount++;
-                }
-            }
-            if (folderCount > 1) {
-                this.snackBar.open('That folder isn\'t empty!', null,
-                    {
-                        duration: 2000
+            const hasChild = this.allFiles.some(e =>
+                e.name.startsWith(file.name) && e.id !== file.id);
+            if (hasChild) {
+                this.zone.run(() => {
+                    this.snackBar.openFromComponent(NotificationComponent, {
+                        data: 'That folder isn\'t empty!',
+                        duration: 3000,
+                        horizontalPosition: 'left',
+                        verticalPosition: 'bottom',
                     });
+                });
                 return;
             }
         }
@@ -368,6 +364,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.http.post(`${RENTER_ADDR}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
+            this.updateRenterInfo();
             this.ref.detectChanges();
         }, (error) => {
             console.error('Unable to delete file');
