@@ -54,17 +54,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     // Renter info object returned from the renter service.
     renterInfo: any = {};
 
-    // If this is the first time launching the app,
-    // this is the setup dialog. This must be kept
-    // in an instance variable to keep angular from whining.
-    loginDialog: MatDialogRef<LoginComponent> = null;
-
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()

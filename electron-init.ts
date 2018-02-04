@@ -96,6 +96,7 @@ function setupSkybin(setupOptions) {
         // Yay! Registration completed successfully.
         // Now we need to start the services...
         // .... ALTERNATIVELY skybin init can do that :)
+        isSkybinSetup = true;
         return {
             wasSuccessful: true,
         };
