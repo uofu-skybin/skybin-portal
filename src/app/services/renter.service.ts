@@ -30,7 +30,7 @@ export class RenterService {
     }
 
     uploadFile(sourcePath: string, body: any): Observable<SkyFile> {
-        return this.http.post<SkyFile>(`${appConfig['renterAddress']}/files/uploads`, body)
+        return this.http.post<SkyFile>(`${appConfig['renterAddress']}/files/upload`, body)
             .pipe(
                 catchError(this.handleError('uploadFile', new SkyFile()))
             );
