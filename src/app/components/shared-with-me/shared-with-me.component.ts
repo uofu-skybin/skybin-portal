@@ -35,18 +35,6 @@ export class SharedWithMeComponent implements OnInit {
     }
 
     downloadFile() {
-        this.selectedFiles.forEach(file => {
-            this.electronService.remote.dialog.showSaveDialog(savePath => {
-                const url = 'http://127.0.0.1:8002/files/' + file.id + '/download';
-                const body = {
-                    destination: savePath
-                };
-                this.http.post(url, body).subscribe(response => {
-                    console.log(response);
-                }, (error) => {
-                    console.error(error);
-                });
-            });
-        });
+        console.error('shared-with-me: downloadFile() not implemented');
     }
 }

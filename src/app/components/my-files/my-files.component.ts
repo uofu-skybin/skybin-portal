@@ -5,6 +5,7 @@ import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile, latestVersion, LoadSkyFilesResponse } from '../../models/common';
+import { appConfig } from '../../models/config';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,9 +28,6 @@ interface Transfer {
 const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
 const TRANSFER_DONE = 'TRANSFER_DONE';
 const TRANSFER_ERROR = 'TRANSFER_ERROR';
-
-// Renter service API address
-const RENTER_ADDR = 'http://127.0.0.1:8002';
 
 @Component({
     selector: 'app-my-files',
@@ -91,7 +89,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     updateRenterInfo() {
-        this.http.get(`${RENTER_ADDR}/info`)
+        this.http.get(`${appConfig['renterAddress']}/info`)
             .subscribe((resp: any) => {
                 this.renterInfo = resp;
             }, (error: HttpErrorResponse) => {
@@ -100,7 +98,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     loadFiles() {
-        this.http.get<LoadSkyFilesResponse>(`${RENTER_ADDR}/files`).subscribe(response => {
+        this.http.get<LoadSkyFilesResponse>(`${appConfig['renterAddress']}/files`).subscribe(response => {
             const files = response['files'];
             if (!files) {
                 console.error('loadFiles: no files returned');
@@ -172,7 +170,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             destPath,
         };
         const startTime = new Date();
-        const sub = this.http.post(`${RENTER_ADDR}/files/upload`, body).subscribe((file: any) => {
+        const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -241,7 +239,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `${RENTER_ADDR}/files/download`;
+            const url = `${appConfig['renterAddress']}/files/download`;
             const body = {
                 fileId: file.id,
                 destPath
@@ -292,7 +290,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const body = {
                 name: folderPath
             };
-            this.http.post(`${RENTER_ADDR}/files/create-folder`, body).subscribe((file: any) => {
+            this.http.post(`${appConfig['renterAddress']}/files/create-folder`, body).subscribe((file: any) => {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
@@ -345,7 +343,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         const body = {
             fileId: file.id,
         };
-        this.http.post(`${RENTER_ADDR}/files/remove`, body).subscribe(response => {
+        this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
             this.updateRenterInfo();
