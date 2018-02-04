@@ -55,11 +55,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-                public electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar,
-                public zone: NgZone) {
+        public electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar,
+        public zone: NgZone) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -147,7 +147,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath) {
-        const scope = this;
         const baseName = this.baseName(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
@@ -189,21 +188,27 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const elapsedMs = endTime.getTime() - startTime.getTime();
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
-            if (error.error.error === 'Cannot find enough space') {
-                this.zone.run(() => {
-                    scope.snackBar.openFromComponent(NotificationComponent, {
-                        data: 'You need to reserve more storage.',
-                        duration: 3000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
-                });
-                console.log('not enough storage');
-                return;
+            console.error('upload error:', error);
+            let errorMessage = 'upload failed';
+            if (error.error && error.error.error) {
+                errorMessage = error.error.error;
             }
+            this.showErrorNotification(errorMessage);
             upload.state = TRANSFER_ERROR;
         });
         this.subscriptions.push(sub);
+    }
+
+    showErrorNotification(message) {
+        const scope = this;
+        this.zone.run(() => {
+            scope.snackBar.openFromComponent(NotificationComponent, {
+                data: message,
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+            });
+        });
     }
 
     uploadClicked() {
@@ -218,7 +223,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             files.forEach(e => this.uploadFile(e));
             this.updateRenterInfo();
             this.ref.detectChanges();
-       });
+        });
     }
 
     downloadFile(file) {
@@ -333,14 +338,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const hasChild = this.allFiles.some(e =>
                 e.name.startsWith(file.name) && e.id !== file.id);
             if (hasChild) {
-                this.zone.run(() => {
-                    this.snackBar.openFromComponent(NotificationComponent, {
-                        data: 'That folder isn\'t empty!',
-                        duration: 3000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
-                });
+                this.showErrorNotification('That folder isn\'t empty!');
                 return;
             }
         }
