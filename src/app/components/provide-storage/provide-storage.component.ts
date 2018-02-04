@@ -3,10 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 import Timer = NodeJS.Timer;
+import { appConfig } from '../../models/config';
 
-
-// The provider API address to access
-const PROVIDER_ADDR = 'http://165.227.15.136:8002';
 
 // Activity feed update interval (ms)
 const ACTIVITY_INTERVAL = 5 * 1000;
@@ -59,7 +57,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     private loadContracts() {
-        this.http.get<ContractsResponse>(`${PROVIDER_ADDR}/contracts`).subscribe(response => {
+        this.http.get<ContractsResponse>(`${appConfig['providerAddress']}/contracts`).subscribe(response => {
             const contracts = response['contracts'];
             if (!contracts) {
                 console.error('Error: GET /contracts returned no contracts.');
@@ -71,7 +69,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     loadProviderInfo() {
-        this.http.get(`${PROVIDER_ADDR}/info`)
+        this.http.get(`${appConfig['providerAddress']}/info`)
             .subscribe((response: any) => {
                 this.providerInfo = response;
             }, (error: HttpErrorResponse) => {
@@ -81,7 +79,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     private loadActivity() {
-        this.http.get<ActivityResponse>(`${PROVIDER_ADDR}/activity`)
+        this.http.get<ActivityResponse>(`${appConfig['providerAddress']}/activity`)
             .subscribe(response => {
                 const activity = response['activity'];
                 if (!activity) {
@@ -100,46 +98,6 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
             });
     }
 
-    // TODO: remove
-    private loadTestActivityData() {
-        setInterval(() => {
-            this.activityFeed.push(
-                {
-                    requestType: 'NEGOTIATE CONTRACT',
-                    blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                    renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                    time: new Date(),
-                    contract: {
-                        storageSpace: '10 GB',
-                        renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-                    }
-                }
-            );
-            this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-        }, 3 * 1000);
-        this.activityFeed.push(
-            {
-                requestType: 'NEGOTIATE CONTRACT',
-                blockId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                time: new Date(),
-                contract: {
-                    storageSpace: '10 GB',
-                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-                }
-            },
-            {
-                requestType: 'PUT BLOCK',
-                blockId: null,
-                renterId: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF',
-                time: new Date(),
-                contract: {
-                    storageSpace: '1 GB',
-                    renterID: '4PNCQEERAP46XZW6OZQQEHZLLCK7NKFF'
-                }
-            },
-        );
-    }
 }
 
 export interface InfoResponse {

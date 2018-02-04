@@ -1,3 +1,5 @@
+button:focus {outline:0;}
+
 #my-files-container {
     height: 100%;
     overflow: hidden;

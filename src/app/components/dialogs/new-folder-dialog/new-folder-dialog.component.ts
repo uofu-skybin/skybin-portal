@@ -9,10 +9,10 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 })
 export class NewFolderDialogComponent {
 
-    name = '';
+    private name = '';
+    private errorMessage = '';
 
     constructor(public dialogRef: MatDialogRef<NewFolderDialogComponent>) {
-
     }
 
     onNoClick(): void {
@@ -20,7 +20,14 @@ export class NewFolderDialogComponent {
     }
 
     submit() {
-        // TODO: have this make sure the name is not empty and show an error if it is.
+        if (this.name.length === 0) {
+            this.errorMessage = 'Must give folder name';
+            return;
+        }
+        if (this.name.match(/^[0-9a-zA-Z\ \-\_]+$/) === null) {
+            this.errorMessage = 'Invalid name';
+            return;
+        }
         this.dialogRef.close(this.name);
     }
 

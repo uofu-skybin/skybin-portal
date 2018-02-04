@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig } from '@angular/material';
+import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
 import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile, latestVersion, LoadSkyFilesResponse } from '../../models/common';
+import { appConfig } from '../../models/config';
 import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 import { Subscription } from 'rxjs/Subscription';
@@ -27,9 +28,6 @@ interface Transfer {
 const TRANSFER_RUNNING = 'TRANSFER_RUNNING';
 const TRANSFER_DONE = 'TRANSFER_DONE';
 const TRANSFER_ERROR = 'TRANSFER_ERROR';
-
-// Renter service API address
-const RENTER_ADDR = 'http://127.0.0.1:8002';
 
 @Component({
     selector: 'app-my-files',
@@ -55,42 +53,35 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-                public electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar,
-                public zone: NgZone) {
-    }
+        public electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar,
+        public zone: NgZone) {
 
-    ngOnInit() {
-        let storageDialog;
+        // Check if this is the first time launching the app.
+        // I do this in the constructor instead of ngOnInit()
+        // due to an angular bug: https://github.com/angular/material2/issues/5268
+        const isSkybinSetup = this.electronService.ipcRenderer.sendSync('isSkybinSetup');
+        if (isSkybinSetup) {
+            this.updateRenterInfo();
+            this.loadFiles();
+        } else {
 
-        // Only poll for file/renter information if Main process is running services.
-        // TODO: switch channel name
-        this.electronService.ipcRenderer.on('servicesRunning', () => {
-            this.zone.run(() => {
+            // First time setup. Show the setup dialog.
+            console.log('showing setup dialog');
+            const loginDialog = this.dialog.open(LoginComponent, {
+                disableClose: true,
+            });
+            loginDialog.afterClosed().subscribe(() => {
                 this.updateRenterInfo();
                 this.loadFiles();
             });
-        });
+        }
+    }
 
-        // Conditionally show the login/register modal if user ID is found.
-        // TODO: rename loginStatus channel
-        this.electronService.ipcRenderer.on('userExists', (loginEvent, userExists) => {
-            if (!userExists) {
-                this.electronService.ipcRenderer.on('registered', () => {
-                    this.zone.run(() => {
-                        storageDialog.close();
-                    });
-                });
-                storageDialog = this.dialog.open(LoginComponent, {
-                    disableClose: true
-                });
-            }
-        });
+    ngOnInit() {
 
-        // Tell Main the Angular view is ready for signals.
-        this.electronService.ipcRenderer.send('viewReady');
     }
 
     ngOnDestroy() {
@@ -98,7 +89,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     updateRenterInfo() {
-        this.http.get(`${RENTER_ADDR}/info`)
+        this.http.get(`${appConfig['renterAddress']}/info`)
             .subscribe((resp: any) => {
                 this.renterInfo = resp;
             }, (error: HttpErrorResponse) => {
@@ -107,7 +98,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     loadFiles() {
-        this.http.get<LoadSkyFilesResponse>(`${RENTER_ADDR}/files`).subscribe(response => {
+        this.http.get<LoadSkyFilesResponse>(`${appConfig['renterAddress']}/files`).subscribe(response => {
             const files = response['files'];
             if (!files) {
                 console.error('loadFiles: no files returned');
@@ -154,13 +145,17 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath) {
-        const scope = this;
         const baseName = this.baseName(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
             destPath += '/';
         }
         destPath += baseName;
+
+        // Make sure there are no files with the given name.
+        while (this.allFiles.some(e => e.name === destPath)) {
+            destPath += '.copy';
+        }
 
         const upload = {
             sourcePath,
@@ -175,7 +170,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             destPath,
         };
         const startTime = new Date();
-        const sub = this.http.post(`${RENTER_ADDR}/files/upload`, body).subscribe((file: any) => {
+        const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
             if (file['id'] === undefined) {
                 console.error('uploadFile: request did not return file object');
                 console.error('response: ', file);
@@ -191,21 +186,27 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const elapsedMs = endTime.getTime() - startTime.getTime();
             setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
         }, (error) => {
-            if (error.error.error === 'Cannot find enough space') {
-                this.zone.run(() => {
-                    scope.snackBar.openFromComponent(NotificationComponent, {
-                        data: 'You need to reserve more storage.',
-                        duration: 3000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
-                });
-                console.log('not enough storage');
-                return;
+            console.error('upload error:', error);
+            let errorMessage = 'upload failed';
+            if (error.error && error.error.error) {
+                errorMessage = error.error.error;
             }
+            this.showErrorNotification(errorMessage);
             upload.state = TRANSFER_ERROR;
         });
         this.subscriptions.push(sub);
+    }
+
+    showErrorNotification(message) {
+        const scope = this;
+        this.zone.run(() => {
+            scope.snackBar.openFromComponent(NotificationComponent, {
+                data: message,
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+            });
+        });
     }
 
     uploadClicked() {
@@ -220,7 +221,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             files.forEach(e => this.uploadFile(e));
             this.updateRenterInfo();
             this.ref.detectChanges();
-       });
+        });
     }
 
     downloadFile(file) {
@@ -238,7 +239,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `${RENTER_ADDR}/files/download`;
+            const url = `${appConfig['renterAddress']}/files/download`;
             const body = {
                 fileId: file.id,
                 destPath
@@ -289,7 +290,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const body = {
                 name: folderPath
             };
-            this.http.post(`${RENTER_ADDR}/files/create-folder`, body).subscribe((file: any) => {
+            this.http.post(`${appConfig['renterAddress']}/files/create-folder`, body).subscribe((file: any) => {
                 if (!file['id']) {
                     console.error('newFolder: no folder returned from request');
                     console.log('response:', file);
@@ -335,21 +336,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const hasChild = this.allFiles.some(e =>
                 e.name.startsWith(file.name) && e.id !== file.id);
             if (hasChild) {
-                this.zone.run(() => {
-                    this.snackBar.openFromComponent(NotificationComponent, {
-                        data: 'That folder isn\'t empty!',
-                        duration: 3000,
-                        horizontalPosition: 'left',
-                        verticalPosition: 'bottom',
-                    });
-                });
+                this.showErrorNotification('That folder isn\'t empty!');
                 return;
             }
         }
         const body = {
             fileId: file.id,
         };
-        this.http.post(`${RENTER_ADDR}/files/remove`, body).subscribe(response => {
+        this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
             this.allFiles = this.allFiles.filter(e => e.id !== file.id);
             this.onSearchChanged();
             this.updateRenterInfo();
@@ -459,5 +453,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 file: file
             }
         });
+    }
+
+    onDrop(event) {
+        // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
+        event.preventDefault();
+
+        let dt = event.dataTransfer;
+        if (dt.items) {
+            for (let i = 0; i < dt.items.length; i++) {
+                if (dt.items[i].kind === 'file') {
+                    let file = dt.items[i].getAsFile();
+                    this.uploadFile(file.path);
+                }
+            }
+        }
+    }
+
+    onDragOver(e) {
+        e.preventDefault();
     }
 }

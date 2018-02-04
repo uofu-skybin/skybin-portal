@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {MatDialogRef} from '@angular/material';
+import { appConfig } from '../../../models/config';
 
 @Component({
   selector: 'app-configure-storage',
@@ -32,7 +33,7 @@ export class ConfigureStorageComponent implements OnInit {
     }
 
     updateRenterInfo() {
-        this.http.get('http://localhost:8002/info')
+        this.http.get(`${appConfig['renterAddress']}/info`)
             .subscribe((resp: any) => {
                 this.renterInfo = resp;
             }, (error: HttpErrorResponse) => {

@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {MatDialogRef} from '@angular/material';
+import { appConfig } from '../../../models/config';
 
 @Component({
     selector: 'app-add-storage',
@@ -39,7 +40,7 @@ export class AddStorageComponent implements OnInit {
         const params = {
             amount: this.storageAmount
         };
-        this.http.post('http://localhost:8002/reserve-storage', params)
+        this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
             .subscribe((resp: any) => {
                 this.updateRenterInfo();
             }, (error: HttpErrorResponse) => {
@@ -50,7 +51,7 @@ export class AddStorageComponent implements OnInit {
     }
 
     updateRenterInfo() {
-        this.http.get('http://localhost:8002/info')
+        this.http.get(`${appConfig['renterAddress']}/info`)
             .subscribe((resp: any) => {
                 this.renterInfo = resp;
             }, (error: HttpErrorResponse) => {

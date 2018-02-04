@@ -2,6 +2,9 @@
     <mat-form-field>
         <input matInput (keyup.enter)="submit()" [(ngModel)]="name" placeholder="New Folder">
     </mat-form-field>
+    <mat-error *ngIf="errorMessage.length > 0">
+        {{errorMessage}}
+    </mat-error>
     <mat-dialog-actions align="center">
         <button mat-button (click)="submit()">Create</button>
         <button mat-button mat-dialog-close>Cancel</button>
