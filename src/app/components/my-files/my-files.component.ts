@@ -168,6 +168,21 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.subscriptions.push(sub);
     }
 
+    uploadClicked() {
+        const options: OpenDialogOptions = {
+            properties: [
+                'openFile',
+                'multiSelections'
+            ],
+        };
+        this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
+            if (!files) return;
+            files.forEach(e => this.uploadFile(e));
+            this.getRenterInfo();
+            this.ref.detectChanges();
+        });
+    }
+
     // Triggered when a file has been right clicked in the filebrowser.
     onContextClick(event: MouseEvent) {
         if (!this.selectedFile.isDir) {
@@ -209,21 +224,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 horizontalPosition: 'center',
                 verticalPosition: 'bottom',
             });
-        });
-    }
-
-    uploadClicked() {
-        const options: OpenDialogOptions = {
-            properties: [
-                'openFile',
-                'multiSelections'
-            ],
-        };
-        this.electronService.remote.dialog.showOpenDialog(options, (files: string[]) => {
-            if (!files) return;
-            files.forEach(e => this.uploadFile(e));
-            this.getRenterInfo();
-            this.ref.detectChanges();
         });
     }
 
@@ -314,11 +314,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
     addStorageClicked() {
         const storageDialog = this.dialog.open(AddStorageComponent, {
-            width: '600px'
+            width: '600px',
+            data: {
+                renterInfo: this.renterInfo,
+            },
         });
 
         storageDialog.afterClosed().subscribe(result => {
-            this.getRenterInfo();
+            const storageRequested = storageDialog.componentInstance.storageRequested;
+            const params = {
+                amount: storageRequested,
+            };
+            console.log('requesting', storageRequested);
+            this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
+                .subscribe((resp: any) => {
+                    this.getRenterInfo();
+                }, (error: HttpErrorResponse) => {
+                    console.error(error);
+                });
         });
     }
 

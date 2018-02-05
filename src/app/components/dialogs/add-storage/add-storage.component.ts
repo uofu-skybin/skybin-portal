@@ -1,7 +1,9 @@
-import {Component, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Inject} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {MatDialogRef} from '@angular/material';
+import {MatDialogRef, MatDialog, MAT_DIALOG_DATA} from '@angular/material';
 import { appConfig } from '../../../models/config';
+import { BytesPipe } from '../../../pipes/bytes.pipe';
+import { ConfirmStorageDialogComponent } from '../confirm-storage-dialog/confirm-storage-dialog.component';
 
 @Component({
     selector: 'app-add-storage',
@@ -9,54 +11,60 @@ import { appConfig } from '../../../models/config';
     styleUrls: ['./add-storage.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class AddStorageComponent implements OnInit {
+export class AddStorageComponent {
 
-    // Renter info object returned from the renter service.
-    public renterInfo: any = {};
+    private renterInfo: any = {};
 
-    private settings: any = {
-        redundancy: 3,
-        minContractDuration: 300000,
-        maxContractDuration: 300000,
-        maxPricePerGbPerMonth: 30,
-    };
+    // Possible storage units the user can select from.
+    private storageUnits = [
+        'Megabytes',
+        'Gigabytes',
+    ];
+    private selectedUnits: string = null;
 
     // Storage space to reserve with a click to reserve.
-    storageAmount: number = null;
+    private storageAmount: number = null;
+    private errorMessage = '';
 
-    constructor(private http: HttpClient,
-                public dialogRef: MatDialogRef<AddStorageComponent>) {
-        this.updateRenterInfo();
-    }
+    // The storage amount requested after multiplying by
+    // the selected units. This is public in order to pass back
+    // the amount to the parent component.
+    public storageRequested: number = null;
 
-    ngOnInit() {
-        this.updateRenterInfo();
+    constructor(
+        public dialogRef: MatDialogRef<AddStorageComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+    ) {
+        this.renterInfo = data.renterInfo;
     }
 
     reserveClicked() {
-        if (!this.storageAmount || this.storageAmount <= 0) {
+        if (!this.storageAmount) {
+            this.errorMessage = 'Must enter a storage amount';
             return;
         }
-        const params = {
-            amount: this.storageAmount
+        if (!this.selectedUnits) {
+            this.errorMessage = 'Must select units';
+            return;
+        }
+        const multipliers = {
+            'Megabytes': 1024 * 1024,
+            'Gigabytes': 1024 * 1024 * 1024,
         };
-        this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
-            .subscribe((resp: any) => {
-                this.updateRenterInfo();
-            }, (error: HttpErrorResponse) => {
-                console.error(error);
-            });
-        this.storageAmount = 0;
+        const multiplier = multipliers[this.selectedUnits];
+        const requestedAmount = this.storageAmount * multiplier;
+        const minAmount = appConfig['minStorageReservationAmount'];
+        const maxAmount = appConfig['maxStorageReservationAmount'];
+        if (requestedAmount < minAmount) {
+            this.errorMessage = `Must reserve at least ${new BytesPipe().transform(minAmount)}`;
+            return;
+        }
+        if (requestedAmount > maxAmount) {
+            this.errorMessage = `Must reserve no more than ${new BytesPipe().transform(maxAmount)}`;
+            return;
+        }
+        this.storageRequested = requestedAmount;
         this.dialogRef.close();
-    }
-
-    updateRenterInfo() {
-        this.http.get(`${appConfig['renterAddress']}/info`)
-            .subscribe((resp: any) => {
-                this.renterInfo = resp;
-            }, (error: HttpErrorResponse) => {
-                console.error(error);
-            });
-    }
+   }
 
 }
