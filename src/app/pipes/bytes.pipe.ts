@@ -11,7 +11,10 @@ export class BytesPipe implements PipeTransform {
         let amt = value;
         let suffix = 'B';
 
-        if (value >= 1e9) {
+        if (value >= 1e12) {
+            amt = value / 1e12;
+            suffix = 'TB';
+        } else if (value >= 1e9) {
             amt = value / 1e9;
             suffix = 'GB';
         } else if (value >= 1e6) {
