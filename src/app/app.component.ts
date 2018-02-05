@@ -17,4 +17,12 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.router.navigate(['my-files']);
     }
+
+    onDrop(e) {
+        e.preventDefault();
+    }
+
+    onDragOver(e) {
+        e.preventDefault();
+    }
 }
