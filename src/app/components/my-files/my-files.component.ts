@@ -210,7 +210,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog({}, (destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: "*/"+file.name}, (destPath: string) => {
             if (!destPath) {
                 return;
             }
