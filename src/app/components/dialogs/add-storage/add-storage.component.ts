@@ -3,7 +3,6 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {MatDialogRef, MatDialog, MAT_DIALOG_DATA} from '@angular/material';
 import { appConfig } from '../../../models/config';
 import { BytesPipe } from '../../../pipes/bytes.pipe';
-import { ConfirmStorageDialogComponent } from '../confirm-storage-dialog/confirm-storage-dialog.component';
 
 @Component({
     selector: 'app-add-storage',
