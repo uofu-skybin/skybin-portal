@@ -125,6 +125,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
         storageDialog.afterClosed().subscribe(result => {
             const storageRequested = storageDialog.componentInstance.storageRequested;
+            if (!storageRequested) {
+                return;
+            }
             const progressDialog = this.dialog.open(ReserveStorageProgressComponent, {
                 width: '600px'
             });
