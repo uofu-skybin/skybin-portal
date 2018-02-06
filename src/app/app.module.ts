@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { MyFilesComponent } from './components/my-files/my-files.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
@@ -23,7 +22,8 @@ import {
     MatTableModule,
     MatTabsModule,
     MatSnackBarModule,
-    MatSnackBar
+    MatSnackBar,
+    MatProgressSpinnerModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSliderModule } from '@angular/material/slider';
@@ -41,38 +41,41 @@ import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 import { NotificationComponent } from './components/notification/notification.component';
-import {RenterService} from './services/renter.service';
-import {ToHtmlPipe} from './pipes/to-html/to-html.pipe';
+import { RenterService } from './services/renter.service';
+import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
+import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
 
 @NgModule({
     entryComponents: [
-        NewFolderDialogComponent,
         AddStorageComponent,
         ConfigureStorageComponent,
+        NewFolderDialogComponent,
+        NotificationComponent,
+        ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
-        NotificationComponent
     ],
     declarations: [
+        AddStorageComponent,
         AppComponent,
         AuthenticationComponent,
         BytesPipe,
+        ConfigureStorageComponent,
         FilebrowserComponent,
         LoginComponent,
         MyFilesComponent,
         MyWalletComponent,
         NewFolderDialogComponent,
+        NotificationComponent,
         ProvideStorageComponent,
         ProvideStorageComponent,
         RegisterComponent,
+        ReserveStorageProgressComponent,
         ShareDialogComponent,
         SharedWithMeComponent,
+        ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
-        AddStorageComponent,
-        ConfigureStorageComponent,
-        NotificationComponent,
-        ToHtmlPipe,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -91,6 +94,7 @@ import {ToHtmlPipe} from './pipes/to-html/to-html.pipe';
         MatMenuModule,
         MatOptionModule,
         MatProgressBarModule,
+        MatProgressSpinnerModule,
         MatSelectModule,
         MatSliderModule,
         MatSnackBarModule,

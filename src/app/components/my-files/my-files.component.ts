@@ -16,6 +16,7 @@ import OpenDialogOptions = Electron.OpenDialogOptions;
 import { NotificationComponent } from '../notification/notification.component';
 import { LoginComponent } from '../login/login.component';
 import { RenterService } from '../../services/renter.service';
+import { ReserveStorageProgressComponent } from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -111,6 +112,37 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }, (error) => {
             console.error('Error fetching files. Error:', error);
             this.showErrorNotification('Error fetching files');
+        });
+    }
+
+    addStorageClicked() {
+        const storageDialog = this.dialog.open(AddStorageComponent, {
+            width: '600px',
+            data: {
+                renterInfo: this.renterInfo,
+            },
+        });
+
+        storageDialog.afterClosed().subscribe(result => {
+            const storageRequested = storageDialog.componentInstance.storageRequested;
+            const progressDialog = this.dialog.open(ReserveStorageProgressComponent, {
+                width: '600px'
+            });
+            const params = {
+                amount: storageRequested,
+            };
+            const startTime = new Date();
+            this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
+                .subscribe((resp: any) => {
+                    const endTime = new Date();
+                    const elapsedMs = endTime.getTime() - startTime.getTime();
+                    setTimeout(() => progressDialog.close(), Math.max(3000 - elapsedMs, 0));
+                    this.getRenterInfo();
+                }, (error: HttpErrorResponse) => {
+                    console.error(error);
+                    progressDialog.close();
+                    this.showErrorNotification('Unable to reserve storage.');
+                });
         });
     }
 
@@ -214,7 +246,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         return pathElems[pathElems.length - 1];
     }
 
-
     showErrorNotification(message) {
         const scope = this;
         this.zone.run(() => {
@@ -312,28 +343,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
     }
 
-    addStorageClicked() {
-        const storageDialog = this.dialog.open(AddStorageComponent, {
-            width: '600px',
-            data: {
-                renterInfo: this.renterInfo,
-            },
-        });
-
-        storageDialog.afterClosed().subscribe(result => {
-            const storageRequested = storageDialog.componentInstance.storageRequested;
-            const params = {
-                amount: storageRequested,
-            };
-            console.log('requesting', storageRequested);
-            this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
-                .subscribe((resp: any) => {
-                    this.getRenterInfo();
-                }, (error: HttpErrorResponse) => {
-                    console.error(error);
-                });
-        });
-    }
 
     configureStorageClicked() {
         const storageDialog = this.dialog.open(ConfigureStorageComponent, {
