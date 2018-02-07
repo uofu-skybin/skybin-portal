@@ -4,7 +4,7 @@
 }
 
 .tab-container {
-    max-height: calc(100vh - 132px);
+    max-height: calc(100vh - 132px - 22px);
     overflow-y: auto;
     margin: 0;
 }
