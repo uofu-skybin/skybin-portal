@@ -150,7 +150,8 @@ function launchApp() {
         width: 1440,
         height: 900,
         backgroundColor: '#ffffff',
-        icon: `file://${__dirname}/dist/assets/logo.png`
+        icon: `file://${__dirname}/dist/assets/logo.png`,
+        titleBarStyle: 'hiddenInset'
     });
     win.loadURL(`file://${__dirname}/dist/index.html`);
 
