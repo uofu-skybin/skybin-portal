@@ -329,6 +329,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             if (folderPath.startsWith('/')) {
                 folderPath = folderPath.slice(1);
             }
+            if (this.allFiles.some(e => e.name === folderPath)) {
+                this.showErrorNotification(`"${result}" already exists`);
+                return;
+            }
             const body = {
                 name: folderPath
             };
