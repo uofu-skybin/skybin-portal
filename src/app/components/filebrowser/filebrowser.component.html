@@ -36,8 +36,8 @@
     </div>
     <div id="file-list-container">
         <table class="table">
-            <tbody>
-                <tr *ngFor='let dir of getDirsInCurrentDirectory()' 
+            <tbody [dragula]='"first-bag"'>
+                <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
                 (contextmenu)="onContextClick($event, dir)">
                     <td>
@@ -47,10 +47,11 @@
                     <td>-</td>
                     <td>-</td>
                 </tr>
-                <tr *ngFor="let file of getFilesInCurrentDirectory()" 
-                    (click)="selectFile(file)" 
+                <tr *ngFor="let file of getFilesInCurrentDirectory()"
+                    (click)="selectFile(file)"
                     (contextmenu)="onContextClick($event, file)"
-                    [class.selected]="file === selectedFile">
+                    [class.selected]="file === selectedFile"
+                    >
                     <td>{{baseName(file.name)}}</td>
                     <td>{{latestVersion(file).size | bytes}}</td>
                     <td>{{formatModTime(latestVersion(file).modTime)}}</td>
