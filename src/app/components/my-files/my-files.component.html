@@ -4,33 +4,29 @@
         <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked()' name='my-files-upload-button'>
             Upload
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()'
-                name='my-files-download-button'>
+        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()' name='my-files-download-button'>
             Download
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
             Share
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
-                name='my-files-new-folder-button'>
+        <button mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()' name='my-files-new-folder-button'>
             New Folder
         </button>
 
         <!-- Group storage info views. -->
         <span id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
-            <span id='available-space-container' mat-tooltip='tooltip'>
+            <span id='available-space-container'>
                 <b>Available:</b> {{renterInfo.freeStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
-            <button id='reserve-space-button' mat-mini-fab class='skybin-btn-primary' (click)='addStorageClicked()'
-                    matTooltip="Tooltip!"
-                    name='my-files-new-folder-button'>
+            <button id='reserve-space-button' mat-mini-fab matTooltip="Reserve more space" class='skybin-btn-primary'
+                name='my-files-new-folder-button' (click)='addStorageClicked()'>
                 <i id='plus-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
-            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary'
-                    (click)='configureStorageClicked()' matTooltip='Configure your renter settings!'
-                    name='my-files-new-folder-button'>
+            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary' (click)='configureStorageClicked()'
+                matTooltip='Update settings' name='my-files-new-folder-button'>
                 <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
             </button>
 
@@ -56,8 +52,7 @@
     <!-- File context menu. Typically hidden. -->
     <div id='context-menu-container' class='context-menu-trigger'>
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button class='context-menu-trigger' mat-button #ctxtMenuTrigger='matMenuTrigger'
-                [matMenuTriggerFor]='menu'></button>
+        <button class='context-menu-trigger' mat-button #ctxtMenuTrigger='matMenuTrigger' [matMenuTriggerFor]='menu'></button>
         <div class='context-menu'>
             <mat-menu #menu='matMenu'>
                 <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
@@ -71,8 +66,7 @@
     <!-- Folder context menu. Typically hidden. -->
     <div id='folder-context-menu-container' class='context-menu-trigger'>
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button class='context-menu-trigger' mat-button #ctxtMenuTriggerFolder='matMenuTrigger'
-                [matMenuTriggerFor]='menuFolder'></button>
+        <button class='context-menu-trigger' mat-button #ctxtMenuTriggerFolder='matMenuTrigger' [matMenuTriggerFor]='menuFolder'></button>
         <div class='context-menu'>
             <mat-menu #menuFolder='matMenu'>
                 <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
@@ -80,14 +74,8 @@
         </div>
     </div>
 
-    <app-filebrowser
-        [filesToDisplay]='filteredFiles'
-        (onPathChanged)='onPathChanged($event)'
-        (onFileSelected)='onFileSelected($event)'
-        (onFileContextClick)='onContextClick($event)'
-        (drop)="onDrop($event)"
-        (dragover)="onDragOver($event)"
-    ></app-filebrowser>
+    <app-filebrowser [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)' (onFileSelected)='onFileSelected($event)'
+        (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)" (dragover)="onDragOver($event)"></app-filebrowser>
 
     <!-- Uploads popup -->
     <div id='popups-container'>
@@ -96,8 +84,7 @@
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 mat-dialog-title>Uploads</h5>
-                        <button (click)='hideUploads()' type='button' class='close' data-dismiss='modal'
-                                aria-label='Close'>
+                        <button (click)='hideUploads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
                     </div>
@@ -105,13 +92,10 @@
                         <div *ngFor='let upload of uploads' class='upload-item'>
                             <div>
                                 {{baseName(upload.destPath)}}
-                                <i *ngIf="upload.state === 'TRANSFER_DONE'" class='fa fa-check-circle transfer-icon green'
-                                   aria-hidden='true'></i>
-                                <i *ngIf="upload.state === 'TRANSFER_ERROR'"
-                                   class='fa fa-exclamation-circle transfer-icon red' aria-hidden='true'></i>
+                                <i *ngIf="upload.state === 'TRANSFER_DONE'" class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>
+                                <i *ngIf="upload.state === 'TRANSFER_ERROR'" class='fa fa-exclamation-circle transfer-icon red' aria-hidden='true'></i>
                             </div>
-                            <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'"
-                                              mode='indeterminate'></mat-progress-bar>
+                            <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'" mode='indeterminate'></mat-progress-bar>
                         </div>
                     </div>
                 </div>
@@ -124,8 +108,7 @@
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 mat-dialog-title>Downloads</h5>
-                        <button (click)='hideDownloads()' type='button' class='close' data-dismiss='modal'
-                                aria-label='Close'>
+                        <button (click)='hideDownloads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
                     </div>
@@ -133,13 +116,11 @@
                         <div *ngFor='let download of downloads' class='upload-item'>
                             <div>
                                 {{download.destPath}}
-                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)'
-                                   class='fa fa-search transfer-icon' aria-hidden='true'></i>
-                                <i *ngIf="download.state === 'TRANSFER_ERROR'"
-                                   class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
+                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)' class='fa fa-search transfer-icon'
+                                    aria-hidden='true'></i>
+                                <i *ngIf="download.state === 'TRANSFER_ERROR'" class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
                             </div>
-                            <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'"
-                                              mode='indeterminate'></mat-progress-bar>
+                            <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'" mode='indeterminate'></mat-progress-bar>
                         </div>
                     </div>
                 </div>
