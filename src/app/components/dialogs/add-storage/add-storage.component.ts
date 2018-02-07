@@ -47,8 +47,8 @@ export class AddStorageComponent {
             return;
         }
         const multipliers = {
-            'Megabytes': 1024 * 1024,
-            'Gigabytes': 1024 * 1024 * 1024,
+            'Megabytes': 1e6,
+            'Gigabytes': 1e9,
         };
         const multiplier = multipliers[this.selectedUnits];
         const requestedAmount = this.storageAmount * multiplier;
