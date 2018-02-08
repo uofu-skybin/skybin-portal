@@ -44,7 +44,6 @@ import { NotificationComponent } from './components/notification/notification.co
 import { RenterService } from './services/renter.service';
 import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
 import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
-import {DragulaModule} from 'ng2-dragula';
 
 @NgModule({
     entryComponents: [
@@ -83,7 +82,6 @@ import {DragulaModule} from 'ng2-dragula';
         BrowserAnimationsModule,
         BrowserModule,
         CdkTableModule,
-        DragulaModule,
         FormsModule,
         HttpClientModule,
         MatButtonModule,
