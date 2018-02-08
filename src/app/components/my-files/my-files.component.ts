@@ -1,22 +1,23 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
-import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import { ChangeDetectorRef } from '@angular/core';
-import { SkyFile, latestVersion, GetFilesResponse } from '../../models/common';
-import { appConfig } from '../../models/config';
-import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
-import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
-import { Subscription } from 'rxjs/Subscription';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
-import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
+import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {ElectronService} from 'ngx-electron';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
+import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import {ChangeDetectorRef} from '@angular/core';
+import {SkyFile, latestVersion, GetFilesResponse} from '../../models/common';
+import {appConfig} from '../../models/config';
+import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
+import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
+import {Subscription} from 'rxjs/Subscription';
+import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
+import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
+import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import { NotificationComponent } from '../notification/notification.component';
-import { LoginComponent } from '../login/login.component';
-import { RenterService } from '../../services/renter.service';
-import { ReserveStorageProgressComponent } from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import {NotificationComponent} from '../notification/notification.component';
+import {LoginComponent} from '../login/login.component';
+import {RenterService} from '../../services/renter.service';
+import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import {DragulaService} from 'ng2-dragula';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -55,12 +56,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone,
-        private renterService: RenterService) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone,
+                private renterService: RenterService,
+                private dragulaService: DragulaService) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -84,6 +86,30 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.dragulaService.setOptions(('file-bag'), {
+            removeOnSpill: true,
+            accepts: (el, target, source, sibling) => {
+                console.log(el);
+                console.log(target);
+                console.log(source);
+                console.log(sibling);
+                return true;
+            }
+        });
+        this.dragulaService.drop.subscribe(value => {
+            // const file = value[1].innerHTML;
+            // console.log(value);
+            // console.log(this.dragulaService.find('file-bag'));
+            // console.log(this.allFiles);
+
+
+            // If the file is a folder.
+            // if (file.search('class=\"fa fa-folder\"') !== -1) {
+            //     // console.log(value[1].children[0].innerText);
+            // } else {
+            //     // console.log(value[1].children[0].innerText);
+            // }
+        });
     }
 
     ngOnDestroy() {
@@ -265,7 +291,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog({ defaultPath: "*/" + file.name }, (destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/' + file.name}, (destPath: string) => {
             if (!destPath) {
                 return;
             }
