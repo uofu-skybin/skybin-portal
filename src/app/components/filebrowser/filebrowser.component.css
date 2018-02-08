@@ -39,3 +39,7 @@ ol.breadcrumb {
     margin: 0;
     background: white;
 }
+
+.dir-link:hover {
+    cursor: pointer;
+}

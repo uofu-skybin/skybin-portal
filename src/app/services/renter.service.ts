@@ -22,6 +22,17 @@ export class RenterService {
             );
     }
 
+    renameFile(fileId: string, name: string): Observable<SkyFile> {
+        const body = {
+            fileId: fileId,
+            name: name
+        };
+        return this.http.post<SkyFile>(`${appConfig['renterAddress']}/files/rename`, body)
+            .pipe(
+                catchError(this.handleError('renameFile', new SkyFile()))
+            );
+    }
+
     getRenterInfo(): Observable<RenterInfo> {
         return this.http.get<RenterInfo>(`${appConfig['renterAddress']}/info`)
             .pipe(

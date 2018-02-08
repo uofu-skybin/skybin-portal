@@ -86,30 +86,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.dragulaService.setOptions(('file-bag'), {
-            removeOnSpill: true,
-            accepts: (el, target, source, sibling) => {
-                console.log(el);
-                console.log(target);
-                console.log(source);
-                console.log(sibling);
-                return true;
-            }
-        });
-        this.dragulaService.drop.subscribe(value => {
-            // const file = value[1].innerHTML;
-            // console.log(value);
-            // console.log(this.dragulaService.find('file-bag'));
-            // console.log(this.allFiles);
-
-
-            // If the file is a folder.
-            // if (file.search('class=\"fa fa-folder\"') !== -1) {
-            //     // console.log(value[1].children[0].innerText);
-            // } else {
-            //     // console.log(value[1].children[0].innerText);
-            // }
-        });
     }
 
     ngOnDestroy() {

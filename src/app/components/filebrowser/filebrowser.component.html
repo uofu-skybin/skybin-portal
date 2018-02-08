@@ -1,61 +1,72 @@
 <div id="file-browser-container">
     <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item" (click)="homeClicked()" aria-current="page">Home</li>
-            <li class="breadcrumb-item" *ngFor='let dir of currentPath' (click)="breadcrumbClicked(dir)" aria-current="page">{{ dir }}</li>
+            <li class="breadcrumb-item dir-link" (click)="homeClicked()" aria-current="page">Home</li>
+            <li class="breadcrumb-item dir-link" *ngFor='let dir of currentPath' (click)="breadcrumbClicked(dir)"
+                aria-current="page">{{ dir }}
+            </li>
         </ol>
     </div>
     <div class="header-table-container">
         <table class="table header-table">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Last Modified</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Last Modified</th>
+            </tr>
             </thead>
             <!-- Hack: Sample rows so that the headers are properly spaced -->
             <tbody>
-                <tr>
-                    <td>
-                        <i class="fa fa-folder" aria-hidden="true"></i>
-                        {{getLongestFolderName()}}
-                    </td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td>
-                        {{getLongestFileName()}}
-                    </td>
-                    <td>100 GB</td>
-                    <td>11-27-2017</td>
-                </tr>
+            <tr>
+                <td>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    {{getLongestFolderName()}}
+                </td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td>
+                    {{getLongestFileName()}}
+                </td>
+                <td>100 GB</td>
+                <td>11-27-2017</td>
+            </tr>
             </tbody>
         </table>
     </div>
     <div id="file-list-container">
         <table class="table">
             <tbody>
-                <tr *ngFor='let dir of getDirsInCurrentDirectory()'
+            <tr class='dir-link' *ngIf="this.currentPath.length !== 0 || (this.currentPath.length === 1 && this.currentPath[0] == '')" droppable (onDrop)='onFileDrop($event, null, true)'
+                (click)="moveUpDir()">
+                <td><b>..</b></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
-                (contextmenu)="onContextClick($event, dir)">
-                    <td>
-                        <i class="fa fa-folder" aria-hidden="true"></i>
-                        {{baseName(dir.name)}}
-                    </td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr *ngFor="let file of getFilesInCurrentDirectory()"
-                    (click)="selectFile(file)"
-                    (contextmenu)="onContextClick($event, file)"
-                    [class.selected]="file === selectedFile"
-                    >
-                    <td>{{baseName(file.name)}}</td>
-                    <td>{{latestVersion(file).size | bytes}}</td>
-                    <td>{{formatModTime(latestVersion(file).modTime)}}</td>
-                </tr>
+                (contextmenu)="onContextClick($event, dir)"
+                droppable (onDrop)="onFileDrop($event, dir)"
+                class='dir-link'>
+                <td>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    {{baseName(dir.name)}}
+                </td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr *ngFor="let file of getFilesInCurrentDirectory()"
+                (click)="selectFile(file)"
+                (contextmenu)="onContextClick($event, file)"
+                [class.selected]="file === selectedFile"
+                draggable
+                [dragData]='file'>
+                <td>{{baseName(file.name)}}</td>
+                <td>{{latestVersion(file).size | bytes}}</td>
+                <td>{{formatModTime(latestVersion(file).modTime)}}</td>
+            </tr>
             </tbody>
         </table>
     </div>
