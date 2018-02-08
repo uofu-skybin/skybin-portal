@@ -136,11 +136,12 @@ export class FilebrowserComponent {
             newName = `${newName}.copy`;
         }
 
-        movedFile.name = newName;
-
         this.renterService.renameFile(movedFile.id, movedFile.name)
             .subscribe(res => {
-                console.log(res);
+                const file: SkyFile = res;
+                if (file.name) {
+                    movedFile.name = newName;
+                }
             }, error => {
                 console.log(error);
             });
