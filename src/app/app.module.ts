@@ -23,7 +23,8 @@ import {
     MatTabsModule,
     MatSnackBarModule,
     MatSnackBar,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatTooltipModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSliderModule } from '@angular/material/slider';
@@ -101,6 +102,7 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
         MatSortModule,
         MatTableModule,
         MatTabsModule,
+        MatTooltipModule,
         NgxElectronModule,
         RoutingModule,
     ],

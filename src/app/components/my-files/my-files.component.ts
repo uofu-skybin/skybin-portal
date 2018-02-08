@@ -139,8 +139,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 .subscribe((resp: any) => {
                     const endTime = new Date();
                     const elapsedMs = endTime.getTime() - startTime.getTime();
-                    setTimeout(() => progressDialog.close(), Math.max(3000 - elapsedMs, 0));
-                    this.getRenterInfo();
+                    setTimeout(() => {
+                        progressDialog.close();
+                        this.getRenterInfo();
+                    }, Math.max(3000 - elapsedMs, 0));
                 }, (error: HttpErrorResponse) => {
                     console.error(error);
                     progressDialog.close();
@@ -328,6 +330,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             let folderPath = this.currentPath + '/' + result;
             if (folderPath.startsWith('/')) {
                 folderPath = folderPath.slice(1);
+            }
+            if (this.allFiles.some(e => e.name === folderPath)) {
+                this.showErrorNotification(`"${result}" already exists`);
+                return;
             }
             const body = {
                 name: folderPath

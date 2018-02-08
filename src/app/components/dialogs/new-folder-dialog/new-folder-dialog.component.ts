@@ -24,7 +24,7 @@ export class NewFolderDialogComponent {
             this.errorMessage = 'Must give folder name';
             return;
         }
-        if (this.name.match(/^[0-9a-zA-Z\ \-\_]+$/) === null) {
+        if (this.name.match(/^[0-9a-zA-Z\ \-\_\.]+$/) === null) {
             this.errorMessage = 'Invalid name';
             return;
         }
