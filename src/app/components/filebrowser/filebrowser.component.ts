@@ -136,7 +136,7 @@ export class FilebrowserComponent {
             newName = `${newName}.copy`;
         }
 
-        this.renterService.renameFile(movedFile.id, movedFile.name)
+        this.renterService.renameFile(movedFile.id, newName)
             .subscribe(res => {
                 const file: SkyFile = res;
                 if (file.name) {
