@@ -6,3 +6,7 @@
 #reserve-progress-spinner {
     display: inline-block;
 }
+
+#reserve-progress-title {
+    text-align: center;
+}
