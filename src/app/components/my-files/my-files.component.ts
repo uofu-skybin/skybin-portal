@@ -91,28 +91,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     getRenterInfo() {
-        this.http.get(`${appConfig['renterAddress']}/info`)
-            .subscribe((resp: any) => {
-                this.renterInfo = resp;
-            }, (error) => {
-                console.error('Unable to fetch renter info. Error:', error);
+        this.renterService.getRenterInfo()
+            .subscribe(res => {
+                this.renterInfo = res;
             });
     }
 
     getFiles() {
-        this.http.get<GetFilesResponse>(`${appConfig['renterAddress']}/files`).subscribe((resp) => {
-            const files = resp['files'];
-            if (!files) {
-                console.error('getFiles: no files returned');
-                console.error('response:', resp);
-                return;
-            }
-            this.allFiles = files;
-            this.filteredFiles = files;
-        }, (error) => {
-            console.error('Error fetching files. Error:', error);
-            this.showErrorNotification('Error fetching files');
-        });
+        this.renterService.getFiles()
+            .subscribe(res => {
+                this.allFiles = res.files;
+                for (const file of this.allFiles) {
+                    this.filteredFiles.push(file);
+                }
+            });
     }
 
     addStorageClicked() {
@@ -164,45 +156,52 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             destPath += '.copy';
         }
 
-        const upload = {
-            sourcePath,
-            destPath,
-            state: TRANSFER_RUNNING,
-        };
-        this.uploads.unshift(upload);
-        this.showUploads = true;
+        // const upload = {
+        //     sourcePath,
+        //     destPath,
+        //     state: TRANSFER_RUNNING,
+        // };
+        // this.uploads.unshift(upload);
+        // this.showUploads = true;
 
         const body = {
             sourcePath,
             destPath,
         };
         const startTime = new Date();
-        const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
-            if (file['id'] === undefined) {
-                upload.state = TRANSFER_ERROR;
-                console.error('uploadFile: request did not return file object');
-                console.error('response: ', file);
-                return;
-            }
-            upload.state = TRANSFER_DONE;
-            this.allFiles.push(file);
-
-            // Force change detection to re-render files and uploads.
-            // If the upload completed quickly, show the progress bar
-            // a little longer before re-rendering.
-            const endTime = new Date();
-            const elapsedMs = endTime.getTime() - startTime.getTime();
-            setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-        }, (error) => {
-            console.error('upload error:', error);
-            let errorMessage = `Unable to upload ${this.baseName(sourcePath)}.`;
-            if (error.error && error.error.error) {
-                errorMessage += ` Error: ${error.error.error}`;
-            }
-            this.showErrorNotification(errorMessage);
-            upload.state = TRANSFER_ERROR;
+        this.zone.run(() => {
+            this.renterService.uploadFile(sourcePath, body)
+                .subscribe(file => {
+                    this.allFiles.push(file);
+                });
         });
-        this.subscriptions.push(sub);
+
+        // const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
+        //     if (file['id'] === undefined) {
+        //         upload.state = TRANSFER_ERROR;
+        //         console.error('uploadFile: request did not return file object');
+        //         console.error('response: ', file);
+        //         return;
+        //     }
+        //     upload.state = TRANSFER_DONE;
+        //     this.allFiles.push(file);
+        //
+        //     // Force change detection to re-render files and uploads.
+        //     // If the upload completed quickly, show the progress bar
+        //     // a little longer before re-rendering.
+        //     const endTime = new Date();
+        //     const elapsedMs = endTime.getTime() - startTime.getTime();
+        //     setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+        // }, (error) => {
+        //     console.error('upload error:', error);
+        //     let errorMessage = `Unable to upload ${this.baseName(sourcePath)}.`;
+        //     if (error.error && error.error.error) {
+        //         errorMessage += ` Error: ${error.error.error}`;
+        //     }
+        //     this.showErrorNotification(errorMessage);
+        //     upload.state = TRANSFER_ERROR;
+        // });
+        // this.subscriptions.push(sub);
     }
 
     uploadClicked() {
@@ -323,31 +322,33 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             width: '325px'
         });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (!result || result.length === 0) {
-                return;
-            }
-            let folderPath = this.currentPath + '/' + result;
-            if (folderPath.startsWith('/')) {
-                folderPath = folderPath.slice(1);
-            }
-            if (this.allFiles.some(e => e.name === folderPath)) {
-                this.showErrorNotification(`"${result}" already exists`);
-                return;
-            }
-            const body = {
-                name: folderPath
-            };
-            this.http.post(`${appConfig['renterAddress']}/files/create-folder`, body).subscribe((file: any) => {
-                if (!file['id']) {
-                    console.error('newFolder: no folder returned from request');
-                    console.log('response:', file);
-                    this.getFiles();
+        this.zone.run(() => {
+            dialogRef.afterClosed().subscribe(result => {
+                if (!result || result.length === 0) {
                     return;
                 }
-                this.allFiles.push(file);
-            }, (error) => {
-                console.error(error);
+                let folderPath = this.currentPath + '/' + result;
+                if (folderPath.startsWith('/')) {
+                    folderPath = folderPath.slice(1);
+                }
+                if (this.allFiles.some(e => e.name === folderPath)) {
+                    this.showErrorNotification(`"${result}" already exists`);
+                    return;
+                }
+                const body = {
+                    name: folderPath
+                };
+                this.http.post(`${appConfig['renterAddress']}/files/create-folder`, body).subscribe((file: any) => {
+                    if (!file['id']) {
+                        console.error('newFolder: no folder returned from request');
+                        console.log('response:', file);
+                        this.getFiles();
+                        return;
+                    }
+                    this.allFiles.push(file);
+                }, (error) => {
+                    console.error(error);
+                });
             });
         });
     }
@@ -382,14 +383,17 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         const body = {
             fileId: file.id,
         };
-        this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
-            this.allFiles = this.allFiles.filter(e => e.id !== file.id);
-            this.onSearchChanged();
-            this.getRenterInfo();
-            this.ref.detectChanges();
-        }, (error) => {
-            console.error('Unable to delete file');
-            console.error('Error:', error);
+        this.zone.run(() => {
+            this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
+                this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+                this.onSearchChanged();
+                this.getRenterInfo();
+                this.ref.detectChanges();
+                this.showErrorNotification(`${file.name} has been deleted!`);
+            }, (error) => {
+                console.error('Unable to delete file');
+                console.error('Error:', error);
+            });
         });
     }
 
@@ -444,6 +448,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     onSearchChanged() {
         if (this.currentSearch === '') {
             this.filteredFiles = this.allFiles;
+            // for (const file of this.allFiles) {
+            //     this.filteredFiles.push(file);
+            // }
             this.ref.detectChanges();
             return;
         }
