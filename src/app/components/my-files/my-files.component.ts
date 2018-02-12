@@ -1,22 +1,22 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ElectronService } from 'ngx-electron';
-import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
-import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import { ChangeDetectorRef } from '@angular/core';
-import { SkyFile, latestVersion, GetFilesResponse } from '../../models/common';
-import { appConfig } from '../../models/config';
-import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
-import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
-import { Subscription } from 'rxjs/Subscription';
-import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
-import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
-import { ConfigureStorageComponent } from '../dialogs/configure-storage/configure-storage.component';
+import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {ElectronService} from 'ngx-electron';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
+import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import {ChangeDetectorRef} from '@angular/core';
+import {SkyFile, latestVersion, GetFilesResponse} from '../../models/common';
+import {appConfig} from '../../models/config';
+import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
+import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
+import {Subscription} from 'rxjs/Subscription';
+import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
+import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
+import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import { NotificationComponent } from '../notification/notification.component';
-import { LoginComponent } from '../login/login.component';
-import { RenterService } from '../../services/renter.service';
-import { ReserveStorageProgressComponent } from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import {NotificationComponent} from '../notification/notification.component';
+import {LoginComponent} from '../login/login.component';
+import {RenterService} from '../../services/renter.service';
+import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -55,12 +55,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     renterInfo: any = {};
 
     constructor(private http: HttpClient,
-        public electronService: ElectronService,
-        public dialog: MatDialog,
-        private ref: ChangeDetectorRef,
-        public snackBar: MatSnackBar,
-        public zone: NgZone,
-        private renterService: RenterService) {
+                public electronService: ElectronService,
+                public dialog: MatDialog,
+                private ref: ChangeDetectorRef,
+                public snackBar: MatSnackBar,
+                public zone: NgZone,
+                private renterService: RenterService) {
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -101,9 +101,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.renterService.getFiles()
             .subscribe(res => {
                 this.allFiles = res.files;
-                for (const file of this.allFiles) {
-                    this.filteredFiles.push(file);
-                }
+                this.filteredFiles = res.files;
             });
     }
 
@@ -156,13 +154,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             destPath += '.copy';
         }
 
-        // const upload = {
-        //     sourcePath,
-        //     destPath,
-        //     state: TRANSFER_RUNNING,
-        // };
-        // this.uploads.unshift(upload);
-        // this.showUploads = true;
+        const upload = {
+            sourcePath,
+            destPath,
+            state: TRANSFER_RUNNING,
+        };
+        this.uploads.unshift(upload);
+        this.showUploads = true;
 
         const body = {
             sourcePath,
@@ -172,36 +170,17 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.zone.run(() => {
             this.renterService.uploadFile(sourcePath, body)
                 .subscribe(file => {
+                    const fakeDelay = 1500; /* ms */
                     this.allFiles.push(file);
+                    const endTime = new Date();
+                    const elapsedMs = endTime.getTime() - startTime.getTime();
+                    const uploadTime = Math.max(elapsedMs, fakeDelay);
+                    this.getRenterInfo();
+                    setTimeout(() => {
+                        upload.state = TRANSFER_DONE;
+                    }, uploadTime);
                 });
         });
-
-        // const sub = this.http.post(`${appConfig['renterAddress']}/files/upload`, body).subscribe((file: any) => {
-        //     if (file['id'] === undefined) {
-        //         upload.state = TRANSFER_ERROR;
-        //         console.error('uploadFile: request did not return file object');
-        //         console.error('response: ', file);
-        //         return;
-        //     }
-        //     upload.state = TRANSFER_DONE;
-        //     this.allFiles.push(file);
-        //
-        //     // Force change detection to re-render files and uploads.
-        //     // If the upload completed quickly, show the progress bar
-        //     // a little longer before re-rendering.
-        //     const endTime = new Date();
-        //     const elapsedMs = endTime.getTime() - startTime.getTime();
-        //     setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-        // }, (error) => {
-        //     console.error('upload error:', error);
-        //     let errorMessage = `Unable to upload ${this.baseName(sourcePath)}.`;
-        //     if (error.error && error.error.error) {
-        //         errorMessage += ` Error: ${error.error.error}`;
-        //     }
-        //     this.showErrorNotification(errorMessage);
-        //     upload.state = TRANSFER_ERROR;
-        // });
-        // this.subscriptions.push(sub);
     }
 
     uploadClicked() {
@@ -266,7 +245,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file || file.isDir) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog({ defaultPath: "*/" + file.name }, (destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/' + file.name}, (destPath: string) => {
             if (!destPath) {
                 return;
             }
@@ -345,7 +324,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         this.getFiles();
                         return;
                     }
-                    this.allFiles.push(file);
+                    this.getFiles();
+                    // this.allFiles.push(file);
+                    // this.filteredFiles.push(file);
                 }, (error) => {
                     console.error(error);
                 });
@@ -386,9 +367,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.zone.run(() => {
             this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
                 this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+                // this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
                 this.onSearchChanged();
                 this.getRenterInfo();
-                this.ref.detectChanges();
+                // this.ref.detectChanges();
                 this.showErrorNotification(`${file.name} has been deleted!`);
             }, (error) => {
                 console.error('Unable to delete file');
@@ -448,10 +430,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     onSearchChanged() {
         if (this.currentSearch === '') {
             this.filteredFiles = this.allFiles;
+            // this.filteredFiles = [];
             // for (const file of this.allFiles) {
             //     this.filteredFiles.push(file);
             // }
-            this.ref.detectChanges();
+            // this.ref.detectChanges();
             return;
         }
 
@@ -489,7 +472,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
 
         this.filteredFiles = filteredFiles;
-        this.ref.detectChanges();
+        // this.ref.detectChanges();
     }
 
     viewDetails(file) {
@@ -505,11 +488,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
         event.preventDefault();
 
-        let dt = event.dataTransfer;
+        const dt = event.dataTransfer;
         if (dt.items) {
             for (let i = 0; i < dt.items.length; i++) {
                 if (dt.items[i].kind === 'file') {
-                    let file = dt.items[i].getAsFile();
+                    const file = dt.items[i].getAsFile();
                     this.uploadFile(file.path);
                 }
             }
