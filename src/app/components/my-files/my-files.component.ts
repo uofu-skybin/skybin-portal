@@ -53,6 +53,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
     // Renter info object returned from the renter service.
     renterInfo: any = {};
+    uploadBodyVisible = true;
 
     constructor(private http: HttpClient,
                 public electronService: ElectronService,
@@ -125,18 +126,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 amount: storageRequested,
             };
             const startTime = new Date();
-            this.http.post(`${appConfig['renterAddress']}/reserve-storage`, params)
-                .subscribe((resp: any) => {
+            this.renterService.reserveStorage(storageRequested)
+                .subscribe(res => {
                     const endTime = new Date();
                     const elapsedMs = endTime.getTime() - startTime.getTime();
                     setTimeout(() => {
                         progressDialog.close();
                         this.getRenterInfo();
                     }, Math.max(3000 - elapsedMs, 0));
-                }, (error: HttpErrorResponse) => {
-                    console.error(error);
-                    progressDialog.close();
-                    this.showErrorNotification('Unable to reserve storage.');
                 });
         });
     }
@@ -170,15 +167,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.zone.run(() => {
             this.renterService.uploadFile(sourcePath, body)
                 .subscribe(file => {
-                    const fakeDelay = 1500; /* ms */
-                    this.allFiles.push(file);
-                    const endTime = new Date();
-                    const elapsedMs = endTime.getTime() - startTime.getTime();
-                    const uploadTime = Math.max(elapsedMs, fakeDelay);
-                    this.getRenterInfo();
-                    setTimeout(() => {
-                        upload.state = TRANSFER_DONE;
-                    }, uploadTime);
+                    if (file.id) {
+                        const fakeDelay = 1500;
+                        /* ms */
+                        this.allFiles.push(file);
+                        const endTime = new Date();
+                        const elapsedMs = endTime.getTime() - startTime.getTime();
+                        const uploadTime = Math.max(elapsedMs, fakeDelay);
+                        this.getRenterInfo();
+                        setTimeout(() => {
+                            upload.state = TRANSFER_DONE;
+                        }, uploadTime);
+                    } else {
+                        upload.state = TRANSFER_ERROR;
+                    }
                 });
         });
     }
@@ -393,6 +395,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.showUploads = false;
         this.uploads = this.uploads.filter(e => e.state === TRANSFER_RUNNING);
         this.ref.detectChanges();
+    }
+
+    toggleUploadBody() {
+        this.uploadBodyVisible = !this.uploadBodyVisible;
     }
 
     hideDownloads() {

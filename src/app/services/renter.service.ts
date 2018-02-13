@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, RenterInfo, SkyFile} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -36,13 +36,23 @@ export class RenterService {
             );
     }
 
+    reserveStorage(amount: number) {
+        const data = {
+            amount: amount
+        };
+        return this.http.post<ContractsResponse>(`${appConfig['renterAddress']}/reserve-storage`, data)
+            .pipe(
+                catchError(this.handleError('reserveStorage', new ContractsResponse()))
+            );
+    }
+
     /**
      * Handle Http operation that failed.
      * Let the app continue.
      * @param operation - name of the operation that failed
      * @param result - optional value to return as the observable result
      */
-    private handleError<T> (operation = 'operation', result?: T) {
+    private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.log(`${operation} failed: ${error.message}`);
 

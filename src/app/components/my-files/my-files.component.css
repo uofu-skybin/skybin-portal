@@ -42,7 +42,10 @@ button:focus {outline:0;}
 }
 
 .modal-header {
-    max-height: 60px;
+    /*max-height: 60px;*/
+    background: #00A7F3;
+    color: white;
+    padding: 9px 9px 9px 15px;
 }
 
 .modal-body {
@@ -128,4 +131,21 @@ button:focus {outline:0;}
 
 .red {
     color: red;
+}
+
+.upload-progress-button {
+    background-color: white;
+}
+
+#uploads-overlay > div > div > div.modal-header > div > button:nth-child(1), #uploads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
+    background: #00A7F3;
+}
+
+#mat-dialog-title-0 {
+    margin-bottom: 0;
+}
+
+#upload-progress-header-title {
+    margin-top: auto;
+    margin-bottom: auto;
 }

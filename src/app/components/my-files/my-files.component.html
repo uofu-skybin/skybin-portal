@@ -83,12 +83,17 @@
             <div class='modal-dialog modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 mat-dialog-title>Uploads</h5>
-                        <button (click)='hideUploads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
-                        </button>
+                        <span id="upload-progress-header-title">Uploads</span>
+                        <div>
+                            <button mat-mini-fab class="upload-progress-button" (click)="toggleUploadBody()"><img src="assets/ic_keyboard_arrow_up_white_24px.svg" alt=""></button>
+                            <button mat-mini-fab class="upload-progress-button" (click)="hideUploads()"><span>X</span></button>
+
+                        </div>
+                        <!--<button (click)='hideUploads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>-->
+                            <!--<span aria-hidden='true'>&times;</span>-->
+                        <!--</button>-->
                     </div>
-                    <div class='modal-body'>
+                    <div *ngIf="uploadBodyVisible" class='modal-body'>
                         <div *ngFor='let upload of uploads' class='upload-item'>
                             <div>
                                 {{baseName(upload.destPath)}}

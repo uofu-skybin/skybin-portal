@@ -4,6 +4,7 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http/src/response';
 import Timer = NodeJS.Timer;
 import { appConfig } from '../../models/config';
+import {Activity, ActivityResponse, Contract, ContractsResponse, InfoResponse} from '../../models/common';
 
 
 // Activity feed update interval (ms)
@@ -100,35 +101,6 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
 
 }
 
-export interface InfoResponse {
-    providerId?: string;
-    providerAllocated?: number;
-    providerReserved?: number;
-    providerUsed?: number;
-    providerFree?: number;
-    providerContracts?: number;
-}
-
-export interface Contract {
-    storageSpace: string;
-    renterID: string;
-}
-
-export interface ContractsResponse {
-    contracts: Contract[];
-}
-
-export interface ActivityResponse {
-    activity: Activity[];
-}
-
-export interface Activity {
-    requestType?: string;
-    blockId?: string;
-    renterId?: string;
-    time?: Date;
-    contract?: Contract;
-}
 
 // displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Time Stamp', 'Contract'];
 const DATA: Activity[] = [
