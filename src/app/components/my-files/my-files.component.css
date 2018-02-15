@@ -41,9 +41,10 @@ button:focus {outline:0;}
     overflow-y: auto;
 }
 
+.modal-header,
+
 .modal-header {
     /*max-height: 60px;*/
-    background: #00A7F3;
     color: white;
     padding: 9px 9px 9px 15px;
 }
@@ -51,6 +52,7 @@ button:focus {outline:0;}
 .modal-body {
     max-height: 90px;
     overflow: scroll;
+    padding: 0 !important;
 }
 
 .modal-content {
@@ -69,7 +71,7 @@ button:focus {outline:0;}
 }
 
 .transfer-icon:hover {
-    font-size: 2.0em;
+    /*font-size: 2.0em;*/
     cursor: pointer;
 }
 
@@ -88,7 +90,10 @@ button:focus {outline:0;}
 }
 
 .upload-item {
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
+    border-bottom: 1px solid gray;
+    padding: 10px 10px 10px 15px;
+    height: 50px;
 }
 
 #my-files-search {
@@ -137,8 +142,10 @@ button:focus {outline:0;}
     background-color: white;
 }
 
-#uploads-overlay > div > div > div.modal-header > div > button:nth-child(1), #uploads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
-    background: #00A7F3;
+#uploads-overlay > div > div > div.modal-header > div > button:nth-child(1), #uploads-overlay > div > div > div.modal-header > div > button:nth-child(2), .modal-header {
+    /*background: #00A7F3;*/
+    background: #4c4c4c;
+    box-shadow: none !important;
 }
 
 #mat-dialog-title-0 {
@@ -148,4 +155,17 @@ button:focus {outline:0;}
 #upload-progress-header-title {
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.file-upload-progress-button {
+    float: right;
+}
+
+.file-upload-name {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#uploads-overlay > div > div > div.modal-body > div > div > button {
+    background: white;
 }

@@ -53,7 +53,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
     // Renter info object returned from the renter service.
     renterInfo: any = {};
+
+    // Upload progress variables.
     uploadBodyVisible = true;
+    completedUploads = 0;
+    uploadInProgress = false;
 
     constructor(private http: HttpClient,
                 public electronService: ElectronService,
@@ -159,6 +163,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.uploads.unshift(upload);
         this.showUploads = true;
 
+        this.uploadInProgress = true;
+
         const body = {
             sourcePath,
             destPath,
@@ -177,6 +183,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         this.getRenterInfo();
                         setTimeout(() => {
                             upload.state = TRANSFER_DONE;
+                            this.completedUploads++;
+                            this.uploadInProgress = false;
                         }, uploadTime);
                     } else {
                         upload.state = TRANSFER_ERROR;
@@ -394,6 +402,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     hideUploads() {
         this.showUploads = false;
         this.uploads = this.uploads.filter(e => e.state === TRANSFER_RUNNING);
+        this.completedUploads = 0;
+        this.uploadBodyVisible = true;
         this.ref.detectChanges();
     }
 
