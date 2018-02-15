@@ -1,7 +1,9 @@
-import { Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
-import { SkyFile, latestVersion } from '../../models/common';
-import { ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output} from '@angular/core';
+import {MatTableDataSource} from '@angular/material';
+import {SkyFile, latestVersion} from '../../models/common';
+import {ChangeDetectorRef} from '@angular/core';
+import {DropEvent} from 'ng-drag-drop';
+import {RenterService} from '../../services/renter.service';
 
 interface FilesResponse {
     files: SkyFile[];
@@ -23,7 +25,9 @@ export class FilebrowserComponent {
     @Output() onFileContextClick = new EventEmitter<MouseEvent>();
 
 
-    constructor(private ref: ChangeDetectorRef) { }
+    constructor(private ref: ChangeDetectorRef,
+                private renterService: RenterService) {
+    }
 
     inCurrentDirectory(path: string) {
         const currentDir = this.currentPath.join('/');
@@ -50,6 +54,10 @@ export class FilebrowserComponent {
     }
 
     changeDir(path: string) {
+        if (path === '') {
+            this.currentPath = [];
+            return;
+        }
         this.currentPath = path.split('/');
         this.onPathChanged.emit(this.currentPath.join('/'));
         this.selectFile(null);
@@ -63,6 +71,8 @@ export class FilebrowserComponent {
 
     homeClicked() {
         this.changeDir('');
+        this.onPathChanged.emit('');
+        this.selectFile(null);
     }
 
     breadcrumbClicked(path: string) {
@@ -103,4 +113,43 @@ export class FilebrowserComponent {
         return latestVersion(file);
     }
 
+    onFileDrop(e: DropEvent, dir?: SkyFile, upDir = false) {
+        const movedFile: SkyFile = e.dragData;
+        const fileName = movedFile.name.split('/')[movedFile.name.split('/').length - 1];
+        let newName: string;
+
+        if (!upDir) {
+            newName = `${dir.name}/${fileName}`;
+        } else {
+            // Moving to root directory.
+            if (movedFile.name.split('/').length === 2) {
+                newName = movedFile.name.split('/')[1];
+            } else {
+                newName = `${movedFile.name.split('/')[movedFile.name.split('/').length - 3]}/${fileName}`;
+            }
+        }
+
+        // Keep appending '.copy' while a file with the same name exists in the destination directory.
+        while (this.filesToDisplay.find((file: SkyFile) => {
+            return file.name === newName;
+        }) !== undefined) {
+            newName = `${newName}.copy`;
+        }
+
+        this.renterService.renameFile(movedFile.id, newName)
+            .subscribe(res => {
+                const file: SkyFile = res;
+                if (file.name) {
+                    movedFile.name = newName;
+                }
+            }, error => {
+                console.log(error);
+            });
+    }
+
+    moveUpDir() {
+        this.currentPath.pop();
+        this.onPathChanged.emit(this.currentPath.join('/'));
+        this.selectFile(null);
+    }
 }
