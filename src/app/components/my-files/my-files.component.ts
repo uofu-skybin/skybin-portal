@@ -54,6 +54,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     // Renter info object returned from the renter service.
     renterInfo: any = {};
 
+    // TODO: These will move if the upload/dl progress view goes into the parent component.
     // Upload progress variables.
     uploadBodyVisible = true;
     completedUploads = 0;
