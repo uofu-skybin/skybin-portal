@@ -132,15 +132,19 @@
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h5 mat-dialog-title>Downloads</h5>
-                        <button (click)='hideDownloads()' type='button' class='close' data-dismiss='modal'
-                                aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
+                        <button mat-mini-fab class="upload-progress-button" (click)="hideDownloads()"><img
+                            src="assets/ic_clear_white_24px.svg"
+                            alt="">
                         </button>
+                        <!--<button (click)='hideDownloads()' type='button' class='close' data-dismiss='modal'-->
+                                <!--aria-label='Close'>-->
+                            <!--<span aria-hidden='true'>&times;</span>-->
+                        <!--</button>-->
                     </div>
                     <div class='modal-body'>
                         <div *ngFor='let download of downloads' class='upload-item'>
                             <div>
-                                {{download.destPath}}
+                                {{download.destPath.split('/')[download.destPath.split('/').length - 1]}}
                                 <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)'
                                    class='fa fa-search transfer-icon'
                                    aria-hidden='true'></i>
