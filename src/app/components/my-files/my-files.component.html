@@ -79,9 +79,10 @@
         </div>
     </div>
 
-    <app-filebrowser [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)'
+    <app-filebrowser [allFiles]="allFiles" [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)'
                      (onFileSelected)='onFileSelected($event)'
                      (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)"
+                     (onFolderMoved)="onFolderMoved($event)"
                      (dragover)="onDragOver($event)"></app-filebrowser>
 
     <!-- Uploads popup -->
@@ -93,7 +94,8 @@
                         <span id="upload-progress-header-title">
                         <span *ngIf="uploadInProgress">Upload in progress</span>
                         <span *ngIf="completedUploads === 1 && !uploadInProgress">1 upload complete</span>
-                        <span *ngIf="completedUploads > 1 && !uploadInProgress">{{completedUploads}} uploads complete</span>
+                        <span
+                            *ngIf="completedUploads !== 1 && !uploadInProgress">{{completedUploads}} uploads complete</span>
                         </span>
                         <div>
                             <button mat-mini-fab class="upload-progress-button" (click)="toggleUploadBody()">
@@ -131,13 +133,20 @@
             <div class='modal-dialog modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 mat-dialog-title>Downloads</h5>
-                        <button mat-mini-fab class="upload-progress-button" (click)="hideDownloads()"><img
-                            src="assets/ic_clear_white_24px.svg"
-                            alt="">
-                        </button>
+                        <span id="download-progress-header-title">Downloads</span>
+                        <div>
+                            <!--<button mat-mini-fab class="toggle-download-progress-button" (click)="toggleDownloadBody()">-->
+                                <!--<img *ngIf="downloadBodyVisible" src="assets/ic_keyboard_arrow_down_white_24px.svg"-->
+                                     <!--alt="">-->
+                                <!--<img *ngIf="!downloadBodyVisible" src="assets/ic_keyboard_arrow_up_white_24px.svg" alt="">-->
+                            <!--</button>-->
+                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()"><img
+                                src="assets/ic_clear_white_24px.svg"
+                                alt="">
+                            </button>
+                        </div>
                     </div>
-                    <div class='modal-body'>
+                    <div *ngIf="downloadBodyVisible" class='modal-body'>
                         <div *ngFor='let download of downloads' class='upload-item'>
                             <div>
                                 {{download.destPath.split('/')[download.destPath.split('/').length - 1]}}

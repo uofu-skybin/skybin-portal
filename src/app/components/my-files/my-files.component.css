@@ -148,11 +148,12 @@ button:focus {outline:0;}
     box-shadow: none !important;
 }
 
+
 #mat-dialog-title-0 {
     margin-bottom: 0;
 }
 
-#upload-progress-header-title {
+#upload-progress-header-title, #download-progress-header-title {
     margin-top: auto;
     margin-bottom: auto;
 }
@@ -168,4 +169,10 @@ button:focus {outline:0;}
 
 #uploads-overlay > div > div > div.modal-body > div > div > button {
     background: white;
+}
+
+#downloads-overlay > div > div > div.modal-header > div > button:nth-child(1), #downloads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
+    /*background: #00A7F3;*/
+    background: #4c4c4c;
+    box-shadow: none !important;
 }

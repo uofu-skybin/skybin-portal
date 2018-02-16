@@ -17,12 +17,14 @@ interface FilesResponse {
 })
 export class FilebrowserComponent {
 
+    @Input() allFiles: SkyFile[];
     @Input() filesToDisplay: SkyFile[];
     currentPath: string[] = [];
     selectedFile: SkyFile = null;
     @Output() onPathChanged = new EventEmitter<string>();
     @Output() onFileSelected = new EventEmitter<SkyFile>();
     @Output() onFileContextClick = new EventEmitter<MouseEvent>();
+    @Output() onFolderMoved = new EventEmitter();
 
 
     constructor(private ref: ChangeDetectorRef,
@@ -140,16 +142,24 @@ export class FilebrowserComponent {
             .subscribe(res => {
                 const file: SkyFile = res;
                 if (file.name) {
+                    if (file.isDir) {
+                        this.onFolderMoved.emit();
+                        // this.renterService.getFiles();
+                    }
                     movedFile.name = newName;
                 }
             }, error => {
                 console.log(error);
             });
+
     }
 
     moveUpDir() {
         this.currentPath.pop();
         this.onPathChanged.emit(this.currentPath.join('/'));
         this.selectFile(null);
+    }
+
+    onFileDragOver(e: any, dir: SkyFile) {
     }
 }

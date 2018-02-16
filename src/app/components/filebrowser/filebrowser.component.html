@@ -39,17 +39,11 @@
     <div id="file-list-container">
         <table class="table">
             <tbody>
-            <tr class='dir-link' [dragOverClass]="'dragover'" *ngIf="this.currentPath.length !== 0 || (this.currentPath.length === 1 && this.currentPath[0] == '')" droppable (onDrop)='onFileDrop($event, null, true)'
-                (click)="moveUpDir()">
-                <td><b>..</b></td>
-                <td></td>
-                <td></td>
-            </tr>
             <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
                 (contextmenu)="onContextClick($event, dir)"
-                droppable [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, dir)"
-                class='dir-link'>
+                droppable [dragOverClass]="'dragover'" (onDragOver)="onFileDragOver($event, dir)" (onDrop)="onFileDrop($event, dir)"
+                class='dir-link' draggable [dragData]='dir'>
                 <td>
                     <i  class="fa fa-folder" aria-hidden="true"></i>
                     {{baseName(dir.name)}}

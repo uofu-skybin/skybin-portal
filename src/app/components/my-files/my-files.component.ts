@@ -57,6 +57,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     // TODO: These will move if the upload/dl progress view goes into the parent component.
     // Upload progress variables.
     uploadBodyVisible = true;
+    downloadBodyVisible = true;
     completedUploads = 0;
     uploadInProgress = false;
 
@@ -189,6 +190,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         }, uploadTime);
                     } else {
                         upload.state = TRANSFER_ERROR;
+                        this.uploadInProgress = false;
                     }
                 });
         });
@@ -400,6 +402,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.selectedFile = file;
     }
 
+    onFolderMoved() {
+        // this.allFiles = [];
+        // this.filteredFiles = [];
+        this.getFiles();
+    }
+
     hideUploads() {
         this.showUploads = false;
         this.uploads = this.uploads.filter(e => e.state === TRANSFER_RUNNING);
@@ -415,7 +423,12 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     hideDownloads() {
         this.showDownloads = false;
         this.downloads = this.downloads.filter(e => e.state === TRANSFER_RUNNING);
+        this.downloadBodyVisible = true;
         this.ref.detectChanges();
+    }
+
+    toggleDownloadBody() {
+        this.downloadBodyVisible = !this.downloadBodyVisible;
     }
 
     inCurrentDirectory(file) {
@@ -519,4 +532,5 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     onDragOver(e) {
         e.preventDefault();
     }
+
 }

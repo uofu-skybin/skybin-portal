@@ -65,11 +65,11 @@ export class RenterService {
      */
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-            console.log(`${operation} failed: ${error.message}`);
+            console.log(`${operation} failed: ${error.error.error}`);
 
             this.zone.run(() => {
                 this.snackBar.openFromComponent(NotificationComponent, {
-                    data: error.message,
+                    data: error.error.error,
                     duration: 3000,
                     horizontalPosition: 'center',
                     verticalPosition: 'bottom',
