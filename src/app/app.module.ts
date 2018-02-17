@@ -46,6 +46,7 @@ import { RenterService } from './services/renter.service';
 import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
 import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {NgDragDropModule} from 'ng-drag-drop';
+import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
 
 @NgModule({
     entryComponents: [
@@ -56,6 +57,7 @@ import {NgDragDropModule} from 'ng-drag-drop';
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
+        RenameFileDialogComponent
     ],
     declarations: [
         AddStorageComponent,
@@ -78,6 +80,7 @@ import {NgDragDropModule} from 'ng-drag-drop';
         ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
+        RenameFileDialogComponent,
     ],
     imports: [
         BrowserAnimationsModule,

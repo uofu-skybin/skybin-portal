@@ -17,6 +17,7 @@ import {NotificationComponent} from '../notification/notification.component';
 import {LoginComponent} from '../login/login.component';
 import {RenterService} from '../../services/renter.service';
 import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -531,6 +532,45 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
     onDragOver(e) {
         e.preventDefault();
+    }
+
+    renameFile(file: SkyFile) {
+        const dialogRef = this.dialog.open(RenameFileDialogComponent, {
+            width: '325px'
+        });
+
+        this.zone.run(() => {
+            dialogRef.afterClosed().subscribe(newName => {
+                if (!newName || newName.length === 0) {
+                    return;
+                }
+
+                // Append new file name to currently scoped directory name.
+                let fullNewName = '';
+                const filePath = file.name.split('/');
+
+                if (filePath.length > 1) {
+                    for (let i = 0; i < filePath.length - 1; i++) {
+                        fullNewName += (i !== 0) ? '/' + filePath[i] : filePath[i];
+                    }
+                    fullNewName += '/' + newName;
+                } else {
+                    fullNewName = newName;
+                }
+
+                for (const existingFile of this.filteredFiles) {
+                    if (existingFile.name === fullNewName) {
+                        this.showErrorNotification(`"${newName}" already exists`);
+                        return;
+                    }
+                }
+
+                this.renterService.renameFile(file.id, fullNewName)
+                    .subscribe(renamedFile => {
+                        this.getFiles();
+                    });
+            });
+        });
     }
 
 }

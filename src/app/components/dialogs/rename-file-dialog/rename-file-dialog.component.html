@@ -1,0 +1,12 @@
+<div id='new-folder-dialog-container'>
+    <mat-form-field>
+        <input matInput (keyup.enter)="submit()" [(ngModel)]="name" placeholder="New file name">
+    </mat-form-field>
+    <mat-error *ngIf="errorMessage.length > 0">
+        {{errorMessage}}
+    </mat-error>
+    <mat-dialog-actions align="center">
+        <button mat-button (click)="submit()">Rename</button>
+        <button mat-button mat-dialog-close>Cancel</button>
+    </mat-dialog-actions>
+</div>
