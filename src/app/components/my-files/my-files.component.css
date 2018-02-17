@@ -78,6 +78,7 @@ button:focus {outline:0;}
 #my-files-search-container {
     float: right;
     width: 15em;
+    margin-right: 3em;
 }
 
 #my-files-buttons {
