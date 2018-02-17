@@ -1,9 +1,11 @@
 <div id="file-browser-container">
     <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item dir-link" (click)="homeClicked()" aria-current="page">Home</li>
-            <li class="breadcrumb-item dir-link" *ngFor='let dir of currentPath' (click)="breadcrumbClicked(dir)"
-                aria-current="page">{{ dir }}
+            <li class="breadcrumb-item dir-link" (click)="homeClicked()" aria-current="page" droppable
+                [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, '', 0)">Home
+            </li>
+            <li class="breadcrumb-item dir-link" *ngFor='let dir of currentPath; let i = index' (click)="breadcrumbClicked(dir)"
+                aria-current="page" droppable [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, dir, i)">{{ dir }}
             </li>
         </ol>
     </div>
@@ -42,10 +44,11 @@
             <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
                 (contextmenu)="onContextClick($event, dir)"
-                droppable [dragOverClass]="'dragover'" (onDragOver)="onFileDragOver($event, dir)" (onDrop)="onFileDrop($event, dir)"
+                droppable [dragOverClass]="'dragover'" (onDragOver)="onFileDragOver($event, dir)"
+                (onDrop)="onFileDrop($event, dir)"
                 class='dir-link' draggable [dragData]='dir'>
                 <td>
-                    <i  class="fa fa-folder" aria-hidden="true"></i>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
                     {{baseName(dir.name)}}
                 </td>
                 <td>-</td>

@@ -1,8 +1,8 @@
 <div class='container-fluid' (drop)="onDrop($event)" (dragover)="onDragOver($event)">
     <div id="title-bar"></div>
     <div id='header' class='row'>
-         <div class='col-sm-4'>
-        <img id="app-logo" src="assets/skybin-logo.png">
+        <div class='col-sm-4'>
+            <img id="app-logo" src="assets/skybin-logo.png">
         </div>
     </div>
     <div id='content-row' class='row'>
@@ -35,6 +35,16 @@
                         <i class="fa fa-usd" aria-hidden="true"></i>
                         My Wallet
                     </a>
+                </div>
+
+                <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="above" xPosition="before" [overlapTrigger]="false">
+                    <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
+                    <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
+                    <hr class='profile-menu-divider'>
+                    <button mat-menu-item>Export key identity</button>
+                </mat-menu>
+                <div matTooltip="View your renter information"  class='row' id='profile-icon-container'>
+                    <button mat-fab id="profile-button" [matMenuTriggerFor]="appMenu"><i class="fa fa-user" aria-hidden="true"></i></button>
                 </div>
             </nav>
         </div>

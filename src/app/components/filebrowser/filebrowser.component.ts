@@ -115,30 +115,30 @@ export class FilebrowserComponent {
         return latestVersion(file);
     }
 
-    onFileDrop(e: DropEvent, dir?: SkyFile, upDir = false) {
+    onFileDrop(e: DropEvent, dir?: any, index?) {
         const movedFile: SkyFile = e.dragData;
-        const fileName = movedFile.name.split('/')[movedFile.name.split('/').length - 1];
-        let newName: string;
+        const movedFileName = movedFile.name.split('/')[movedFile.name.split('/').length - 1];
+        let newPathName: string;
 
-        if (!upDir) {
-            newName = `${dir.name}/${fileName}`;
-        } else {
-            // Moving to root directory.
-            if (movedFile.name.split('/').length === 2) {
-                newName = movedFile.name.split('/')[1];
+        if (typeof dir === 'string') {
+            if (dir === '') {
+                newPathName = movedFileName;
             } else {
-                newName = `${movedFile.name.split('/')[movedFile.name.split('/').length - 3]}/${fileName}`;
+                const destDirPath = this.currentPath.slice(0, index + 1).join('/');
+                newPathName = `${destDirPath}/${movedFileName}`;
             }
+        } else {
+            newPathName = `${dir.name}/${movedFileName}`;
         }
 
         // Keep appending '.copy' while a file with the same name exists in the destination directory.
         while (this.filesToDisplay.find((file: SkyFile) => {
-            return file.name === newName;
+            return file.name === newPathName;
         }) !== undefined) {
-            newName = `${newName}.copy`;
+            newPathName = `${newPathName}.copy`;
         }
 
-        this.renterService.renameFile(movedFile.id, newName)
+        this.renterService.renameFile(movedFile.id, newPathName)
             .subscribe(res => {
                 const file: SkyFile = res;
                 if (file.name) {
@@ -146,12 +146,11 @@ export class FilebrowserComponent {
                         this.onFolderMoved.emit();
                         // this.renterService.getFiles();
                     }
-                    movedFile.name = newName;
+                    movedFile.name = newPathName;
                 }
             }, error => {
                 console.log(error);
             });
-
     }
 
     moveUpDir() {
