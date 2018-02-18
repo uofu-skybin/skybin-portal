@@ -10,21 +10,23 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 })
 export class ShareDialogComponent implements OnInit {
 
-  constructor(
-    public dialogRef: MatDialogRef<ShareDialogComponent>
-  ) { }
+  private alias = '';
+  private errorMessage = '';
 
-  private currentName = '';
-  private names = [];
+  constructor(public dialogRef: MatDialogRef<ShareDialogComponent>) { }
 
   ngOnInit() {
   }
 
-  addName() {
-    if (this.currentName !== '') {
-      this.names.push(this.currentName);
-      this.names = this.names.slice();
-      this.currentName = '';
-    }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  submit() {
+      if (this.alias.length === 0) {
+          this.errorMessage = 'Must supply renter alias';
+          return;
+      }
+      this.dialogRef.close(this.alias);
   }
 }

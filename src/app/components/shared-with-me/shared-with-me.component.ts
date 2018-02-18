@@ -180,19 +180,12 @@ export class SharedWithMeComponent implements OnInit {
         if (!file) {
             return;
         }
-        // If the file is a directory, make sure it is empty
-        // if (file.isDir) {
-        //     const hasChild = this.allFiles.some(e =>
-        //         e.name.startsWith(file.name) && e.id !== file.id);
-        //     if (hasChild) {
-        //         this.showErrorNotification('That folder isn\'t empty!');
-        //         return;
-        //     }
-        // }
+        // Need to add the endpoint for removing shared files to the renter.
+        
         // const body = {
         //     fileId: file.id,
         // };
-        // this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
+        // this.http.post(`${appConfig['renterAddress']}/files/shared/remove`, body).subscribe(response => {
         //     this.allFiles = this.allFiles.filter(e => e.id !== file.id);
         //     this.onSearchChanged();
         //     this.getRenterInfo();
@@ -225,16 +218,6 @@ export class SharedWithMeComponent implements OnInit {
         return dirs;
     }
 
-    getFilesInCurrentDirectory() {
-        const files = [];
-        for (const file of this.allFiles) {
-            if (!file.isDir && this.inCurrentDirectory(file)) {
-                files.push(file);
-            }
-        }
-        return files;
-    }
-
     onSearchChanged() {
         if (this.currentSearch === '') {
             this.filteredFiles = this.allFiles;
@@ -260,18 +243,16 @@ export class SharedWithMeComponent implements OnInit {
             }
         }
 
-        for (const file of this.getFilesInCurrentDirectory()) {
-            if (this.inCurrentDirectory(file)) {
-                const fileName = this.baseName(file.name);
-                let containsTerms = true;
-                for (const term of searchTerms) {
-                    if (fileName.indexOf(term) === -1) {
-                        containsTerms = false;
-                    }
+        for (const file of this.allFiles) {
+            const fileName = this.baseName(file.name);
+            let containsTerms = true;
+            for (const term of searchTerms) {
+                if (fileName.indexOf(term) === -1) {
+                    containsTerms = false;
                 }
-                if (containsTerms) {
-                    filteredFiles.push(file);
-                }
+            }
+            if (containsTerms) {
+                filteredFiles.push(file);
             }
         }
 
