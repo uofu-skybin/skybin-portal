@@ -16,3 +16,80 @@
 #search-input {
     font-family: FontAwesome, Arial;
 }
+
+.context-menu-trigger {
+    display: none;
+}
+
+#popups-container {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+}
+
+.modal.in {
+    bottom: 20px;
+    display: block;
+    float: right;
+    margin-right: 20px;
+    max-height: 150px;
+    position: static;
+    width: 300px;
+}
+
+.modal-dialog {
+    width: 300px;
+    max-height: 150px;
+    margin: 0px;
+    float: right;
+}
+
+.modal .modal-body {
+    overflow-y: auto;
+}
+
+.modal-header {
+    max-height: 60px;
+}
+
+.modal-body {
+    max-height: 90px;
+    overflow: scroll;
+}
+
+.modal-content {
+    overflow: auto;
+    max-height: 150px;
+}
+
+.container-fluid {
+    height: 100%;
+}
+
+.transfer-icon {
+    font-size: 1.3em;
+    margin-right: 25px;
+    float: right;
+}
+
+.transfer-icon:hover {
+    font-size: 2.0em;
+    cursor: pointer;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+#cdk-overlay-0 > mat-dialog-container, #cdk-overlay-1 > mat-dialog-container {
+    padding: 0 !important;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
