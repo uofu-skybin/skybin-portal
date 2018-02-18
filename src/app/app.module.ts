@@ -35,7 +35,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FilebrowserComponent } from './components/filebrowser/filebrowser.component';
 import { NewFolderDialogComponent } from './components/dialogs/new-folder-dialog/new-folder-dialog.component';
-import { ShareDialogComponent } from './components/share-dialog/share-dialog.component';
+import { ShareDialogComponent } from './components/dialogs/share-dialog/share-dialog.component';
 import { BytesPipe } from './pipes/bytes.pipe';
 import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';

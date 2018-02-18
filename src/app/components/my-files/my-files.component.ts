@@ -6,7 +6,7 @@ import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folde
 import { ChangeDetectorRef } from '@angular/core';
 import { SkyFile, latestVersion, GetFilesResponse } from '../../models/common';
 import { appConfig } from '../../models/config';
-import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
+import { ShareDialogComponent } from '../dialogs/share-dialog/share-dialog.component';
 import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
 import { Subscription } from 'rxjs/Subscription';
 import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
@@ -363,7 +363,27 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!this.selectedFile) {
             return;
         }
-        const dialogRef = this.dialog.open(ShareDialogComponent, {});
+
+        const dialogRef = this.dialog.open(ShareDialogComponent, {
+            width: '325px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result || result.length === 0) {
+                return;
+            }
+            
+            const body = {
+                renterAlias: result,
+                fileId: this.selectedFile.id
+            };
+            this.http.post(`${appConfig['renterAddress']}/files/share`, body).subscribe(result => {
+                this.showErrorNotification("File shared!")
+            }, (error) => {
+                console.error(error);
+                this.showErrorNotification(error.error.error);
+            });
+        });
     }
 
     deleteFile(file) {
