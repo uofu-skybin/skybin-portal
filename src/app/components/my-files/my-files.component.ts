@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone, Output, EventEmitter} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {ElectronService} from 'ngx-electron';
 import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
@@ -140,6 +140,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                     setTimeout(() => {
                         progressDialog.close();
                         this.getRenterInfo();
+                        this.renterService.emitStorageChange(storageRequested);
                     }, Math.max(3000 - elapsedMs, 0));
                 });
         });

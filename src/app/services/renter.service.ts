@@ -7,9 +7,16 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import {MatSnackBar} from '@angular/material';
 import {NotificationComponent} from '../components/notification/notification.component';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class RenterService {
+    private emitStorageChangeSource = new Subject<any>();
+    storageChangeEmitted$ = this.emitStorageChangeSource.asObservable();
+    emitStorageChange(change: number) {
+        this.emitStorageChangeSource.next(change);
+    }
+
     constructor(private http: HttpClient,
                 public snackBar: MatSnackBar,
                 private zone: NgZone) {
