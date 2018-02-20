@@ -18,6 +18,7 @@ import {LoginComponent} from '../login/login.component';
 import {RenterService} from '../../services/renter.service';
 import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
+import {beautifyBytes} from '../../pipes/bytes.pipe';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -141,6 +142,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         progressDialog.close();
                         this.getRenterInfo();
                         this.renterService.emitStorageChange(storageRequested);
+                        this.showErrorNotification(`Successfully reserved ${beautifyBytes(storageRequested)}!`);
                     }, Math.max(3000 - elapsedMs, 0));
                 });
         });
