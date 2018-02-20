@@ -120,7 +120,12 @@ export class FilebrowserComponent {
         const movedFileName = movedFile.name.split('/')[movedFile.name.split('/').length - 1];
         let newPathName: string;
 
+
         if (typeof dir === 'string') {
+            // Do nothing if the user drags on a file on the currently scoped folder.
+            if (this.currentPath[this.currentPath.length - 1] === dir && index === this.currentPath.length - 1) {
+                return;
+            }
             if (dir === '') {
                 newPathName = movedFileName;
             } else {
