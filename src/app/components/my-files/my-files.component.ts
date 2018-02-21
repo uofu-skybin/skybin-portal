@@ -273,29 +273,23 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             };
             this.downloads.unshift(download);
             this.showDownloads = true;
-            const url = `${appConfig['renterAddress']}/files/download`;
-            const body = {
-                fileId: file.id,
-                destPath
-            };
             const startTime = new Date();
-            const sub = this.http.post(url, body).subscribe(response => {
-                download.state = TRANSFER_DONE;
-                const endTime = new Date();
-                const elapsedMs = endTime.getTime() - startTime.getTime();
-                setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-            }, (error) => {
-                console.error(error);
-                let errorMessage = `Unable to download ${download.sourcePath}.`;
-                if (error.error && error.error.error) {
-                    errorMessage += ` Error: ${error.error.error}`;
-                }
-                this.showErrorNotification(errorMessage);
-                download.state = TRANSFER_ERROR;
-                this.ref.detectChanges();
-            });
-            this.subscriptions.push(sub);
-            this.ref.detectChanges();
+
+            this.renterService.downloadFile(file.id, destPath)
+                .subscribe(downloadedFile => {
+                    if (downloadedFile.id) {
+                        const fakeDelay = 1500;
+                        const endTime = new Date();
+                        const elapsedMs = endTime.getTime() - startTime.getTime();
+                        setTimeout(() => {
+                            download.state = TRANSFER_DONE;
+                            // this.completedDownloads++;
+                        }, Math.max(1000 - elapsedMs, 0));
+                        // setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
+                    } else {
+                        download.state = TRANSFER_ERROR;
+                    }
+                });
         });
     }
 
@@ -331,22 +325,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                     this.showErrorNotification(`"${result}" already exists`);
                     return;
                 }
-                const body = {
-                    name: folderPath
-                };
-                this.http.post(`${appConfig['renterAddress']}/files/create-folder`, body).subscribe((file: any) => {
-                    if (!file['id']) {
-                        console.error('newFolder: no folder returned from request');
-                        console.log('response:', file);
-                        this.getFiles();
-                        return;
-                    }
-                    this.getFiles();
-                    // this.allFiles.push(file);
-                    // this.filteredFiles.push(file);
-                }, (error) => {
-                    console.error(error);
-                });
+
+                this.renterService.createFolder(folderPath)
+                    .subscribe(newFolder => {
+                        if (newFolder['id']) {
+                            this.getFiles();
+                        }
+                    });
             });
         });
     }
@@ -378,21 +363,19 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
         }
-        const body = {
-            fileId: file.id,
-        };
+
         this.zone.run(() => {
-            this.http.post(`${appConfig['renterAddress']}/files/remove`, body).subscribe(response => {
-                this.allFiles = this.allFiles.filter(e => e.id !== file.id);
-                // this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
-                this.onSearchChanged();
-                this.getRenterInfo();
-                // this.ref.detectChanges();
-                this.showErrorNotification(`${file.name} has been deleted!`);
-            }, (error) => {
-                console.error('Unable to delete file');
-                console.error('Error:', error);
-            });
+            this.renterService.deleteFile(file.id)
+                .subscribe(deletedFile => {
+                    this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+                    // this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
+                    this.onSearchChanged();
+                    this.getRenterInfo();
+                    // this.ref.detectChanges();
+                    const filePath = file.name.split('/');
+                    const name = (filePath.length === 1) ? filePath[0] : filePath[filePath.length - 1];
+                    this.showErrorNotification(`${name} has been deleted!`);
+                });
         });
     }
 

@@ -13,6 +13,7 @@ import {Subject} from 'rxjs/Subject';
 export class RenterService {
     private emitStorageChangeSource = new Subject<any>();
     storageChangeEmitted$ = this.emitStorageChangeSource.asObservable();
+
     emitStorageChange(change: number) {
         this.emitStorageChangeSource.next(change);
     }
@@ -61,6 +62,32 @@ export class RenterService {
         return this.http.post<ContractsResponse>(`${appConfig['renterAddress']}/reserve-storage`, data)
             .pipe(
                 catchError(this.handleError('reserveStorage', new ContractsResponse()))
+            );
+    }
+
+    downloadFile(id: string, destPath: string) {
+        const url = `${appConfig['renterAddress']}/files/download`;
+        const body = {
+            fileId: id,
+            destPath
+        };
+        return this.http.post<SkyFile>(url, body)
+            .pipe(
+                catchError(this.handleError('downloadFile', new SkyFile()))
+            );
+    }
+
+    createFolder(folderPath: string) {
+        return this.http.post(`${appConfig['renterAddress']}/files/create-folder`, {name: folderPath})
+            .pipe(
+                catchError(this.handleError('createFolder', new SkyFile()))
+            );
+    }
+
+    deleteFile(fileId: string) {
+        return this.http.post(`${appConfig['renterAddress']}/files/remove`, {fileId: fileId})
+            .pipe(
+                catchError(this.handleError('deleteFile', new SkyFile()))
             );
     }
 
