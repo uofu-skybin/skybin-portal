@@ -12,7 +12,8 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "electron .",
-    "electron-build": "ng build --dev && electron ."
+    "electron-build": "ng build --dev && electron .",
+    "package-mac": "electron-packager . --platform=darwin --arch=x64 --icon assets/cloud-logo_64x64.icns"
   },
   "private": true,
   "dependencies": {
@@ -27,12 +28,14 @@
     "@angular/platform-browser": "^5.0.2",
     "@angular/platform-browser-dynamic": "^5.0.2",
     "@angular/router": "^5.0.2",
+    "auto-launch": "^5.0.5",
     "core-js": "^2.4.1",
     "electron": "^1.8.1",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "ng-drag-drop": "^4.0.0",
     "ngx-electron": "^1.0.4",
+    "request": "^2.83.0",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },

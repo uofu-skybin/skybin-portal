@@ -1,0 +1,13 @@
+
+#registration-container {
+    padding: 30px;
+}
+
+#registration-progress-content {
+    text-align: center;
+}
+
+#registration-progress-spinner {
+    display: inline-block;
+    margin: 40px;
+}

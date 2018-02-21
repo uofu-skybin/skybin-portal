@@ -1,0 +1,73 @@
+<div id='registration-container'>
+    <div *ngIf="showIntro">
+        <h1 mat-dialog-title>Welcome to SkyBin!</h1>
+        <mat-dialog-content>
+            <p>
+                First time user? Click register below.
+            </p>
+            <p>
+                Already have an account and need to import your key? Click import key.
+            </p>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+            <button mat-raised-button class='skybin-btn-primary' (click)='registerClicked()' name='register-button'>
+                Register
+            </button>
+            <button mat-raised-button class='skybin-btn-primary' (click)='importKeyClicked()' name='identity-login-button'>
+                Import Key 
+            </button>
+        </mat-dialog-actions>
+    </div>
+    <div *ngIf="showRegistrationForm">
+        <h1 mat-dialog-title>Register</h1>
+        <mat-dialog-content>
+            <mat-form-field>
+                <input matInput [(ngModel)]="userAlias" placeholder="User Alias" type="text">
+            </mat-form-field>
+            <mat-error *ngIf="userAliasError.length > 0">
+                {{userAliasError}}
+            </mat-error>
+            <mat-error *ngIf="registrationError.length > 0">
+                {{registrationError}}
+            </mat-error>
+        </mat-dialog-content>
+        <div *ngIf="showRegistrationProgress">
+            <div id="registration-progress-content">
+                <mat-progress-spinner id="registration-progress-spinner" mode="indeterminate"></mat-progress-spinner>
+                <p>This may take a minute.</p>
+            </div>
+        </div>
+        <mat-dialog-actions *ngIf="!showRegistrationProgress">
+            <button mat-raised-button class='skybin-btn-primary' (click)='registrationDoneClicked()' name='go-backselect-file-button'>
+                Register
+            </button>
+            <button mat-raised-button class='skybin-btn-primary' (click)='goBackClicked()' name='go-backselect-file-button'>
+                Go Back
+            </button>
+        </mat-dialog-actions>
+    </div>
+    <div *ngIf="showLoginForm">
+        <h1 mat-dialog-title>Import Key</h1>
+        <mat-dialog-content>
+            You'll just need to pick your SkyBin private key file.
+        </mat-dialog-content>
+        <mat-error *ngIf="loginError.length > 0">
+            {{loginError}}
+        </mat-error>
+        <div *ngIf="showRegistrationProgress">
+            <div id="registration-progress-content">
+                <mat-progress-spinner id="registration-progress-spinner" mode="indeterminate"></mat-progress-spinner>
+                <p>This may take a minute.</p>
+            </div>
+        </div>
+        <mat-dialog-actions *ngIf="!showRegistrationProgress">
+            <button mat-raised-button class='skybin-btn-primary' (click)='selectFileClicked()' name='select-file-button'>
+                Select File
+            </button>
+            <button mat-raised-button class='skybin-btn-primary' (click)='goBackClicked()' name='go-back-button'>
+                Go Back
+            </button>
+        </mat-dialog-actions>
+    </div>
+
+</div>

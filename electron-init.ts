@@ -1,12 +1,20 @@
 const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
 const { spawn, exec, spawnSync } = require('child_process');
+const {
+    initRenter,
+    initRenterDaemon,
+    initProvider,
+    initProviderDaemon
+} = require('./lib/skybin-setup');
 const fs = require('fs');
+const request = require('request');
 
 // window object
 let win;
 
-let isSkybinSetup = false;
 let skybinHome = null;
+let isRenterSetup = false;
+let isProviderSetup = false;
 let renterConfig = null;
 let providerConfig = null;
 
@@ -16,108 +24,14 @@ function loadConfig(path) {
     return JSON.parse(data);
 }
 
-// Attempts to load the config file for the renter or provider.
-// configType should be 'renter' or 'provider'
-function tryLoadConfig(configType) {
-    console.assert(['renter', 'provider']
-        .some(e => e === configType), 'unknown config type');
-    if (skybinHome === null) {
-        return {
-            'error': 'SkyBin home is not known. Has SkyBin been setup yet?',
-        };
-    }
-    try {
-        return loadConfig(`${skybinHome}/${configType}/config.json`);
-    } catch (error) {
-        return {
-            'error': `Error loading config. Error: ${error}`,
-        };
-    }
-}
-
-// Register IPC handlers for main<->renderer process communication.
-ipcMain
-    .on('isSkybinSetup', (event) => {
-        event.returnValue = isSkybinSetup;
-    })
-    .on('setupSkybin', (event, setupOptions) => {
-        try {
-            event.returnValue = setupSkybin(setupOptions);
-        } catch (error) {
-            console.error('error setting up skybin', error);
-            event.returnValue = {
-                wasSuccessful: false,
-                errorMessage: `setup exception: ${error}`,
-                errorReason: 'unknown error',
-            };
-        }
-    })
-    .on('loadRenterConfig', (event) => {
-       event.returnValue = tryLoadConfig('renter');
-    })
-    .on('loadProviderConfig', (event) => {
-        event.returnValue = tryLoadConfig('provider');
+// Attempts to ping the renter daemon running at the
+// given address in 'host:port' form. Calls callback
+// with the resulting error (if one occurred).
+function pingRenter(address, callback) {
+    const url = `http://${address}/info`;
+    request(url, (error, response, body) => {
+        callback(error);
     });
-
-// Setup skybin for the first time using 'skybin init'.
-// Returns an object describing the attempted setup's result.
-function setupSkybin(setupOptions) {
-    const skybinCmd = 'skybin';
-    const args = ['init'];
-    if (setupOptions.keyFile !== null) {
-        args.push('-keyfile', setupOptions.keyFile);
-    }
-    if (setupOptions.homeFolder !== null) {
-        args.push('-home', setupOptions.homeFolder);
-    }
-    if (setupOptions.renterAlias !== null) {
-        args.push('-renter-alias', setupOptions.renterAlias);
-    }
-    console.log('running skybin init');
-    console.log('arguments:', args);
-
-    const result = spawnSync(skybinCmd, args);
-    if (result.status === null) {
-        console.error('error: cannot find skybin executable');
-        return {
-            wasSuccessful: false,
-            errorReason: 'cannot find skybin',
-            errorMessage: 'cannot find skybin executable',
-        };
-    }
-
-    console.log('skybin init complete');
-    console.log('return code:', result.status);
-    console.log('standard out: ', result.stdout.toString());
-    console.log('standard error:', result.stderr.toString());
-
-    if (result.status === 0) {
-
-        // Yay! Registration completed successfully.
-        // Now we need to start the services...
-        // .... ALTERNATIVELY skybin init can do that :)
-        isSkybinSetup = true;
-        return {
-            wasSuccessful: true,
-        };
-    }
-
-    // Something went wrong!
-    const setupResult = {
-        wasSuccessful: false,
-        errorMessage: result.stderr.toString(),
-        errorReason: '',
-    };
-    const errorMap = {
-        1: 'homedir exists',
-        2: 'duplicate alias',
-        3: 'bad key file'
-    };
-    setupResult.errorReason = errorMap[result.status];
-    if (setupResult.errorReason) {
-        setupResult.errorReason = 'unknown error';
-    }
-    return setupResult;
 }
 
 // Application entry point
@@ -127,20 +41,107 @@ function init() {
         skybinHome = process.env.SKYBIN_HOME;
     }
 
-    console.log('looking for skybin home folder at', skybinHome);
+    isRenterSetup = fs.existsSync(`${skybinHome}/renter`);
+    isProviderSetup = fs.existsSync(`${skybinHome}/provider`);
 
-    isSkybinSetup = fs.existsSync(skybinHome);
-    if (isSkybinSetup) {
-        console.log('skybin homefolder found');
-
-        // TODO: check that services are running. If not, find out why, attempt to run them, etc.
-
-    } else {
-        console.log('no skybin homefolder found');
+    if (isRenterSetup) {
+        renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+    }
+    if (isProviderSetup) {
+        providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
     }
 
     launchApp();
 }
+
+ipcMain
+    .on('isRenterSetup', (event) => {
+        event.returnValue = isRenterSetup;
+    })
+    .on('setupRenter', (event, options) => {
+        try {
+            initRenter(options);
+            initRenterDaemon();
+        } catch (err) {
+            event.sender.send('setupRenterDone', {
+                error: err.toString()
+            });
+            return;
+        }
+
+        isRenterSetup = true;
+        try {
+            renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+        } catch (err) {
+            event.sender.send('setupRenterDone', {
+                error: `Unable to load skybin renter config. Error: ${err}`
+            });
+            return;
+        }
+
+        // Wait 1 second and ensure we can ping the renter.
+        setTimeout(() => {
+            pingRenter(renterConfig['apiAddress'], (error) => {
+                const response = {error: null};
+                if (error) {
+                    console.error('Error pinging renter: ', error);
+                    response.error = 'Error starting skybin renter daemon';
+                }
+                event.sender.send('setupRenterDone', response);
+            });
+        }, 1000);
+    })
+    .on('loadRenterConfig', (event) => {
+        if (renterConfig === null) {
+            event.returnValue = {
+                config: null,
+                error: 'No renter config present. Have you set up a renter yet?',
+            };
+            return;
+        }
+        event.returnValue = {
+            config: renterConfig,
+        };
+    })
+    .on('isProviderSetup', (event) => {
+        event.returnValue = isProviderSetup;
+    })
+    .on('setupProvider', (event, options) => {
+        try {
+            initProvider(options);
+            initProviderDaemon();
+        } catch (err) {
+            event.returnValue = {
+                error: err,
+            };
+            return;
+        }
+        isProviderSetup = true;
+        try {
+            providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
+        } catch (err) {
+            event.returnValue = {
+                error: `Unable to load skybin provider config. Error: ${err}`,
+            };
+            return;
+        }
+        event.returnValue = {
+            error: null,
+        };
+    })
+
+    .on('loadProviderConfig', (event) => {
+        if (providerConfig === null) {
+            event.returnValue = {
+                config: null,
+                error: 'No provider config present. Have you set up a provider yet?',
+            };
+            return;
+        }
+        event.returnValue = {
+            config: providerConfig,
+        };
+    });
 
 // Launches the app window.
 function launchApp() {

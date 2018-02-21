@@ -13,10 +13,10 @@ import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
 import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
 import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import {NotificationComponent} from '../notification/notification.component';
-import {LoginComponent} from '../login/login.component';
-import {RenterService} from '../../services/renter.service';
-import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import { NotificationComponent } from '../notification/notification.component';
+import { RegistrationComponent } from '../dialogs/registration/registration.component';
+import { RenterService } from '../../services/renter.service';
+import { ReserveStorageProgressComponent } from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
 import {beautifyBytes} from '../../pipes/bytes.pipe';
 
@@ -74,18 +74,19 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
         // due to an angular bug: https://github.com/angular/material2/issues/5268
-        const isSkybinSetup = this.electronService.ipcRenderer.sendSync('isSkybinSetup');
-        if (isSkybinSetup) {
+        const isRenterSetup = this.electronService.ipcRenderer.sendSync('isRenterSetup');
+        if (isRenterSetup) {
             this.getRenterInfo();
             this.getFiles();
         } else {
 
-            // First time setup. Show the setup dialog.
-            console.log('showing setup dialog');
-            const loginDialog = this.dialog.open(LoginComponent, {
+            // First time setup. Show the registration dialog.
+            const registrationDialog = this.dialog.open(RegistrationComponent, {
+                height: '400px',
+                width: '400px',
                 disableClose: true,
             });
-            loginDialog.afterClosed().subscribe(() => {
+            registrationDialog.afterClosed().subscribe(() => {
                 this.getRenterInfo();
                 this.getFiles();
             });
