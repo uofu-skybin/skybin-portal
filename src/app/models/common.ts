@@ -1,4 +1,3 @@
-
 // Metadata for a file stored in skybin.
 export class SkyFile {
     id: string;
@@ -64,4 +63,34 @@ export class Transfer {
     sourcePath: string;
     destPath: string;
     state: string;
+}
+
+export class InfoResponse {
+    providerId?: string;
+    providerAllocated?: number;
+    providerReserved?: number;
+    providerUsed?: number;
+    providerFree?: number;
+    providerContracts?: number;
+}
+
+export class Contract {
+    storageSpace: string;
+    renterID: string;
+}
+
+export class ContractsResponse {
+    contracts: Contract[];
+}
+
+export class ActivityResponse {
+    activity: Activity[];
+}
+
+export class Activity {
+    requestType?: string;
+    blockId?: string;
+    renterId?: string;
+    time?: Date;
+    contract?: Contract;
 }

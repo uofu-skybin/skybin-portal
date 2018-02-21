@@ -44,6 +44,8 @@ import { NotificationComponent } from './components/notification/notification.co
 import { RenterService } from './services/renter.service';
 import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
 import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import {NgDragDropModule} from 'ng-drag-drop';
+import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
 
 @NgModule({
     entryComponents: [
@@ -55,6 +57,7 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
         ShareDialogComponent,
         ViewFileDetailsComponent,
         RegistrationComponent,
+        RenameFileDialogComponent
     ],
     declarations: [
         AddStorageComponent,
@@ -77,10 +80,12 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
         ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
+        RenameFileDialogComponent,
     ],
     imports: [
         BrowserAnimationsModule,
         BrowserAnimationsModule,
+        NgDragDropModule.forRoot(),
         BrowserModule,
         CdkTableModule,
         FormsModule,
@@ -102,7 +107,6 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
         MatSortModule,
         MatTableModule,
         MatTabsModule,
-        MatTooltipModule,
         NgxElectronModule,
         RoutingModule,
     ],

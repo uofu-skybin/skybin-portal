@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, RenterInfo, SkyFile} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -7,9 +7,17 @@ import {catchError, tap} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import {MatSnackBar} from '@angular/material';
 import {NotificationComponent} from '../components/notification/notification.component';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class RenterService {
+    private emitStorageChangeSource = new Subject<any>();
+    storageChangeEmitted$ = this.emitStorageChangeSource.asObservable();
+
+    emitStorageChange(change: number) {
+        this.emitStorageChangeSource.next(change);
+    }
+
     constructor(private http: HttpClient,
                 public snackBar: MatSnackBar,
                 private zone: NgZone) {
@@ -19,6 +27,17 @@ export class RenterService {
         return this.http.get<GetFilesResponse>(`${appConfig['renterAddress']}/files`)
             .pipe(
                 catchError(this.handleError('getFiles', {files: []}))
+            );
+    }
+
+    renameFile(fileId: string, name: string): Observable<SkyFile> {
+        const body = {
+            fileId: fileId,
+            name: name
+        };
+        return this.http.post<SkyFile>(`${appConfig['renterAddress']}/files/rename`, body)
+            .pipe(
+                catchError(this.handleError('renameFile', new SkyFile()))
             );
     }
 
@@ -36,19 +55,52 @@ export class RenterService {
             );
     }
 
+    reserveStorage(amount: number) {
+        const data = {
+            amount: amount
+        };
+        return this.http.post<ContractsResponse>(`${appConfig['renterAddress']}/reserve-storage`, data)
+            .pipe(
+                catchError(this.handleError('reserveStorage', new ContractsResponse()))
+            );
+    }
+
+    downloadFile(id: string, destPath: string) {
+        const url = `${appConfig['renterAddress']}/files/download`;
+        const body = {
+            fileId: id,
+            destPath: destPath
+        };
+        return this.http.post(url, body);
+    }
+
+    createFolder(folderPath: string) {
+        return this.http.post(`${appConfig['renterAddress']}/files/create-folder`, {name: folderPath})
+            .pipe(
+                catchError(this.handleError('createFolder', new SkyFile()))
+            );
+    }
+
+    deleteFile(fileId: string) {
+        return this.http.post(`${appConfig['renterAddress']}/files/remove`, {fileId: fileId})
+            .pipe(
+                catchError(this.handleError('deleteFile', new SkyFile()))
+            );
+    }
+
     /**
      * Handle Http operation that failed.
      * Let the app continue.
      * @param operation - name of the operation that failed
      * @param result - optional value to return as the observable result
      */
-    private handleError<T> (operation = 'operation', result?: T) {
+    private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-            console.log(`${operation} failed: ${error.message}`);
+            console.log(`${operation} failed: ${error.error.error}`);
 
             this.zone.run(() => {
                 this.snackBar.openFromComponent(NotificationComponent, {
-                    data: error.message,
+                    data: error.error.error,
                     duration: 3000,
                     horizontalPosition: 'center',
                     verticalPosition: 'bottom',

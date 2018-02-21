@@ -41,13 +41,18 @@ button:focus {outline:0;}
     overflow-y: auto;
 }
 
+.modal-header,
+
 .modal-header {
-    max-height: 60px;
+    /*max-height: 60px;*/
+    color: white;
+    padding: 9px 9px 9px 15px;
 }
 
 .modal-body {
     max-height: 90px;
     overflow: scroll;
+    padding: 0 !important;
 }
 
 .modal-content {
@@ -66,17 +71,18 @@ button:focus {outline:0;}
 }
 
 .transfer-icon:hover {
-    font-size: 2.0em;
+    /*font-size: 2.0em;*/
     cursor: pointer;
 }
 
 #my-files-search-container {
     float: right;
     width: 15em;
+    margin-right: 3em;
 }
 
 #my-files-buttons {
-    min-width: 725px;
+    min-width: 960px;
 }
 
 #search-button {
@@ -85,7 +91,10 @@ button:focus {outline:0;}
 }
 
 .upload-item {
-    margin-bottom: 10px;
+    /*margin-bottom: 10px;*/
+    border-bottom: 1px solid gray;
+    padding: 10px 10px 10px 15px;
+    height: 50px;
 }
 
 #my-files-search {
@@ -128,4 +137,43 @@ button:focus {outline:0;}
 
 .red {
     color: red;
+}
+
+.upload-progress-button {
+    background-color: white;
+}
+
+#uploads-overlay > div > div > div.modal-header > div > button:nth-child(1), #uploads-overlay > div > div > div.modal-header > div > button:nth-child(2), .modal-header, #downloads-overlay > div > div > div.modal-header > button {
+    /*background: #00A7F3;*/
+    background: #4c4c4c;
+    box-shadow: none !important;
+}
+
+
+#mat-dialog-title-0 {
+    margin-bottom: 0;
+}
+
+#upload-progress-header-title, #download-progress-header-title {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.file-upload-progress-button {
+    float: right;
+}
+
+.file-upload-name {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+#uploads-overlay > div > div > div.modal-body > div > div > button {
+    background: white;
+}
+
+#downloads-overlay > div > div > div.modal-header > div > button:nth-child(1), #downloads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
+    /*background: #00A7F3;*/
+    background: #4c4c4c;
+    box-shadow: none !important;
 }

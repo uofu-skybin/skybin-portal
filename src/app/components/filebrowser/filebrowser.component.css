@@ -39,3 +39,13 @@ ol.breadcrumb {
     margin: 0;
     background: white;
 }
+
+.dir-link:hover {
+    cursor: pointer;
+}
+
+.dragover {
+    /*border: 3px dotted red;*/
+    /*background-color: #6ab6f3;*/
+    background-color: #eff9ff;
+}

@@ -4,13 +4,15 @@
         <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked()' name='my-files-upload-button'>
             Upload
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()' name='my-files-download-button'>
+        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()'
+                name='my-files-download-button'>
             Download
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
             Share
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()' name='my-files-new-folder-button'>
+        <button mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
+                name='my-files-new-folder-button'>
             New Folder
         </button>
 
@@ -22,43 +24,43 @@
             </span>
             <!-- Storage management widgets. -->
             <button id='reserve-space-button' mat-mini-fab matTooltip="Reserve more space" class='skybin-btn-primary'
-                name='my-files-new-folder-button' (click)='addStorageClicked()'>
+                    name='my-files-new-folder-button' (click)='addStorageClicked()'>
                 <i id='plus-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
-            <button id='configure-space-button' mat-mini-fab class='skybin-btn-primary' (click)='configureStorageClicked()'
-                matTooltip='Update settings' name='my-files-new-folder-button'>
-                <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
-            </button>
+
+            <!-- TODO: Future of this element is uncertain. -->
+            <!--<button id='configure-space-button' mat-mini-fab class='skybin-btn-primary'-->
+                    <!--(click)='configureStorageClicked()'-->
+                    <!--matTooltip='Update settings' name='my-files-new-folder-button'>-->
+                <!--<i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>-->
+            <!--</button>-->
 
         </span>
 
         <!-- TODO: Move the search bar into the next row up. -->
         <!-- TODO: Remove bootstrap styling in favor of goog mat design. -->
         <!-- Search/filter for my-files. -->
-        <!--<div id='my-files-search-container' class='input-group'>-->
-        <!--&lt;!&ndash; <span class="input-group-btn"> &ndash;&gt;-->
-        <!--&lt;!&ndash; <button id="search-button" class="btn" type="button">-->
-        <!--<i class="fa fa-search" aria-hidden="true"></i>-->
-        <!--</button>-->
-        <!--</span> &ndash;&gt;-->
-        <!--<input id='my-files-search'-->
-        <!--[(ngModel)]='currentSearch'-->
-        <!--(input)='onSearchChanged()'-->
-        <!--type='text' class='form-control'-->
-        <!--placeholder='&#xf002; Search...' aria-label='Search...'>-->
-        <!--</div>-->
+        <div id='my-files-search-container' class='input-group'>
+        <input id='my-files-search'
+        [(ngModel)]='currentSearch'
+        (input)='onSearchChanged()'
+        type='text' class='form-control'
+        placeholder='&#xf002; Filter...' aria-label='Filter...'>
+        </div>
     </div>
 
     <!-- File context menu. Typically hidden. -->
     <div id='context-menu-container' class='context-menu-trigger'>
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button class='context-menu-trigger' mat-button #ctxtMenuTrigger='matMenuTrigger' [matMenuTriggerFor]='menu'></button>
+        <button class='context-menu-trigger' mat-button #ctxtMenuTrigger='matMenuTrigger'
+                [matMenuTriggerFor]='menu'></button>
         <div class='context-menu'>
             <mat-menu #menu='matMenu'>
                 <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
                 <button mat-menu-item (click)='shareClicked()'>Share</button>
                 <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
                 <button mat-menu-item (click)='viewDetails(selectedFile)'>View Details</button>
+                <button mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
             </mat-menu>
         </div>
     </div>
@@ -66,7 +68,8 @@
     <!-- Folder context menu. Typically hidden. -->
     <div id='folder-context-menu-container' class='context-menu-trigger'>
         <!-- This button triggers context menu opens/closes but is not displayed -->
-        <button class='context-menu-trigger' mat-button #ctxtMenuTriggerFolder='matMenuTrigger' [matMenuTriggerFor]='menuFolder'></button>
+        <button class='context-menu-trigger' mat-button #ctxtMenuTriggerFolder='matMenuTrigger'
+                [matMenuTriggerFor]='menuFolder'></button>
         <div class='context-menu'>
             <mat-menu #menuFolder='matMenu'>
                 <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
@@ -74,8 +77,11 @@
         </div>
     </div>
 
-    <app-filebrowser [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)' (onFileSelected)='onFileSelected($event)'
-        (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)" (dragover)="onDragOver($event)"></app-filebrowser>
+    <app-filebrowser [allFiles]="allFiles" [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)'
+                     (onFileSelected)='onFileSelected($event)'
+                     (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)"
+                     (onFolderMoved)="onFolderMoved($event)"
+                     (dragover)="onDragOver($event)"></app-filebrowser>
 
     <!-- Uploads popup -->
     <div id='popups-container'>
@@ -83,19 +89,37 @@
             <div class='modal-dialog modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 mat-dialog-title>Uploads</h5>
-                        <button (click)='hideUploads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
-                        </button>
+                        <span id="upload-progress-header-title">
+                        <span *ngIf="uploadInProgress">Upload in progress</span>
+                        <span *ngIf="completedUploads === 1 && !uploadInProgress">1 upload complete</span>
+                        <span
+                            *ngIf="completedUploads !== 1 && !uploadInProgress">{{completedUploads}} uploads complete</span>
+                        </span>
+                        <div>
+                            <button mat-mini-fab class="upload-progress-button" (click)="toggleUploadBody()">
+                                <img *ngIf="uploadBodyVisible" src="assets/ic_keyboard_arrow_down_white_24px.svg"
+                                     alt="">
+                                <img *ngIf="!uploadBodyVisible" src="assets/ic_keyboard_arrow_up_white_24px.svg" alt="">
+                            </button>
+                            <button mat-mini-fab class="upload-progress-button" (click)="hideUploads()"><img
+                                src="assets/ic_clear_white_24px.svg"
+                                alt="">
+                            </button>
+
+                        </div>
+                        <!--<button (click)='hideUploads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>-->
+                        <!--<span aria-hidden='true'>&times;</span>-->
+                        <!--</button>-->
                     </div>
-                    <div class='modal-body'>
+                    <div *ngIf="uploadBodyVisible" class='modal-body'>
                         <div *ngFor='let upload of uploads' class='upload-item'>
-                            <div>
-                                {{baseName(upload.destPath)}}
-                                <i *ngIf="upload.state === 'TRANSFER_DONE'" class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>
-                                <i *ngIf="upload.state === 'TRANSFER_ERROR'" class='fa fa-exclamation-circle transfer-icon red' aria-hidden='true'></i>
-                            </div>
-                            <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'" mode='indeterminate'></mat-progress-bar>
+                            <span class='file-upload-name'>{{baseName(upload.destPath)}}</span>
+                            <i *ngIf="upload.state === 'TRANSFER_DONE'"
+                               class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>
+                            <i *ngIf="upload.state === 'TRANSFER_ERROR'"
+                               class='fa fa-exclamation-circle transfer-icon red' aria-hidden='true'></i>
+                            <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'"
+                                              mode='indeterminate'></mat-progress-bar>
                         </div>
                     </div>
                 </div>
@@ -107,20 +131,31 @@
             <div class='modal-dialog modal-sm' role='document'>
                 <div class='modal-content'>
                     <div class='modal-header'>
-                        <h5 mat-dialog-title>Downloads</h5>
-                        <button (click)='hideDownloads()' type='button' class='close' data-dismiss='modal' aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
-                        </button>
+                        <span id="download-progress-header-title">Downloads</span>
+                        <div>
+                            <!--<button mat-mini-fab class="toggle-download-progress-button" (click)="toggleDownloadBody()">-->
+                                <!--<img *ngIf="downloadBodyVisible" src="assets/ic_keyboard_arrow_down_white_24px.svg"-->
+                                     <!--alt="">-->
+                                <!--<img *ngIf="!downloadBodyVisible" src="assets/ic_keyboard_arrow_up_white_24px.svg" alt="">-->
+                            <!--</button>-->
+                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()"><img
+                                src="assets/ic_clear_white_24px.svg"
+                                alt="">
+                            </button>
+                        </div>
                     </div>
-                    <div class='modal-body'>
+                    <div *ngIf="downloadBodyVisible" class='modal-body'>
                         <div *ngFor='let download of downloads' class='upload-item'>
                             <div>
-                                {{download.destPath}}
-                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)' class='fa fa-search transfer-icon'
-                                    aria-hidden='true'></i>
-                                <i *ngIf="download.state === 'TRANSFER_ERROR'" class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
+                                {{download.destPath.split('/')[download.destPath.split('/').length - 1]}}
+                                <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)'
+                                   class='fa fa-search transfer-icon'
+                                   aria-hidden='true'></i>
+                                <i *ngIf="download.state === 'TRANSFER_ERROR'"
+                                   class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
                             </div>
-                            <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'" mode='indeterminate'></mat-progress-bar>
+                            <mat-progress-bar *ngIf="download.state === 'TRANSFER_RUNNING'"
+                                              mode='indeterminate'></mat-progress-bar>
                         </div>
                     </div>
                 </div>
