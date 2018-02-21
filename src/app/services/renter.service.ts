@@ -69,12 +69,9 @@ export class RenterService {
         const url = `${appConfig['renterAddress']}/files/download`;
         const body = {
             fileId: id,
-            destPath
+            destPath: destPath
         };
-        return this.http.post<SkyFile>(url, body)
-            .pipe(
-                catchError(this.handleError('downloadFile', new SkyFile()))
-            );
+        return this.http.post(url, body);
     }
 
     createFolder(folderPath: string) {

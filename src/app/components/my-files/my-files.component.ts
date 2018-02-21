@@ -275,21 +275,19 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             this.showDownloads = true;
             const startTime = new Date();
 
-            this.renterService.downloadFile(file.id, destPath)
-                .subscribe(downloadedFile => {
-                    if (downloadedFile.id) {
-                        const fakeDelay = 1500;
-                        const endTime = new Date();
-                        const elapsedMs = endTime.getTime() - startTime.getTime();
-                        setTimeout(() => {
-                            download.state = TRANSFER_DONE;
-                            // this.completedDownloads++;
-                        }, Math.max(1000 - elapsedMs, 0));
-                        // setTimeout(() => this.ref.detectChanges(), Math.max(1000 - elapsedMs, 0));
-                    } else {
-                        download.state = TRANSFER_ERROR;
-                    }
-                });
+            this.zone.run(() => {
+                this.renterService.downloadFile(file.id, destPath)
+                    .subscribe(downloadedFile => {
+                        // if (downloadedFile.id) {
+                            const fakeDelay = 1500;
+                            const endTime = new Date();
+                            const elapsedMs = endTime.getTime() - startTime.getTime();
+                            setTimeout(() => {
+                                download.state = TRANSFER_DONE;
+                                // this.completedDownloads++;
+                            }, Math.max(1000 - elapsedMs, fakeDelay));
+                    });
+            });
         });
     }
 
