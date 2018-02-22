@@ -19,7 +19,7 @@ export class AddStorageComponent {
         'Megabytes',
         'Gigabytes',
     ];
-    private selectedUnits: string = null;
+    private selectedUnits = 'Megabytes';
 
     // Storage space to reserve with a click to reserve.
     private storageAmount: number = null;
