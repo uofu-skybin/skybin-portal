@@ -130,6 +130,11 @@ ipcMain
         };
     })
 
+    .on('exportRenterKey' , (event, destPath) => {
+        // fs.copyFileSync('/Users/gc/.skybin/renter/renterid', destPath);
+
+    })
+
     .on('loadProviderConfig', (event) => {
         if (providerConfig === null) {
             event.returnValue = {

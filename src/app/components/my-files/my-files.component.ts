@@ -129,7 +129,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 return;
             }
             const progressDialog = this.dialog.open(ReserveStorageProgressComponent, {
-                width: '600px'
+                width: '600px',
+                disableClose: true
             });
             const params = {
                 amount: storageRequested,
@@ -137,14 +138,18 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const startTime = new Date();
             this.renterService.reserveStorage(storageRequested)
                 .subscribe(res => {
-                    const endTime = new Date();
-                    const elapsedMs = endTime.getTime() - startTime.getTime();
-                    setTimeout(() => {
+                    if (res.contracts) {
+                        const endTime = new Date();
+                        const elapsedMs = endTime.getTime() - startTime.getTime();
+                        setTimeout(() => {
+                            progressDialog.close();
+                            this.getRenterInfo();
+                            this.renterService.emitStorageChange(storageRequested);
+                            this.showErrorNotification(`Successfully reserved ${beautifyBytes(storageRequested)}!`);
+                        }, Math.max(3000 - elapsedMs, 0));
+                    } else {
                         progressDialog.close();
-                        this.getRenterInfo();
-                        this.renterService.emitStorageChange(storageRequested);
-                        this.showErrorNotification(`Successfully reserved ${beautifyBytes(storageRequested)}!`);
-                    }, Math.max(3000 - elapsedMs, 0));
+                    }
                 });
         });
     }
@@ -258,6 +263,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             });
         });
     }
+
 
     downloadFile(file) {
         if (!file || file.isDir) {
