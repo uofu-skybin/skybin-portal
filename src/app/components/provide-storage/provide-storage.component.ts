@@ -1,10 +1,14 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSort, MatTableDataSource } from '@angular/material';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {MatSort, MatTableDataSource} from '@angular/material';
+import {HttpErrorResponse} from '@angular/common/http/src/response';
 import Timer = NodeJS.Timer;
-import { appConfig } from '../../models/config';
+import {appConfig} from '../../models/config';
+import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
 import {Activity, ActivityResponse, Contract, ContractsResponse, InfoResponse} from '../../models/common';
+import {ConfigureProviderComponent} from '../dialogs/configure-provider/configure-provider.component';
+// import {ReserveStorageProgressComponent} from "../dialogs/reserve-storage-progress/reserve-storage-progress.component";
+// import {beautifyBytes} from "../../pipes/bytes.pipe";
 
 
 // Activity feed update interval (ms)
@@ -20,30 +24,30 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
     private myContracts: Contract[] = [];
 
     // TODO convert to structure as opposed to any object
-    providerInfo: InfoResponse = {};
+    providerInfo: any = {};
     activityFeed: Activity[] = [];
     displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp'];
     dataSource = new MatTableDataSource<Activity>();
     activityPollId: Timer = null;
 
-    // TODO make dynamic
-    wallets = [
-        { value: 'wallet-0', viewValue: 'Wallet 1' },
-        { value: 'wallet-1', viewValue: 'Wallet 2' },
-        { value: 'wallet-2', viewValue: 'Wallet 3' }
-    ];
+    // wallets = [
+    //     { value: 'wallet-0', viewValue: 'Wallet 1' },
+    //     { value: 'wallet-1', viewValue: 'Wallet 2' },
+    //     { value: 'wallet-2', viewValue: 'Wallet 3' }
+    // ];
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                public dialog: MatDialog) {
     }
 
     ngOnInit() {
         this.loadProviderInfo();
         this.loadContracts();
-        // this.loadTestActivityData();
         this.loadActivity();
-        console.log('starting poll service...');
-        this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
+        // this.loadTestActivityData();
+        // console.log('starting poll service...');
+        // this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
     }
 
     // Necessary for the mat-table column sorting.
@@ -53,8 +57,8 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
 
     // Delete the polling service in memory when leaving this tab view.
     ngOnDestroy(): void {
-        console.log('destroying poll service. . .');
-        clearInterval(this.activityPollId);
+        // console.log('destroying poll service. . .');
+        // clearInterval(this.activityPollId);
     }
 
     private loadContracts() {
@@ -73,6 +77,7 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         this.http.get(`${appConfig['providerAddress']}/info`)
             .subscribe((response: any) => {
                 this.providerInfo = response;
+                console.log(response);
             }, (error: HttpErrorResponse) => {
                 console.error('Unable to load provider info.');
                 console.error('Error:', error);
@@ -99,10 +104,21 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
             });
     }
 
+    configureProviderClicked() {
+        const configDialog = this.dialog.open(ConfigureProviderComponent, {
+            width: '600px',
+        });
+    }
 }
 
 
 // displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Time Stamp', 'Contract'];
 const DATA: Activity[] = [
-    { requestType: 'GET', blockId: '1', renterId: '1', time: new Date(), contract: { storageSpace: '100 KB', renterID: '1' } }
+    {
+        requestType: 'GET',
+        blockId: '1',
+        renterId: '1',
+        time: new Date(),
+        contract: {storageSpace: '100 KB', renterID: '1'}
+    }
 ];
