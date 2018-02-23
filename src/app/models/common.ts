@@ -31,7 +31,7 @@ export class Block {
     num: number;
     size: number;
     sha256hash: string;
-    locations: any[];
+    location: any;
 }
 
 // Metadata for a single version of a file.
@@ -65,13 +65,13 @@ export class Transfer {
     state: string;
 }
 
-export class InfoResponse {
+export class ProviderInfo {
     providerId?: string;
-    providerAllocated?: number;
-    providerReserved?: number;
-    providerUsed?: number;
-    providerFree?: number;
-    providerContracts?: number;
+    storageAllocated?: number;
+    storageReserved?: number;
+    storageUsed?: number;
+    storageFree?: number;
+    totalContracts?: number;
 }
 
 export class Contract {

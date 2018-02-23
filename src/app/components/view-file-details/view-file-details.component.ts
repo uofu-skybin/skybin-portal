@@ -11,8 +11,8 @@ export class ViewFileDetailsComponent implements OnInit {
 
     file: SkyFile = null;
 
-    constructor( @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.file = <SkyFile> data.file;
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+        this.file = <SkyFile>data.file;
     }
 
     ngOnInit() {
@@ -29,12 +29,7 @@ export class ViewFileDetailsComponent implements OnInit {
     }
 
     getFileLocations() {
-        const locations = latestVersion(this.file).blocks
-            .map(e => e.locations)
-
-            // Flatten the location lists.
-            .reduce((acc, e) => acc.concat(e), []);
-
+        const locations = latestVersion(this.file).blocks.map(e => e.location);
         const addrs = locations.map(e => e.address);
         return addrs;
     }
