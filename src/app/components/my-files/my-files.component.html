@@ -1,10 +1,13 @@
 <div id='my-files-container'>
     <div id='my-files-buttons'>
         <!-- Primary my-files functionality buttons. -->
-        <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked()' name='my-files-upload-button'>
-            Upload
+        <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(false)' name='my-files-upload-button'>
+            Upload File
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()'
+        <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(true)' name='my-files-upload-button'>
+            Upload Folder
+        </button>
+        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
                 name='my-files-download-button'>
             Download
         </button>
@@ -74,6 +77,7 @@
             <mat-menu #menuFolder='matMenu'>
                 <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
                 <button mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
+                <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
             </mat-menu>
         </div>
     </div>

@@ -37,15 +37,15 @@
                     </a>
                 </div>
 
-                <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="above" xPosition="before" [overlapTrigger]="false">
-                    <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
-                    <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
-                    <hr class='profile-menu-divider'>
-                    <button (click)="exportRenterKey()" mat-menu-item>Export key identity</button>
-                </mat-menu>
-                <div matTooltip="View your renter information"  class='row' id='profile-icon-container'>
-                    <button mat-fab id="profile-button" [matMenuTriggerFor]="appMenu"><i class="fa fa-user" aria-hidden="true"></i></button>
-                </div>
+                <!--<mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="above" xPosition="before" [overlapTrigger]="false">-->
+                    <!--<p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>-->
+                    <!--<p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>-->
+                    <!--<hr class='profile-menu-divider'>-->
+                    <!--<button (click)="exportRenterKey()" mat-menu-item>Export key identity</button>-->
+                <!--</mat-menu>-->
+                <!--<div matTooltip="View your renter information"  class='row' id='profile-icon-container'>-->
+                    <!--<button mat-fab id="profile-button" [matMenuTriggerFor]="appMenu"><i class="fa fa-user" aria-hidden="true"></i></button>-->
+                <!--</div>-->
             </nav>
         </div>
         <div id="main-content" class='col'>
