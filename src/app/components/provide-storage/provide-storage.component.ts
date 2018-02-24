@@ -52,20 +52,21 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         // console.log('starting poll service...');
         // this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
 
-        this.drawChart();
-        this.drawStorageUsed();
+        this.drawStorageUsedChart();
+        this.drawRequestsChart();
+        this.drawContractsChart();
     }
 
-    drawStorageUsed() {
-        let ctxt = document.getElementById('storagePieChart');
+    drawStorageUsedChart() {
+        let ctxt = document.getElementById('storage-pie-chart');
         let chart = new Chart(ctxt, {
             type: 'doughnut',
             data: {
                 datasets: [{
                     data: [10000, 7500],
                     backgroundColor: [
-                        'red',
-                        'blue'
+                        'lightgrey',
+                        'grey'
                     ],
                 }],
                 labels: [
@@ -77,6 +78,85 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
                 title: {
                     display: true,
                     text: 'Storage Used',
+                },
+            },
+        });
+    }
+
+    drawRequestsChart() {
+        let ctxt = document.getElementById('requests-chart');
+        let chart = new Chart(ctxt, {
+            type: 'bar',
+            data: {
+                labels: ['1:00', '2:00', '3:00', '4:00', '5:00'],
+                datasets: [{
+                        data: [121, 523, 123, 98, 23],
+                    },
+                ],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Request Activity - Last 24 Hours',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Hour',
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Requests',
+                        },
+                    }],
+                },
+                legend: {
+                    display: false,
+                },
+            },
+        });
+    }
+
+    drawContractsChart() {
+        let ctxt = (<any>document.getElementById('contracts-chart')).getContext('2d');
+        let chart = new Chart(ctxt, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'March', 'April', 'May'],
+                datasets: [
+                    {
+                        data: [3, 4, 5, 6, 7],
+                    }
+                ],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Storage Contracts Over Time',
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date',
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Total Contracts',
+                        },
+                    }],
+                },
+                legend: {
+                    display: false,
                 },
             },
         });
@@ -115,43 +195,6 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         // });
 
         // graph.render();
-
-        let ctxt = (<any>document.getElementById('myChart')).getContext('2d');
-        let myChart = new Chart(ctxt, {
-            type: 'line',
-            data: {
-                // label: 'Storage Contracts over Time',
-                datasets: [
-                    {
-                        labels: ['a', 'b', 'c', 'd', 'e'],
-                        data: [3, 4, 5, 6, 7, 3, 4, 5, 7, 12],
-                    }
-                ],
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Storage Use Over Time',
-                },
-                scales: {
-                    xAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Date',
-                        },
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Total Contracts',
-                        },
-                    }],
-                },
-                legend: {
-                    display: false,
-                },
-            },
-        });
     }
 
     // Necessary for the mat-table column sorting.

@@ -1,4 +1,9 @@
 
+#provider-dashboard-container {
+    background: lightgray;
+    margin: 0;
+}
+
 #provide-storage-summary-container {
     margin-top: 1em;
 }

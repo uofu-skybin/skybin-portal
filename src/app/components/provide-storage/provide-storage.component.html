@@ -1,37 +1,42 @@
-<div class="container">
+<div id="provider-dashboard-container" class="container">
     <div class="row">
         <div id="provider-summary-panel" class="col-md-4">
-            <div>
-                <h3>Summary</h3>
-                Provider Node ID: adksjfoeijasdfwueifasd
-                Daemon Status: Running
-            </div>
-            <div>
-                <h3>Past Week</h3>
-                5,000 blocks uploaded <br>
-                2,200 blocks downloaded <br>
-                21 new storage contracts <br>
-                0 evictions
-            </div>
-            <div>
-                <h3>Totals</h3>
-                3,000 storage contracts with 15 unique renters<br>
-                8.3 GB reserved space <br>
-                3.4 GB used <br>
-                2,100 blocks stored <br>
-            </div>
-            <button mat-raised-button class='skybin-btn-primary'>
-                Settings
-            </button>
-        </div>
-        <div id="storage-used-container" class="col-md-8">
             <mat-card>
-                <canvas id="storagePieChart" width="300" height="200"></canvas>
+                <div>
+                    <h3>Summary</h3>
+                    Provider Node ID: adksjfoeijasdfwueifasd Daemon Status: Running
+                </div>
+                <div>
+                    <h3>Past Week</h3>
+                    5,000 blocks uploaded
+                    <br> 2,200 blocks downloaded
+                    <br> 21 new storage contracts
+                    <br> 0 evictions
+                </div>
+                <div>
+                    <h3>Totals</h3>
+                    3,000 storage contracts with 15 unique renters
+                    <br> 8.3 GB reserved space
+                    <br> 3.4 GB used
+                    <br> 2,100 blocks stored
+                    <br>
+                </div>
+                <button mat-raised-button class='skybin-btn-primary'>
+                    Settings
+                </button>
             </mat-card>
         </div>
-    </div>
-    <div class="row">
-        <canvas id="myChart" width="300" height="200"></canvas>
+        <div id="charts-container" class="col-md-8">
+            <mat-card>
+                <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+            </mat-card>
+            <mat-card>
+                <canvas id="requests-chart" width="300" height="200"></canvas>
+            </mat-card>
+            <mat-card>
+                <canvas id="contracts-chart" width="300" height="200"></canvas>
+            </mat-card>
+        </div>
     </div>
 </div>
 <div style="display:none">
