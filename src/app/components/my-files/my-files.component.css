@@ -132,7 +132,7 @@ button:focus {outline:0;}
 }
 
 #cdk-overlay-0 > mat-dialog-container, #cdk-overlay-1 > mat-dialog-container {
-    padding: 0 !important;
+    /*padding: 0 !important;*/
 }
 
 .green {
