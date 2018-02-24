@@ -31,7 +31,7 @@ export class Block {
     num: number;
     size: number;
     sha256hash: string;
-    locations: any[];
+    location: any;
 }
 
 // Metadata for a single version of a file.
