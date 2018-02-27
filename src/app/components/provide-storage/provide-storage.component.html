@@ -1,41 +1,50 @@
-<div id="provider-dashboard-container" class="container">
+<div id="provider-dashboard-container" class="container-fluid">
     <div class="row">
-        <div id="provider-summary-panel" class="col-md-4">
-            <mat-card>
-                <div>
+        <div class="col-md-4">
+            <!-- <mat-card id="provider-summary-panel"> -->
+            <div class="row">
+                <mat-card class="stats-card">
                     <h3>Summary</h3>
-                    Provider Node ID: adksjfoeijasdfwueifasd Daemon Status: Running
-                </div>
-                <div>
+                    Provider Node ID: adksjfoeijasdfwueifasd
+                    <br> Server Status: Running
+                    <mat-card-actions>
+                        <button>
+                            Settings
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+            <div class="row">
+                <mat-card class="stats-card">
                     <h3>Past Week</h3>
                     5,000 blocks uploaded
                     <br> 2,200 blocks downloaded
                     <br> 21 new storage contracts
                     <br> 0 evictions
-                </div>
-                <div>
+                </mat-card>
+            </div>
+            <div class="row">
+                <mat-card class="stats-card">
                     <h3>Totals</h3>
                     3,000 storage contracts with 15 unique renters
                     <br> 8.3 GB reserved space
                     <br> 3.4 GB used
                     <br> 2,100 blocks stored
-                    <br>
-                </div>
-                <button mat-raised-button class='skybin-btn-primary'>
-                    Settings
-                </button>
-            </mat-card>
+                </mat-card>
+            </div>
         </div>
-        <div id="charts-container" class="col-md-8">
-            <mat-card>
-                <canvas id="storage-pie-chart" width="300" height="200"></canvas>
-            </mat-card>
-            <mat-card>
-                <canvas id="requests-chart" width="300" height="200"></canvas>
-            </mat-card>
-            <mat-card>
-                <canvas id="contracts-chart" width="300" height="200"></canvas>
-            </mat-card>
+        <div class="col-md-8">
+            <div id="charts-container">
+                <mat-card class="chart-container">
+                    <canvas id="requests-chart" width="300" height="200"></canvas>
+                </mat-card>
+                <!-- <mat-card class="chart-container">
+                    <canvas id="contracts-chart" width="300" height="200"></canvas>
+                </mat-card> -->
+                <!-- <mat-card class="chart-container">
+                        <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+                    </mat-card> -->
+            </div>
         </div>
     </div>
 </div>

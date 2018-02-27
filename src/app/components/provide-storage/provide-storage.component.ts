@@ -52,9 +52,9 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         // console.log('starting poll service...');
         // this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
 
-        this.drawStorageUsedChart();
+        // this.drawStorageUsedChart();
         this.drawRequestsChart();
-        this.drawContractsChart();
+        // this.drawContractsChart();
     }
 
     drawStorageUsedChart() {
@@ -88,9 +88,9 @@ export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit
         let chart = new Chart(ctxt, {
             type: 'bar',
             data: {
-                labels: ['1:00', '2:00', '3:00', '4:00', '5:00'],
+                labels: ['1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00'],
                 datasets: [{
-                        data: [121, 523, 123, 98, 23],
+                        data: [121, 523, 123, 98, 23, 234, 123, 182, 231, 124, 11, 125],
                     },
                 ],
             },
