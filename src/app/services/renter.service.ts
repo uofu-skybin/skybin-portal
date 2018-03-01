@@ -30,6 +30,13 @@ export class RenterService {
             );
     }
 
+    getSharedFiles(): Observable<GetFilesResponse> {
+        return this.http.get<GetFilesResponse>(`${appConfig['renterAddress']}/files/shared`)
+            .pipe(
+                catchError(this.handleError('getSharedFiles', {files: []}))
+            );
+    }
+
     renameFile(fileId: string, name: string): Observable<SkyFile> {
         const body = {
             fileId: fileId,

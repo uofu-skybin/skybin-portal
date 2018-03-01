@@ -19,6 +19,7 @@ import {RenterService} from '../../services/renter.service';
 import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
 import {beautifyBytes} from '../../pipes/bytes.pipe';
+import {ActivatedRoute} from '@angular/router';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -57,6 +58,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     // Renter info object returned from the renter service.
     renterInfo: any = {};
 
+    // Indicates whether this instance of the component is for the user's files or the shared-with-me files.
+    shared: boolean = null;
+
     // TODO: These will move if the upload/dl progress view goes into the parent component.
     // Upload progress variables.
     uploadBodyVisible = true;
@@ -64,13 +68,17 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     completedUploads = 0;
     uploadInProgress = false;
 
+
     constructor(private http: HttpClient,
                 public electronService: ElectronService,
                 public dialog: MatDialog,
                 private ref: ChangeDetectorRef,
                 public snackBar: MatSnackBar,
                 public zone: NgZone,
-                private renterService: RenterService) {
+                private renterService: RenterService,
+                private route: ActivatedRoute) {
+
+        this.shared = this.route.snapshot.data.shared;
 
         // Check if this is the first time launching the app.
         // I do this in the constructor instead of ngOnInit()
@@ -109,11 +117,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     getFiles() {
-        this.renterService.getFiles()
-            .subscribe(res => {
-                this.allFiles = res.files;
-                this.filteredFiles = res.files;
-            });
+        if (this.shared) {
+            this.renterService.getSharedFiles()
+                .subscribe(res => {
+                    this.allFiles = res.files;
+                    this.filteredFiles = res.files;
+                });
+
+        } else {
+            this.renterService.getFiles()
+                .subscribe(res => {
+                    this.allFiles = res.files;
+                    this.filteredFiles = res.files;
+                });
+        }
     }
 
     addStorageClicked() {
