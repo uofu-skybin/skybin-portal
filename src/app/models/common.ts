@@ -72,6 +72,8 @@ export class ProviderInfo {
     storageUsed?: number;
     storageFree?: number;
     totalContracts?: number;
+    totalBlocks?: number;
+    totalRenters?: number;
 }
 
 export class Contract {
