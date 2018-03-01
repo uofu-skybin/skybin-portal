@@ -93,8 +93,8 @@ export class ProvideStorageComponent implements OnInit {
                         this.providerInfo.storageUsed,
                     ],
                     backgroundColor: [
-                        'lightgrey',
-                        'grey'
+                        'red',
+                        'blue'
                     ],
                 }],
                 labels: [
@@ -123,18 +123,22 @@ export class ProvideStorageComponent implements OnInit {
             {
                 label: 'Block Uploads',
                 data: counters.blockUploads,
+                backgroundColor: 'rgb(54, 162, 235)',
             },
             {
                 label: 'Block Downloads',
                 data: counters.blockDownloads,
+                backgroundColor: 'rgb(75, 192, 192)',
             },
             {
                 label: 'Block Deletions',
                 data: counters.blockDeletions,
+                backgroundColor: 'rgb(255, 99, 132)',
             },
             {
                 label: 'Storage Reservations',
                 data: counters.storageReservations,
+                backgroundColor: 'rgb(153, 102, 255)',
             },
         ];
         const title = `Request Activity - Last ${labels.length} Hours`;
@@ -169,7 +173,6 @@ export class ProvideStorageComponent implements OnInit {
                     }],
                 },
                 legend: {
-                    display: false,
                 },
             },
         });
@@ -186,10 +189,12 @@ export class ProvideStorageComponent implements OnInit {
             {
                 label: 'Bytes Uploaded',
                 data: counters.bytesUploaded,
+                backgroundColor: 'red',
             },
             {
                 label: 'Bytes Downloaded',
                 data: counters.bytesDownloaded,
+                backgroundColor: 'blue',
             },
         ];
 
