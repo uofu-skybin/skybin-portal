@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../models/config';
+import { ConfigureProviderComponent } from '../dialogs/configure-provider/configure-provider.component';
 import { Activity, ActivityResponse, Contract, ContractsResponse, ProviderInfo } from '../../models/common';
 import * as d3 from 'd3';
 import * as Rickshaw from 'rickshaw';
 import * as Chart from 'chart.js';
+import { MatDialog } from '@angular/material';
 
 console.log('got rickshaw!');
 console.log('rickshaw:', Rickshaw);
@@ -51,6 +53,7 @@ export class ProvideStorageComponent implements OnInit {
     };
 
     constructor(private http: HttpClient,
+        private dialog: MatDialog,
         private ref: ChangeDetectorRef) {
     }
 
@@ -74,7 +77,9 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     settingsClicked() {
-        console.log('settings clicked');
+        const settingsDialog = this.dialog.open(ConfigureProviderComponent, {
+            width: '600px',
+        });
     }
 
     drawStorageUsedChart() {
