@@ -65,6 +65,17 @@ export class Transfer {
     state: string;
 }
 
+export class ProviderConfig {
+    providerId: string;
+    publicApiAddress: string;
+    metaServerAddress: string;
+    localApiAddress: string;
+    privateKeyFile: string;
+    publicKeyFile: string;
+    spaceAvail: number;
+    storageRate: number;
+}
+
 export class ProviderInfo {
     providerId?: string;
     storageAllocated?: number;

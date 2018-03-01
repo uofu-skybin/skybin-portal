@@ -19,7 +19,6 @@ export class ConfigureProviderComponent implements OnInit {
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureProviderComponent>) {
-        this.updateProviderInfo();
     }
 
     ngOnInit() {
@@ -30,7 +29,6 @@ export class ConfigureProviderComponent implements OnInit {
         this.http.get(`${appConfig['providerAddress']}/config`)
             .subscribe((response: any) => {
                 this.settings = response;
-                console.log(response);
             }, (error: HttpErrorResponse) => {
                 console.error('Unable to load provider configuration.');
                 console.error('Error:', error);
