@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -27,6 +27,13 @@ export class RenterService {
         return this.http.get<GetFilesResponse>(`${appConfig['renterAddress']}/files`)
             .pipe(
                 catchError(this.handleError('getFiles', {files: []}))
+            );
+    }
+
+    getSharedFiles(): Observable<GetFilesResponse> {
+        return this.http.get<GetFilesResponse>(`${appConfig['renterAddress']}/files/shared`)
+            .pipe(
+                catchError(this.handleError('getSharedFiles', {files: []}))
             );
     }
 
@@ -88,6 +95,13 @@ export class RenterService {
             );
     }
 
+    shareFile(fileId: string, renterAlias: string) {
+        return this.http.post<ShareResponse>(`${appConfig['renterAddress']}/files/share`, {fileId: fileId, renterAlias: renterAlias})
+            .pipe(
+                catchError(this.handleError('shareFile', new ShareResponse()))
+            );
+    }
+
     /**
      * Handle Http operation that failed.
      * Let the app continue.
@@ -96,11 +110,12 @@ export class RenterService {
      */
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-            console.log(`${operation} failed: ${error.error.error}`);
+            console.log(`${operation} failed: ${error.error}`);
 
             this.zone.run(() => {
+                const errMessage = (error.error.error) ? error.error.error : error.error;
                 this.snackBar.openFromComponent(NotificationComponent, {
-                    data: error.error.error,
+                    data: errMessage,
                     duration: 3000,
                     horizontalPosition: 'center',
                     verticalPosition: 'bottom',

@@ -1,9 +1,10 @@
-import {Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output} from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {Component, OnInit, EventEmitter, ViewEncapsulation, Input, Output, NgZone} from '@angular/core';
+import {MatSnackBar, MatTableDataSource} from '@angular/material';
 import {SkyFile, latestVersion} from '../../models/common';
 import {ChangeDetectorRef} from '@angular/core';
 import {DropEvent} from 'ng-drag-drop';
 import {RenterService} from '../../services/renter.service';
+import {NotificationComponent} from '../notification/notification.component';
 
 interface FilesResponse {
     files: SkyFile[];
@@ -28,7 +29,9 @@ export class FilebrowserComponent {
 
 
     constructor(private ref: ChangeDetectorRef,
-                private renterService: RenterService) {
+                private renterService: RenterService,
+                private snackBar: MatSnackBar,
+                private zone: NgZone) {
     }
 
     inCurrentDirectory(path: string) {
@@ -120,6 +123,18 @@ export class FilebrowserComponent {
         const movedFileName = movedFile.name.split('/')[movedFile.name.split('/').length - 1];
         let newPathName: string;
 
+        if (movedFile.name === dir.name) {
+            const scope = this;
+            this.zone.run(() => {
+                scope.snackBar.openFromComponent(NotificationComponent, {
+                    data: `Cannot move directory ${movedFileName} into itself!`,
+                    duration: 3000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom',
+                });
+            });
+            return;
+        }
 
         if (typeof dir === 'string') {
             // Do nothing if the user drags on a file on the currently scoped folder.

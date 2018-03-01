@@ -1,23 +1,26 @@
 <div id='my-files-container'>
     <div id='my-files-buttons'>
         <!-- Primary my-files functionality buttons. -->
-        <button mat-raised-button class='skybin-btn-primary' (click)='uploadClicked()' name='my-files-upload-button'>
-            Upload
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(false)' name='my-files-upload-button'>
+            Upload File
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked()'
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(true)' name='my-files-upload-button'>
+            Upload Folder
+        </button>
+        <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
                 name='my-files-download-button'>
             Download
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
             Share
         </button>
-        <button mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
                 name='my-files-new-folder-button'>
             New Folder
         </button>
 
         <!-- Group storage info views. -->
-        <span id='my-files-storage-management-container'>
+        <span *ngIf="!shared" id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
             <span id='available-space-container'>
                 <b>Available:</b> {{renterInfo.freeStorage | bytes}}
@@ -73,6 +76,8 @@
         <div class='context-menu'>
             <mat-menu #menuFolder='matMenu'>
                 <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
+                <button mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
+                <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
             </mat-menu>
         </div>
     </div>
@@ -113,7 +118,8 @@
                     </div>
                     <div *ngIf="uploadBodyVisible" class='modal-body'>
                         <div *ngFor='let upload of uploads' class='upload-item'>
-                            <span class='file-upload-name'>{{baseName(upload.destPath)}}</span>
+                            <span *ngIf="baseName(upload.destPath).length > 25" class='file-upload-name'>{{(baseName(upload.destPath)).slice(0, 25) + '...'}}</span>
+                            <span *ngIf="baseName(upload.destPath).length <= 25" class='file-upload-name'>{{(baseName(upload.destPath))}}</span>
                             <i *ngIf="upload.state === 'TRANSFER_DONE'"
                                class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>
                             <i *ngIf="upload.state === 'TRANSFER_ERROR'"
@@ -147,7 +153,8 @@
                     <div *ngIf="downloadBodyVisible" class='modal-body'>
                         <div *ngFor='let download of downloads' class='upload-item'>
                             <div>
-                                {{download.destPath.split('/')[download.destPath.split('/').length - 1]}}
+                                <span *ngIf="baseName(download.destPath.split('/')[download.destPath.split('/').length - 1]).length > 25">{{download.destPath.split('/')[download.destPath.split('/').length - 1].slice(0, 25) + '...'}}</span>
+                                <span *ngIf="baseName(download.destPath.split('/')[download.destPath.split('/').length - 1]).length <= 25">{{download.destPath.split('/')[download.destPath.split('/').length - 1]}}</span>
                                 <i *ngIf="download.state === 'TRANSFER_DONE'" (click)='showFinishedDownload(download)'
                                    class='fa fa-search transfer-icon'
                                    aria-hidden='true'></i>

@@ -1,18 +1,18 @@
 <h2 id="share-dialog-title" mat-dialog-title>Share File</h2>
 
 <mat-dialog-content>
-  <mat-list dense>
-    <mat-list-item *ngFor="let name of names" class="user-name">{{ name }}</mat-list-item>
-  </mat-list>
+  <!--<mat-list dense>-->
+    <!--<mat-list-item *ngFor="let name of names" class="user-name">{{ name }}</mat-list-item>-->
+  <!--</mat-list>-->
 
   <mat-form-field>
       <input matInput (keyup.enter)="addName()" [(ngModel)]="currentName" placeholder="User">
   </mat-form-field>
 
-  <button mat-raised-button (click)="addName()" skybin-btn-primary>Add</button>
+  <!--<button mat-raised-button (click)="shareFile(currentName)" skybin-btn-primary>Add</button>-->
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-  <button mat-button [mat-dialog-close]="true">Share</button>
+  <button (click)="shareFile(currentName)" mat-button [mat-dialog-close]="true">Share</button>
   <button mat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

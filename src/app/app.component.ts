@@ -40,4 +40,10 @@ export class AppComponent implements OnInit {
         e.preventDefault();
     }
 
+    exportRenterKey(): void {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
+            this.electronService.ipcRenderer.send('exportRenterKey', destPath);
+        });
+
+    }
 }
