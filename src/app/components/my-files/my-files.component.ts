@@ -453,6 +453,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
     toggleUploadBody() {
         this.uploadBodyVisible = !this.uploadBodyVisible;
+        document.getElementById('uploads-overlay').style.paddingTop = (this.uploadBodyVisible) ? '0' : '50px';
     }
 
     hideDownloads() {

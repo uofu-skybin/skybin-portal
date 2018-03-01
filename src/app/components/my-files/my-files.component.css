@@ -181,3 +181,9 @@ button:focus {outline:0;}
     background: #4c4c4c;
     box-shadow: none !important;
 }
+
+/*#uploads-overlay {*/
+    /*position: fixed;*/
+    /*bottom: 20px;*/
+    /*right: 30px;*/
+/*}*/
