@@ -391,7 +391,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!this.selectedFile) {
             return;
         }
-        const dialogRef = this.dialog.open(ShareDialogComponent, {});
+        const dialogRef = this.dialog.open(ShareDialogComponent, {
+            data: {
+                file: this.selectedFile
+            }
+        });
     }
 
     deleteFile(file) {

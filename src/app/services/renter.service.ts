@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -92,6 +92,13 @@ export class RenterService {
         return this.http.post(`${appConfig['renterAddress']}/files/remove`, {fileId: fileId})
             .pipe(
                 catchError(this.handleError('deleteFile', new SkyFile()))
+            );
+    }
+
+    shareFile(fileId: string, renterAlias: string) {
+        return this.http.post<ShareResponse>(`${appConfig['renterAddress']}/files/share`, {fileId: fileId, renterAlias: renterAlias})
+            .pipe(
+                catchError(this.handleError('shareFile', new ShareResponse()))
             );
     }
 

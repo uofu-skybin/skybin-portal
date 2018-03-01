@@ -94,3 +94,7 @@ export class Activity {
     time?: Date;
     contract?: Contract;
 }
+
+export class ShareResponse {
+    message: string;
+}
