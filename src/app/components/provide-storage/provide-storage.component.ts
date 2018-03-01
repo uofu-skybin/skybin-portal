@@ -1,8 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSort, MatTableDataSource } from '@angular/material';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
-import Timer = NodeJS.Timer;
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../models/config';
 import { Activity, ActivityResponse, Contract, ContractsResponse, ProviderInfo } from '../../models/common';
 import * as d3 from 'd3';
