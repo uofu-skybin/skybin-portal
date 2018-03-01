@@ -40,6 +40,7 @@ import { ViewFileDetailsComponent } from './components/view-file-details/view-fi
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
 import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
+import { ConfigureProviderComponent } from './components/dialogs/configure-provider/configure-provider.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { RenterService } from './services/renter.service';
 import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
@@ -51,6 +52,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
     entryComponents: [
         AddStorageComponent,
         ConfigureStorageComponent,
+        ConfigureProviderComponent,
         NewFolderDialogComponent,
         NotificationComponent,
         ReserveStorageProgressComponent,
@@ -72,7 +74,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         NewFolderDialogComponent,
         NotificationComponent,
         ProvideStorageComponent,
-        ProvideStorageComponent,
+        ConfigureProviderComponent,
         RegistrationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
