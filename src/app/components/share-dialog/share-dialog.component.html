@@ -1,11 +1,13 @@
 <h2 id="share-dialog-title" mat-dialog-title>Share File</h2>
 
-<mat-dialog-content>
-  <!--<mat-list dense>-->
-    <!--<mat-list-item *ngFor="let name of names" class="user-name">{{ name }}</mat-list-item>-->
-  <!--</mat-list>-->
+<p id="share-access-title"><i>Shared with:</i></p>
 
-  <mat-form-field>
+<mat-dialog-content>
+  <mat-list dense>
+    <mat-list-item *ngFor="let renter of sharedFile.accessList" class="user-name">{{ renter.renterId.slice(0, 15) }}...</mat-list-item>
+  </mat-list>
+
+  <mat-form-field id="share-input">
       <input matInput (keyup.enter)="addName()" [(ngModel)]="currentName" placeholder="User">
   </mat-form-field>
 

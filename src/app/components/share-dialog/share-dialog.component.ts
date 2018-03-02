@@ -3,6 +3,7 @@ import {ComponentFactoryResolver} from '@angular/core/src/linker/component_facto
 import {MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 import {RenterService} from '../../services/renter.service';
 import {NotificationComponent} from '../notification/notification.component';
+import {SkyFile} from '../../models/common';
 
 @Component({
     selector: 'app-share-dialog',
@@ -20,8 +21,10 @@ export class ShareDialogComponent implements OnInit {
 
     currentName = '';
     names = [];
+    sharedFile: SkyFile = null;
 
     ngOnInit() {
+        this.sharedFile = this.data.file;
     }
 
     addName() {
@@ -33,7 +36,6 @@ export class ShareDialogComponent implements OnInit {
     }
 
     shareFile(renterAlias: string): void {
-        // console.log(`sharing file ${this.data.fileId} with ${alias}`);
         const sharedFile = this.data.file;
         const sharedFileName = sharedFile.name.split('/')[sharedFile.name.split('/').length - 1];
         this.renterService.shareFile(sharedFile.id, renterAlias)

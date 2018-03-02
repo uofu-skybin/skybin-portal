@@ -7,3 +7,11 @@
     font-size: 1.0em !important;
     height: 2.0em !important;
 }
+
+#share-input {
+    margin-top: 1em;
+}
+
+#share-access-title {
+    margin-top: 1em;
+}
