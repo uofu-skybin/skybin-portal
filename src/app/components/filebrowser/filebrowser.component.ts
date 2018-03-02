@@ -138,7 +138,8 @@ export class FilebrowserComponent {
 
         if (typeof dir === 'string') {
             // Do nothing if the user drags on a file on the currently scoped folder.
-            if (this.currentPath[this.currentPath.length - 1] === dir && index === this.currentPath.length - 1) {
+            if ((this.currentPath[this.currentPath.length - 1] === dir && index === this.currentPath.length - 1) ||
+                (dir === '' && this.currentPath.length === 0)) {
                 return;
             }
             if (dir === '') {

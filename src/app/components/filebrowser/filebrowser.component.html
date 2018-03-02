@@ -2,10 +2,12 @@
     <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
             <li class="breadcrumb-item dir-link" (click)="homeClicked()" aria-current="page" droppable
-                [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, '', 0)">Home
+                [dragOverClass]="'drag-over-breadcrumb'" (onDrop)="onFileDrop($event, '', 0)">Home
             </li>
-            <li class="breadcrumb-item dir-link" *ngFor='let dir of currentPath; let i = index' (click)="breadcrumbClicked(dir)"
-                aria-current="page" droppable [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, dir, i)">{{ dir }}
+            <li class="breadcrumb-item dir-link" *ngFor='let dir of currentPath; let i = index'
+                (click)="breadcrumbClicked(dir)" [dragOverClass]="'drag-over-breadcrumb'"
+                aria-current="page" droppable [dragOverClass]="'dragover'" (onDrop)="onFileDrop($event, dir, i)">{{ dir
+                }}
             </li>
         </ol>
     </div>
@@ -44,12 +46,14 @@
             <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
                 (contextmenu)="onContextClick($event, dir)"
-                droppable [dragOverClass]="'dragover'" (onDragOver)="onFileDragOver($event, dir)"
+                droppable [dragOverClass]="'drag-over-folder'" (onDragOver)="onFileDragOver($event, dir)"
                 (onDrop)="onFileDrop($event, dir)"
-                class='dir-link' draggable [dragData]='dir'>
-                <td>
+                class='dir-link'>
+                <td >
+                    <span draggable [dragData]='dir' [dragTransitClass]="'fileDrag'" class="file-folder-drag">
                     <i class="fa fa-folder" aria-hidden="true"></i>
                     {{baseName(dir.name)}}
+                    </span>
                 </td>
                 <td>-</td>
                 <td>-</td>
@@ -57,10 +61,13 @@
             <tr *ngFor="let file of getFilesInCurrentDirectory()"
                 (click)="selectFile(file)"
                 (contextmenu)="onContextClick($event, file)"
-                [class.selected]="file === selectedFile"
-                draggable
-                [dragData]='file'>
-                <td>{{baseName(file.name)}}</td>
+                [class.selected]="file === selectedFile">
+                <td >
+                    <span draggable [dragData]='file' [dragTransitClass]="'fileDrag'"  class="file-folder-drag">
+                    <i class="fa fa-file" aria-hidden="true"></i>
+                    {{baseName(file.name)}}
+                    </span>
+                </td>
                 <td>{{latestVersion(file).size | bytes}}</td>
                 <td>{{formatModTime(latestVersion(file).modTime)}}</td>
             </tr>
