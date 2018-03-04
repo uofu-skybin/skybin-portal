@@ -37,4 +37,16 @@ export class ViewFileDetailsComponent implements OnInit {
     latestVersion(file: SkyFile) {
         return latestVersion(file);
     }
+
+    /**
+     * Calculate total storage in bytes of a file including all versions.
+     * @param {SkyFile} file
+     */
+    getTotalFileSize(file: SkyFile): number {
+        let size = 0;
+        for (const version of file.versions) {
+            size += version.size;
+        }
+        return size;
+    }
 }

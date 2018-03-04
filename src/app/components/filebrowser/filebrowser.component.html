@@ -79,7 +79,10 @@
                     </span>
                 </td>
                 <!--<td>{{file.versions.length}}</td>-->
-                <td>{{latestVersion(file).size | bytes}}</td>
+                <td>
+                    {{latestVersion(file).size | bytes}}
+                    <span class="file-version-number" *ngIf="file.versions.length >= 2">(x{{file.versions.length}})</span>
+                </td>
                 <td>{{formatModTime(latestVersion(file).modTime)}}</td>
             </tr>
             </tbody>

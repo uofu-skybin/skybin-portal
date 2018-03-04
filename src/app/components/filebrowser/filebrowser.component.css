@@ -67,3 +67,8 @@ ol.breadcrumb {
 .drag-disappear {
     display: none;
 }
+
+.file-version-number {
+    font-style: italic;
+    color: gray;
+}

@@ -2,6 +2,8 @@
 <hr>
 <mat-dialog-content>
     <p>Size: {{ latestVersion(file).size| bytes }}</p>
+    <p>Versions: {{ file.versions.length }}</p>
+    <p>Total Size: {{ getTotalFileSize(file) | bytes  }}</p>
     <p>Last Modified: {{ formatModTime(latestVersion(file).modTime)}}</p>
     <p>Storage Cost: $0.0002 per month</p>
     <div class="detail-content">
