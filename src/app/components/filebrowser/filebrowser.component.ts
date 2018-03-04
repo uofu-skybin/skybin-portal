@@ -127,7 +127,7 @@ export class FilebrowserComponent {
             const scope = this;
             this.zone.run(() => {
                 scope.snackBar.openFromComponent(NotificationComponent, {
-                    data: `Cannot move directory ${movedFileName} into itself!`,
+                    data: `Cannot move folder ${movedFileName} into itself!`,
                     duration: 3000,
                     horizontalPosition: 'center',
                     verticalPosition: 'bottom',
