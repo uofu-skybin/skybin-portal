@@ -180,9 +180,15 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         destPath += baseName;
 
-        // Make sure there are no files with the given name.
-        while (this.allFiles.some(e => e.name === destPath)) {
-            destPath += '.copy';
+        // Are we uploading a new version of an existing file?
+        let newVersion = false;
+
+        const existingFile = this.allFiles.find(file => {
+            return file.name === destPath;
+        });
+
+        if (existingFile !== undefined) {
+            newVersion = true;
         }
 
         const upload = {
@@ -215,7 +221,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                             upload.state = TRANSFER_DONE;
                             this.completedUploads++;
                             this.uploadInProgress = false;
-                            this.allFiles.push(file);
+
+                            if (newVersion) {
+                                this.showErrorNotification(`Added new version of ${file.name}`);
+                                this.getFiles();
+                            } else {
+                                this.allFiles.push(file);
+                            }
+
                             if (isDir) {
                                 this.getFiles();
                             }
