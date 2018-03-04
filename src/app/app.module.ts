@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { MyFilesComponent } from './components/my-files/my-files.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { MyWalletComponent } from './components/my-wallet/my-wallet.component';
-import { RegistrationComponent } from './components/dialogs/registration/registration.component';
+import { RenterRegistrationComponent } from './components/dialogs/renter-registration/renter-registration.component';
 import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
 import { ProvideStorageComponent } from './components/provide-storage/provide-storage.component';
 import { RoutingModule } from './modules/routing/routing.module';
@@ -56,7 +56,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         RenameFileDialogComponent
     ],
     declarations: [
@@ -65,14 +65,14 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         AuthenticationComponent,
         BytesPipe,
         FilebrowserComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         MyFilesComponent,
         MyWalletComponent,
         NewFolderDialogComponent,
         NotificationComponent,
         ProvideStorageComponent,
         ConfigureProviderComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         SharedWithMeComponent,
