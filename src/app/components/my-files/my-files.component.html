@@ -60,10 +60,11 @@
         <div class='context-menu'>
             <mat-menu #menu='matMenu'>
                 <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
-                <button mat-menu-item (click)='shareClicked()'>Share</button>
-                <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
+                <button *ngIf="!shared" mat-menu-item (click)='shareClicked()'>Share</button>
+                <button *ngIf="!shared" mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
+                <!--<button *ngIf="shared" mat-menu-item (click)='deleteFile(selectedFile)'>Remove from shared</button>-->
                 <button mat-menu-item (click)='viewDetails(selectedFile)'>View Details</button>
-                <button mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
+                <button *ngIf="!shared" mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
             </mat-menu>
         </div>
     </div>
