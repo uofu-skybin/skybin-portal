@@ -44,8 +44,26 @@ ol.breadcrumb {
     cursor: pointer;
 }
 
-.dragover {
+.fileDrag {
+    background: #d2e2f3;
+    /*width: 150px;*/
+}
+
+.file-folder-drag {
+    cursor: grab;
+}
+
+.drag-over-folder {
     /*border: 3px dotted red;*/
     /*background-color: #6ab6f3;*/
-    background-color: #eff9ff;
+    background: #eff9ff;
+}
+
+.drag-over-breadcrumb {
+    border: 1px dashed blue;
+    background: #abdaff;
+}
+
+.drag-disappear {
+    display: none;
 }
