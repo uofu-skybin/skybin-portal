@@ -1,187 +1,65 @@
-<mat-tab-group class='provider-tab-group'>
-    <mat-tab label='Summary' id='provide-storage-container'>
-        <div class="tab-container">
-            <div class='col-sm-12' id='provide-storage-summary-container'>
-                <section>
-                    <mat-card-title class='summary-card-title'>
-                        Node ID: <span id="node-id-span">{{providerInfo.providerId}}</span>
-                    </mat-card-title>
-                    <mat-card-subtitle id="node-status">
-                        Status: Running
-                        <i id="node-status-icon" class="fa fa-check-circle"></i>
-                    </mat-card-subtitle>
-                    <mat-card class="mat-elevation-z1">
-                        <!--<mat-card-title>-->
-                            <!--Summary-->
-                        <!--</mat-card-title>-->
-                        <div class='row'>
-                            <div class='col-sm-4'>
-                                <mat-card-subtitle>
-                                    Storage Allocated
-                                </mat-card-subtitle>
-                                <mat-card-content>
-                                    {{providerInfo.providerAllocated | bytes}}
-                                </mat-card-content>
-                            </div>
-                            <div class='col-sm-4'>
-                                <mat-card-subtitle>
-                                    Storage Reserved
-                                </mat-card-subtitle>
-                                <mat-card-content>
-                                    {{providerInfo.providerReserved | bytes}}
-                                </mat-card-content>
-                            </div>
-                            <div class='col-sm-4'>
-                                <mat-card-subtitle>
-                                    Storage Free
-                                </mat-card-subtitle>
-                                <mat-card-content>
-                                    {{providerInfo.providerFree | bytes}}
-                                </mat-card-content>
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-sm-4'>
-                                <mat-card-subtitle>
-                                    Storage Used
-                                </mat-card-subtitle>
-                                <mat-card-content>
-                                    {{providerInfo.providerUsed | bytes}}
-                                </mat-card-content>
-                            </div>
-                            <div class='col-sm-4'>
-                                <mat-card-subtitle>
-                                    Total Contracts
-                                </mat-card-subtitle>
-                                <mat-card-content>
-                                    {{providerInfo.providerContracts}}
-                                </mat-card-content>
-                            </div>
-                        </div>
-                    </mat-card>
-                </section>
-            </div>
-            <div class='col-sm-12' id='provide-storage-activity-container'>
-                <section>
-                    <mat-card-title id="activity-card-title" class='summary-card-title'>
-                        Activity
-                    </mat-card-title>
-                    <div id='provide-storage-activity-feed-container' class='example-container mat-elevation-z8'>
-                        <mat-table #table [dataSource]='dataSource' matSort>
-
-                            <!--- Note that these columns can be defined in any order.
-                                The actual rendered columns are set as a property on the row definition" -->
-
-                            <!-- Position Column -->
-                            <ng-container matColumnDef='Request Type'>
-                                <mat-header-cell *matHeaderCellDef mat-sort-header> Request Type</mat-header-cell>
-                                <mat-cell *matCellDef='let element'> {{element.requestType}}</mat-cell>
-                            </ng-container>
-
-                            <!-- Name Column -->
-                            <ng-container matColumnDef='Block ID'>
-                                <mat-header-cell *matHeaderCellDef mat-sort-header> Block Id</mat-header-cell>
-                                <mat-cell *matCellDef='let element'>
-                                    {{element.blockId | truncate}}
-                                </mat-cell>
-                            </ng-container>
-
-                            <!-- Weight Column -->
-                            <ng-container matColumnDef='Renter ID'>
-                                <mat-header-cell *matHeaderCellDef mat-sort-header> Renter Id</mat-header-cell>
-                                <mat-cell *matCellDef='let element'>
-                                    {{element.renterId | truncate}}
-                                </mat-cell>
-                            </ng-container>
-
-                            <!-- Color Column -->
-                            <ng-container matColumnDef='Timestamp'>
-                                <mat-header-cell *matHeaderCellDef mat-sort-header> Timestamp</mat-header-cell>
-                                <mat-cell *matCellDef='let element'> {{element.time | date:'short'}}</mat-cell>
-                            </ng-container>
-
-                            <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
-                            <mat-row *matRowDef='let row; columns: displayedColumns;'></mat-row>
-                        </mat-table>
-                    </div>
-
-                </section>
-
-            </div>
-        </div>
-    </mat-tab>
-
-    <mat-tab label='Settings'>
-        <div class="tab-container">
-            <div id='provide-storage-settings-container'>
-                <section>
-                    <mat-card>
-                        <mat-card-title>
+<div id="provider-dashboard-container" class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <mat-card class="stats-card">
+                    <h3>Summary</h3>
+                    Provider Node ID: {{providerInfo.providerId}} 
+                    <br> Server Status: Running
+                    <br> Storage Available: {{providerInfo.storageAllocated | bytes}}
+                    <mat-card-actions>
+                        <button id="provider-settings-button" matTooltip="Settings" (click)="settingsClicked()">
+                            <i id='plus-icon' class='fa fa-cog' aria-hidden='true'></i>
                             Settings
-                        </mat-card-title>
-                        <mat-card-content>
-                            <mat-form-field>
-                                <mat-select placeholder='Select Wallet'>
-                                    <mat-option *ngFor='let wallet of wallets' [value]='wallet.value'>
-                                        {{ wallet.viewValue }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-content>
-                            <mat-form-field>
-                                <input #storageAmount matInput placeholder='Storage Available' value='999999' type='number'>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-content>
-                            <mat-form-field>
-                                <input #minPrice matInput placeholder='Min Price per GB' value='1' type='number'>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-content>
-                            <mat-form-field>
-                                <input #minContract matInput placeholder='Min Contract Duration' value='17' type='number'>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-content>
-                            <mat-form-field>
-                                <input #maxContract matInput placeholder='Max Contract Duration' value='84' type='number'>
-                            </mat-form-field>
-                        </mat-card-content>
-                        <mat-card-content>
-                            <button mat-raised-button class='skybin-btn-primary' (click)='updateProviderSettings()'
-                                    name='provide-storage-update-button'>Update Settings
-                            </button>
-                        </mat-card-content>
-                    </mat-card>
-                </section>
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+            <div class="row">
+                <mat-card class="stats-card">
+                    <h3>Past Week</h3>
+                    {{pastWeekSummary.counters.blockUploads}} blocks uploaded
+                    <br> {{pastWeekSummary.counters.blockDownloads}} blocks downloaded
+                    <br> {{pastWeekSummary.counters.blockDeletions}} blocks removed
+                    <br> {{pastWeekSummary.counters.storageReservations}} new storage contracts
+                </mat-card>
+            </div>
+            <div class="row">
+                <mat-card class="stats-card">
+                    <h3>Totals</h3>
+                    {{providerInfo.totalContracts}} storage contracts with {{providerInfo.totalRenters}} unique renters
+                    <br> {{providerInfo.storageReserved | bytes}} reserved space
+                    <br> {{providerInfo.storageUsed | bytes}} used
+                    <br> {{providerInfo.totalBlocks}} blocks stored
+                </mat-card>
             </div>
         </div>
-    </mat-tab>
-
-    <mat-tab label='Contracts'>
-        <div class="tab-container">
-            <mat-card>
-                <mat-card-title>
-                    Contracts
-                </mat-card-title>
-                <mat-card-content>
-                    <table class='table'>
-                        <thead>
-                        <tr>
-                            <th>Renter ID</th>
-                            <th>Storage Rented</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor='let contract of myContracts'>
-                            <td>{{contract.renterID}}</td>
-                            <td>{{contract.storageSpace | bytes}}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </mat-card-content>
-            </mat-card>
+        <div class="col-md-8">
+            <div id="charts-container">
+                <mat-card class="chart-container">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <canvas id="requests-chart" width="300" height="200"></canvas>
+                            </div>
+                            <div class="carousel-item">
+                                <canvas id="throughput-chart" width="300" height="200"></canvas>
+                            </div>
+                            <div class="carousel-item">
+                                <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </mat-card>
+            </div>
         </div>
-    </mat-tab>
-</mat-tab-group>
+    </div>
+</div>

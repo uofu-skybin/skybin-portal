@@ -11,8 +11,8 @@ export class ViewFileDetailsComponent implements OnInit {
 
     file: SkyFile = null;
 
-    constructor( @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.file = <SkyFile> data.file;
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+        this.file = <SkyFile>data.file;
     }
 
     ngOnInit() {

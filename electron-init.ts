@@ -166,7 +166,7 @@ function launchApp() {
     win.maximize();
 
     // uncomment below to open the DevTools.
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
     win.on('closed', function () {
         win = null;
     });

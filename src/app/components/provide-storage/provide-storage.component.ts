@@ -1,14 +1,17 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSort, MatTableDataSource } from '@angular/material';
-import { HttpErrorResponse } from '@angular/common/http/src/response';
-import Timer = NodeJS.Timer;
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../models/config';
-import {Activity, ActivityResponse, Contract, ContractsResponse, InfoResponse} from '../../models/common';
+import { ConfigureProviderComponent } from '../dialogs/configure-provider/configure-provider.component';
+import { Activity, ActivityResponse, Contract, ContractsResponse, ProviderInfo } from '../../models/common';
+import * as d3 from 'd3';
+import * as Rickshaw from 'rickshaw';
+import * as Chart from 'chart.js';
+import { MatDialog } from '@angular/material';
 
-
-// Activity feed update interval (ms)
-const ACTIVITY_INTERVAL = 5 * 1000;
+console.log('got rickshaw!');
+console.log('rickshaw:', Rickshaw);
+console.log('d3:', d3);
+console.log('chartjs', Chart);
 
 @Component({
     selector: 'app-provide-storage',
@@ -16,93 +19,222 @@ const ACTIVITY_INTERVAL = 5 * 1000;
     styleUrls: ['./provide-storage.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ProvideStorageComponent implements OnInit, OnDestroy, AfterViewInit {
-    private myContracts: Contract[] = [];
+export class ProvideStorageComponent implements OnInit {
 
-    // TODO convert to structure as opposed to any object
-    providerInfo: InfoResponse = {};
-    activityFeed: Activity[] = [];
-    displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Timestamp'];
-    dataSource = new MatTableDataSource<Activity>();
-    activityPollId: Timer = null;
+    providerInfo: ProviderInfo = {
+        providerId: 'asdasdkjfiawejfklasdjfl;ajsfd',
+        storageAllocated: 1e9,
+        storageFree: 1e3,
+        storageReserved: 1e6,
+        storageUsed: 1e4,
+        totalContracts: 234,
+        totalBlocks: 3587,
+        totalRenters: 128,
+    };
+    providerStats: any = {
+        activityCounters: {
+            timestamps: [new Date().toString(), new Date().toString(), new Date().toString(), new Date().toString(), new Date().toString()],
+            blockUploads: [112, 238, 124, 38, 23],
+            blockDownloads: [28, 5, 34, 120, 63],
+            blockDeletions: [32, 35, 2, 1, 5],
+            storageReservations: [2, 1, 3, 0, 5],
+            bytesUploaded: [20000, 30000, 21000, 23000, 34000],
+            bytesDownloaded: [19384, 23842, 38492, 29384, 10245],
+        }
+    };
+    pastWeekSummary: any = {
+        period: 'Week',
+        counters: {
+            blockUploads: 485,
+            blockDownloads: 236,
+            blockDeletions: 22,
+            storageReservations: 12,
+        },
+    };
 
-    // TODO make dynamic
-    wallets = [
-        { value: 'wallet-0', viewValue: 'Wallet 1' },
-        { value: 'wallet-1', viewValue: 'Wallet 2' },
-        { value: 'wallet-2', viewValue: 'Wallet 3' }
-    ];
-    @ViewChild(MatSort) sort: MatSort;
-
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+        private dialog: MatDialog,
+        private ref: ChangeDetectorRef) {
     }
 
     ngOnInit() {
-        this.loadProviderInfo();
-        this.loadContracts();
-        // this.loadTestActivityData();
-        this.loadActivity();
-        console.log('starting poll service...');
-        this.activityPollId = setInterval(() => this.loadActivity(), ACTIVITY_INTERVAL);
+        this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
+            this.providerInfo = info;
+        }, (error) => {
+            console.error('Error fetching provider info');
+            console.error(error);
+        });
+        this.http.get(`${appConfig['providerAddress']}/stats`).subscribe((stats: any) => {
+            this.providerStats = stats;
+        }, (error) => {
+            console.error('Error fetching provider stats');
+            console.error(error);
+        });
+
+        this.drawStorageUsedChart();
+        this.drawRequestsChart();
+        this.drawThroughputChart();
     }
 
-    // Necessary for the mat-table column sorting.
-    ngAfterViewInit() {
-        this.dataSource.sort = this.sort;
-    }
-
-    // Delete the polling service in memory when leaving this tab view.
-    ngOnDestroy(): void {
-        console.log('destroying poll service. . .');
-        clearInterval(this.activityPollId);
-    }
-
-    private loadContracts() {
-        this.http.get<ContractsResponse>(`${appConfig['providerAddress']}/contracts`).subscribe(response => {
-            const contracts = response['contracts'];
-            if (!contracts) {
-                console.error('Error: GET /contracts returned no contracts.');
-                console.error('Response:', response);
-                return;
-            }
-            this.myContracts.push(...contracts);
+    settingsClicked() {
+        const settingsDialog = this.dialog.open(ConfigureProviderComponent, {
+            width: '600px',
         });
     }
 
-    loadProviderInfo() {
-        this.http.get(`${appConfig['providerAddress']}/info`)
-            .subscribe((response: any) => {
-                this.providerInfo = response;
-            }, (error: HttpErrorResponse) => {
-                console.error('Unable to load provider info.');
-                console.error('Error:', error);
-            });
+    drawStorageUsedChart() {
+        let ctxt = document.getElementById('storage-pie-chart');
+        let chart = new Chart(ctxt, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [
+                        this.providerInfo.storageAllocated,
+                        this.providerInfo.storageUsed,
+                    ],
+                    backgroundColor: [
+                        'red',
+                        'blue'
+                    ],
+                }],
+                labels: [
+                    'Allocated',
+                    'Used',
+                ],
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Storage Used',
+                },
+            },
+        });
     }
 
-    private loadActivity() {
-        this.http.get<ActivityResponse>(`${appConfig['providerAddress']}/activity`)
-            .subscribe(response => {
-                const activity = response['activity'];
-                if (!activity) {
-                    console.error('Error: GET /activity returned no activity.');
-                    console.error('Response:', response);
-                    return;
-                }
-                console.log('polled data with response ', activity);
+    drawRequestsChart() {
+        const counters = this.providerStats.activityCounters;
 
-                // Only take up to five most recent items.
-                this.activityFeed = response.activity.reverse().slice(0, 5);
-                this.dataSource = new MatTableDataSource<Activity>(this.activityFeed);
-            }, (error) => {
-                console.error('Unable to load provider activity feed.');
-                console.error('Error:', error);
-            });
+        // Get hours of the counter timestamps as x-axis labels.
+        const labels = counters.timestamps
+            .map(dateString => new Date(dateString))
+            .map(date => date.getHours().toString());
+
+        const datasets = [
+            {
+                label: 'Block Uploads',
+                data: counters.blockUploads,
+                backgroundColor: 'rgb(54, 162, 235)',
+            },
+            {
+                label: 'Block Downloads',
+                data: counters.blockDownloads,
+                backgroundColor: 'rgb(75, 192, 192)',
+            },
+            {
+                label: 'Block Deletions',
+                data: counters.blockDeletions,
+                backgroundColor: 'rgb(255, 99, 132)',
+            },
+            {
+                label: 'Storage Reservations',
+                data: counters.storageReservations,
+                backgroundColor: 'rgb(153, 102, 255)',
+            },
+        ];
+        const title = `Request Activity - Last ${labels.length} Hours`;
+        let ctxt = document.getElementById('requests-chart');
+        let chart = new Chart(ctxt, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: datasets,
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: title,
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        stacked: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Hour',
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        stacked: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Requests',
+                        },
+                    }],
+                },
+                legend: {
+                },
+            },
+        });
+    }
+
+    drawThroughputChart() {
+        const counters = this.providerStats.activityCounters;
+
+        const labels = counters.timestamps
+            .map(dateString => new Date(dateString))
+            .map(date => date.getHours().toString());
+
+        const datasets = [
+            {
+                label: 'Bytes Uploaded',
+                data: counters.bytesUploaded,
+                backgroundColor: 'red',
+            },
+            {
+                label: 'Bytes Downloaded',
+                data: counters.bytesDownloaded,
+                backgroundColor: 'blue',
+            },
+        ];
+
+        const title = `Uploads and Downloads - Last ${labels.length} Hours`;
+
+        let ctxt = document.getElementById('throughput-chart');
+        let chart = new Chart(ctxt, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets,
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: title,
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        stacked: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Hour',
+                        },
+                    }],
+                    yAxes: [{
+                        display: true,
+                        stacked: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Bytes Transferred',
+                        },
+                    }],
+                },
+                legend: {
+                    display: false,
+                },
+            },
+        });
     }
 
 }
-
-
-// displayedColumns = ['Request Type', 'Block ID', 'Renter ID', 'Time Stamp', 'Contract'];
-const DATA: Activity[] = [
-    { requestType: 'GET', blockId: '1', renterId: '1', time: new Date(), contract: { storageSpace: '100 KB', renterID: '1' } }
-];
