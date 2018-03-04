@@ -20,25 +20,21 @@ export class ShareDialogComponent implements OnInit {
     }
 
     currentName = '';
-    names = [];
     sharedFile: SkyFile = null;
+    errorMessage = '';
 
     ngOnInit() {
         this.sharedFile = this.data.file;
     }
 
-    addName() {
-        if (this.currentName !== '') {
-            this.names.push(this.currentName);
-            this.names = this.names.slice();
-            this.currentName = '';
-        }
-    }
-
     shareFile(renterAlias: string): void {
-        const sharedFile = this.data.file;
-        const sharedFileName = sharedFile.name.split('/')[sharedFile.name.split('/').length - 1];
-        this.renterService.shareFile(sharedFile.id, renterAlias)
+        if (renterAlias.length === 0) {
+            this.errorMessage = 'Must give user alias.';
+            return;
+        }
+        const pathComponents = this.sharedFile.name.split('/');
+        const sharedFileName = pathComponents[pathComponents.length - 1];
+        this.renterService.shareFile(this.sharedFile.id, renterAlias)
             .subscribe(res => {
                 if (res.message === 'file shared') {
                     this.snackBar.openFromComponent(NotificationComponent, {
@@ -48,7 +44,7 @@ export class ShareDialogComponent implements OnInit {
                         verticalPosition: 'bottom',
                     });
                 }
-                console.log(res);
+                this.dialogRef.close();
             });
     }
 }
