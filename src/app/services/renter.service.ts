@@ -113,7 +113,10 @@ export class RenterService {
             console.log(`${operation} failed: ${error.error}`);
 
             this.zone.run(() => {
-                const errMessage = (error.error.error) ? error.error.error : error.error;
+                let errMessage = (error.error.error) ? error.error.error : error.error;
+                if (errMessage.target) {
+                    errMessage = error.message;
+                }
                 this.snackBar.openFromComponent(NotificationComponent, {
                     data: errMessage,
                     duration: 3000,
