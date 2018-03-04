@@ -133,7 +133,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
     }
 
-    addStorageClicked() {
+    storageSettingsClicked() {
         const storageDialog = this.dialog.open(AddStorageComponent, {
             width: '600px',
             data: {
