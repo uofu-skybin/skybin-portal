@@ -11,8 +11,37 @@
             </li>
         </ol>
     </div>
-    <div class="header-table-container">
-        <table class="table header-table">
+    <!--<div class="header-table-container">-->
+        <!--<table class="table header-table">-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--<th>Name</th>-->
+                <!--<th>Size</th>-->
+                <!--<th>Last Modified</th>-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--&lt;!&ndash; Hack: Sample rows so that the headers are properly spaced &ndash;&gt;-->
+            <!--<tbody>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--<i class="fa fa-folder" aria-hidden="true"></i>-->
+                    <!--{{getLongestFolderName()}}-->
+                <!--</td>-->
+                <!--<td>-</td>-->
+                <!--<td>-</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td>-->
+                    <!--{{getLongestFileName()}}-->
+                <!--</td>-->
+                <!--<td>100 GB</td>-->
+                <!--<td>11-27-2017</td>-->
+            <!--</tr>-->
+            <!--</tbody>-->
+        <!--</table>-->
+    <!--</div>-->
+    <div id="file-list-container">
+        <table class="table">
             <thead>
             <tr>
                 <th>Name</th>
@@ -20,28 +49,6 @@
                 <th>Last Modified</th>
             </tr>
             </thead>
-            <!-- Hack: Sample rows so that the headers are properly spaced -->
-            <tbody>
-            <tr>
-                <td>
-                    <i class="fa fa-folder" aria-hidden="true"></i>
-                    {{getLongestFolderName()}}
-                </td>
-                <td>-</td>
-                <td>-</td>
-            </tr>
-            <tr>
-                <td>
-                    {{getLongestFileName()}}
-                </td>
-                <td>100 GB</td>
-                <td>11-27-2017</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="file-list-container">
-        <table class="table">
             <tbody>
             <tr *ngFor='let dir of getDirsInCurrentDirectory()'
                 (click)="changeDir(dir.name)"
