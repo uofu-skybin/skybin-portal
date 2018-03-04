@@ -11,10 +11,9 @@ import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.c
 import {Subscription} from 'rxjs/Subscription';
 import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
 import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
-import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
 import {NotificationComponent} from '../notification/notification.component';
-import {RegistrationComponent} from '../dialogs/registration/registration.component';
+import {RenterRegistrationComponent} from '../dialogs/renter-registration/renter-registration.component';
 import {RenterService} from '../../services/renter.service';
 import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
@@ -90,7 +89,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         } else {
 
             // First time setup. Show the registration dialog.
-            const registrationDialog = this.dialog.open(RegistrationComponent, {
+            const registrationDialog = this.dialog.open(RenterRegistrationComponent, {
                 height: '400px',
                 width: '400px',
                 disableClose: true,
@@ -133,7 +132,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
     }
 
-    addStorageClicked() {
+    storageSettingsClicked() {
         const storageDialog = this.dialog.open(AddStorageComponent, {
             width: '600px',
             data: {
@@ -377,13 +376,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         }
                     });
             });
-        });
-    }
-
-
-    configureStorageClicked() {
-        const storageDialog = this.dialog.open(ConfigureStorageComponent, {
-            width: '600px'
         });
     }
 

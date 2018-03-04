@@ -23,21 +23,15 @@
         <span *ngIf="!shared" id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
             <span id='available-space-container'>
-                <b>Available:</b> {{renterInfo.freeStorage | bytes}}
+                <b>Free Space:</b> {{renterInfo.freeStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
-            <button id='reserve-space-button' mat-mini-fab matTooltip="Reserve more space" class='skybin-btn-primary'
-                    name='my-files-new-folder-button' (click)='addStorageClicked()'>
-                <i id='plus-icon' class='fa fa-plus' aria-hidden='true'></i>
+            <button id='reserve-space-button' mat-mini-fab 
+                    matTooltip="Reserve more space" 
+                    class='skybin-btn-primary'
+                    name='my-files-new-folder-button' (click)='storageSettingsClicked()'>
+                <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
             </button>
-
-            <!-- TODO: Future of this element is uncertain. -->
-            <!--<button id='configure-space-button' mat-mini-fab class='skybin-btn-primary'-->
-                    <!--(click)='configureStorageClicked()'-->
-                    <!--matTooltip='Update settings' name='my-files-new-folder-button'>-->
-                <!--<i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>-->
-            <!--</button>-->
-
         </span>
 
         <!-- TODO: Move the search bar into the next row up. -->

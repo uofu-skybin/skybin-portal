@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigureStorageComponent } from './configure-storage.component';
+import { RenterRegistrationComponent } from './renter-registration.component';
 
-describe('ConfigureStorageComponent', () => {
-  let component: ConfigureStorageComponent;
-  let fixture: ComponentFixture<ConfigureStorageComponent>;
+describe('RenterRegistrationComponent', () => {
+  let component: RenterRegistrationComponent;
+  let fixture: ComponentFixture<RenterRegistrationComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigureStorageComponent ]
+      declarations: [ RenterRegistrationComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigureStorageComponent);
+    fixture = TestBed.createComponent(RenterRegistrationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

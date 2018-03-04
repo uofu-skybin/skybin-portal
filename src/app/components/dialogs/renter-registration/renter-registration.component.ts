@@ -4,11 +4,11 @@ import { MatDialogRef } from '@angular/material';
 
 @Component({
     selector: 'app-login',
-    templateUrl: './registration.component.html',
-    styleUrls: ['./registration.component.css'],
+    templateUrl: './renter-registration.component.html',
+    styleUrls: ['./renter-registration.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class RegistrationComponent implements OnInit {
+export class RenterRegistrationComponent implements OnInit {
 
     private showIntro = true;
     private showRegistrationForm = false;
@@ -20,7 +20,7 @@ export class RegistrationComponent implements OnInit {
     private registrationError = '';
     private loginError = '';
 
-    constructor(private dialogRef: MatDialogRef<RegistrationComponent>,
+    constructor(private dialogRef: MatDialogRef<RenterRegistrationComponent>,
         private electronService: ElectronService,
         private zone: NgZone) {
     }

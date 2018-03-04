@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { MyFilesComponent } from './components/my-files/my-files.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { MyWalletComponent } from './components/my-wallet/my-wallet.component';
-import { RegistrationComponent } from './components/dialogs/registration/registration.component';
+import { RenterRegistrationComponent } from './components/dialogs/renter-registration/renter-registration.component';
 import { SharedWithMeComponent } from './components/shared-with-me/shared-with-me.component';
 import { ProvideStorageComponent } from './components/provide-storage/provide-storage.component';
 import { RoutingModule } from './modules/routing/routing.module';
@@ -39,7 +39,6 @@ import { BytesPipe } from './pipes/bytes.pipe';
 import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
-import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 import { ConfigureProviderComponent } from './components/dialogs/configure-provider/configure-provider.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { RenterService } from './services/renter.service';
@@ -51,14 +50,13 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
 @NgModule({
     entryComponents: [
         AddStorageComponent,
-        ConfigureStorageComponent,
         ConfigureProviderComponent,
         NewFolderDialogComponent,
         NotificationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         RenameFileDialogComponent
     ],
     declarations: [
@@ -66,16 +64,15 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         AppComponent,
         AuthenticationComponent,
         BytesPipe,
-        ConfigureStorageComponent,
         FilebrowserComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         MyFilesComponent,
         MyWalletComponent,
         NewFolderDialogComponent,
         NotificationComponent,
         ProvideStorageComponent,
         ConfigureProviderComponent,
-        RegistrationComponent,
+        RenterRegistrationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         SharedWithMeComponent,

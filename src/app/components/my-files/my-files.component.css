@@ -115,7 +115,7 @@ button:focus {outline:0;}
     background-color: white;
 }
 
-#plus-icon, #settings-icon {
+#settings-icon {
     color: #00A7F3;
 }
 
