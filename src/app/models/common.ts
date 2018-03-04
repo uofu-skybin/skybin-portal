@@ -65,13 +65,26 @@ export class Transfer {
     state: string;
 }
 
-export class InfoResponse {
+export class ProviderConfig {
+    providerId: string;
+    publicApiAddress: string;
+    metaServerAddress: string;
+    localApiAddress: string;
+    privateKeyFile: string;
+    publicKeyFile: string;
+    spaceAvail: number;
+    storageRate: number;
+}
+
+export class ProviderInfo {
     providerId?: string;
-    providerAllocated?: number;
-    providerReserved?: number;
-    providerUsed?: number;
-    providerFree?: number;
-    providerContracts?: number;
+    storageAllocated?: number;
+    storageReserved?: number;
+    storageUsed?: number;
+    storageFree?: number;
+    totalContracts?: number;
+    totalBlocks?: number;
+    totalRenters?: number;
 }
 
 export class Contract {
