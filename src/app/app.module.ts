@@ -39,7 +39,6 @@ import { BytesPipe } from './pipes/bytes.pipe';
 import { ViewFileDetailsComponent } from './components/view-file-details/view-file-details.component';
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 import { AddStorageComponent } from './components/dialogs/add-storage/add-storage.component';
-import { ConfigureStorageComponent } from './components/dialogs/configure-storage/configure-storage.component';
 import { ConfigureProviderComponent } from './components/dialogs/configure-provider/configure-provider.component';
 import { NotificationComponent } from './components/notification/notification.component';
 import { RenterService } from './services/renter.service';
@@ -51,7 +50,6 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
 @NgModule({
     entryComponents: [
         AddStorageComponent,
-        ConfigureStorageComponent,
         ConfigureProviderComponent,
         NewFolderDialogComponent,
         NotificationComponent,
@@ -66,7 +64,6 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         AppComponent,
         AuthenticationComponent,
         BytesPipe,
-        ConfigureStorageComponent,
         FilebrowserComponent,
         RegistrationComponent,
         MyFilesComponent,

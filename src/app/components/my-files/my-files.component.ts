@@ -11,7 +11,6 @@ import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.c
 import {Subscription} from 'rxjs/Subscription';
 import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
 import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
-import {ConfigureStorageComponent} from '../dialogs/configure-storage/configure-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
 import {NotificationComponent} from '../notification/notification.component';
 import {RegistrationComponent} from '../dialogs/registration/registration.component';
@@ -377,13 +376,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         }
                     });
             });
-        });
-    }
-
-
-    configureStorageClicked() {
-        const storageDialog = this.dialog.open(ConfigureStorageComponent, {
-            width: '600px'
         });
     }
 
