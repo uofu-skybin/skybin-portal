@@ -192,12 +192,12 @@ export class ProvideStorageComponent implements OnInit {
             {
                 label: 'Bytes Uploaded',
                 data: counters.bytesUploaded,
-                backgroundColor: 'red',
+                backgroundColor: 'rgb(69, 154, 255)',
             },
             {
                 label: 'Bytes Downloaded',
                 data: counters.bytesDownloaded,
-                backgroundColor: 'blue',
+                backgroundColor: 'rgb(177, 204, 35)',
             },
         ];
 
@@ -205,7 +205,7 @@ export class ProvideStorageComponent implements OnInit {
 
         let ctxt = document.getElementById('throughput-chart');
         let chart = new Chart(ctxt, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: labels,
                 datasets: datasets,
@@ -234,7 +234,6 @@ export class ProvideStorageComponent implements OnInit {
                     }],
                 },
                 legend: {
-                    display: false,
                 },
             },
         });
