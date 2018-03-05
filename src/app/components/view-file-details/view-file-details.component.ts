@@ -29,12 +29,6 @@ export class ViewFileDetailsComponent implements OnInit {
         return date.toLocaleDateString().replace(/\//g, '-');
     }
 
-    getFileLocations() {
-        const locations = latestVersion(this.file).blocks.map(e => e.location);
-        const addrs = locations.map(e => e.address);
-        return addrs;
-    }
-
     latestVersion(file: SkyFile) {
         return latestVersion(file);
     }

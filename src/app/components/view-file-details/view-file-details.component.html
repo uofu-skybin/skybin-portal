@@ -49,17 +49,10 @@
     </mat-expansion-panel>
     <p>Total Size: {{ getTotalFileSize(file) | bytes }}</p>
     <p>Last Modified: {{ formatModTime(latestVersion(file).modTime)}}</p>
-    <p>Storage Cost: $0.0002 per month</p>
     <div class="detail-content">
         Shared With:
         <span *ngIf="file.accessList.length === 0">Nobody</span>
         <li *ngFor="let permission of file.accessList">permission.renterId</li>
-    </div>
-    <div class="detail-content">
-        Storage Locations:
-        <ul>
-            <li *ngFor="let location of getFileLocations()">{{ location }}</li>
-        </ul>
     </div>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
