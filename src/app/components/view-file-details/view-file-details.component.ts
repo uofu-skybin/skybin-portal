@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material';
-import { SkyFile, latestVersion } from '../../models/common';
+import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material';
+import {SkyFile, latestVersion, Version} from '../../models/common';
 
 @Component({
     selector: 'app-view-file-details',
@@ -10,6 +10,7 @@ import { SkyFile, latestVersion } from '../../models/common';
 export class ViewFileDetailsComponent implements OnInit {
 
     file: SkyFile = null;
+    @Output() onDownloadVersion = new EventEmitter<any[]>();
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
         this.file = <SkyFile>data.file;
@@ -36,5 +37,24 @@ export class ViewFileDetailsComponent implements OnInit {
 
     latestVersion(file: SkyFile) {
         return latestVersion(file);
+    }
+
+    /**
+     * Calculate total storage in bytes of a file including all versions.
+     * @param {SkyFile} file
+     */
+    getTotalFileSize(file: SkyFile): number {
+        let size = 0;
+        for (const version of file.versions) {
+            size += version.size;
+        }
+        return size;
+    }
+
+    downloadVersion(file: SkyFile, version: Version) {
+        if (!file) {
+            return;
+        }
+        this.onDownloadVersion.emit([file, version.num]);
     }
 }

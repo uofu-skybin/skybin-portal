@@ -72,12 +72,21 @@ export class RenterService {
             );
     }
 
-    downloadFile(id: string, destPath: string) {
+    downloadFile(id: string, destPath: string, versionNum?: number) {
         const url = `${appConfig['renterAddress']}/files/download`;
-        const body = {
-            fileId: id,
-            destPath: destPath
-        };
+        let body;
+        if (versionNum !== null) {
+            body = {
+                fileId: id,
+                destPath: destPath,
+                versionNum: versionNum
+            };
+        } else {
+            body = {
+                fileId: id,
+                destPath: destPath
+            };
+        }
         return this.http.post(url, body);
     }
 
@@ -113,7 +122,10 @@ export class RenterService {
             console.log(`${operation} failed: ${error.error}`);
 
             this.zone.run(() => {
-                const errMessage = (error.error.error) ? error.error.error : error.error;
+                let errMessage = (error.error.error) ? error.error.error : error.error;
+                if (errMessage.target) {
+                    errMessage = error.message;
+                }
                 this.snackBar.openFromComponent(NotificationComponent, {
                     data: errMessage,
                     duration: 3000,

@@ -2,6 +2,52 @@
 <hr>
 <mat-dialog-content>
     <p>Size: {{ latestVersion(file).size| bytes }}</p>
+    <!--<p>Versions: {{ file.versions.length }}</p>-->
+
+    <mat-expansion-panel *ngIf="!data.shared && file.versions.length > 1" id="version-dropdown">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <span *ngIf="file.versions.length === 1">
+                    1 Version
+                </span>
+                <span *ngIf="file.versions.length > 1">
+                    {{file.versions.length}} Versions
+                </span>
+            </mat-panel-title>
+            <mat-panel-description>
+                Download a version
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <table id="version-table">
+            <thead>
+            <tr>
+                <td>#</td>
+                <td>Size</td>
+                <td>Download</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="version-row" *ngFor="let version of file.versions; let i = index;">
+                <td>{{i}}</td>
+                <td>{{version.size | bytes}}</td>
+                <td><button (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!--<mat-list>-->
+            <!--<mat-list-item *ngFor="let version of file.versions; let i = index;">-->
+                <!--<span class="version-number">{{i}}</span>-->
+                <!--|-->
+                <!--<span class="version-size">Size: {{version.size}}</span>-->
+                <!--<button class="skybin-btn-primary" mat-button>Download</button>-->
+            <!--</mat-list-item>-->
+        <!--</mat-list>-->
+
+    </mat-expansion-panel>
+    <p>Total Size: {{ getTotalFileSize(file) | bytes }}</p>
     <p>Last Modified: {{ formatModTime(latestVersion(file).modTime)}}</p>
     <p>Storage Cost: $0.0002 per month</p>
     <div class="detail-content">

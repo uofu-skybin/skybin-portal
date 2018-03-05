@@ -44,9 +44,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Size</th>
-                <th>Last Modified</th>
+                <th class="file-table-header">Name</th>
+                <!--<th>Version</th>-->
+                <th class="file-table-header">Size</th>
+                <th class="file-table-header">Last Modified</th>
             </tr>
             </thead>
             <tbody>
@@ -62,6 +63,7 @@
                     {{baseName(dir.name)}}
                     </span>
                 </td>
+                <!--<td>-</td>-->
                 <td>-</td>
                 <td>-</td>
             </tr>
@@ -71,11 +73,16 @@
                 [class.selected]="file === selectedFile">
                 <td >
                     <span draggable [dragData]='file' [dragTransitClass]="'fileDrag'"  class="file-folder-drag">
-                    <i class="fa fa-file-o" aria-hidden="true"></i>
+                    <i *ngIf="file.versions.length < 2" class="fa fa-file-o" aria-hidden="true"></i>
+                    <i *ngIf="file.versions.length >= 2" class="fa fa-files-o" aria-hidden="true"></i>
                     {{baseName(file.name)}}
                     </span>
                 </td>
-                <td>{{latestVersion(file).size | bytes}}</td>
+                <!--<td>{{file.versions.length}}</td>-->
+                <td>
+                    {{latestVersion(file).size | bytes}}
+                    <span class="file-version-number" *ngIf="file.versions.length >= 2">(x{{file.versions.length}})</span>
+                </td>
                 <td>{{formatModTime(latestVersion(file).modTime)}}</td>
             </tr>
             </tbody>

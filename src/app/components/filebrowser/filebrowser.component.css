@@ -67,3 +67,15 @@ ol.breadcrumb {
 .drag-disappear {
     display: none;
 }
+
+.file-version-number {
+    font-style: italic;
+    color: gray;
+}
+
+.file-table-header {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

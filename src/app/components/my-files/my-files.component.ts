@@ -179,9 +179,15 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         destPath += baseName;
 
-        // Make sure there are no files with the given name.
-        while (this.allFiles.some(e => e.name === destPath)) {
-            destPath += '.copy';
+        // Are we uploading a new version of an existing file?
+        let newVersion = false;
+
+        const existingFile = this.allFiles.find(file => {
+            return file.name === destPath;
+        });
+
+        if (existingFile !== undefined) {
+            newVersion = true;
         }
 
         const upload = {
@@ -214,7 +220,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                             upload.state = TRANSFER_DONE;
                             this.completedUploads++;
                             this.uploadInProgress = false;
-                            this.allFiles.push(file);
+
+                            if (newVersion) {
+                                this.showErrorNotification(`Added new version of ${file.name}`);
+                                this.getFiles();
+                            } else {
+                                this.allFiles.push(file);
+                            }
+
                             if (isDir) {
                                 this.getFiles();
                             }
@@ -297,7 +310,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
 
-    downloadFile(file: SkyFile, isDir: boolean) {
+    downloadFile(file: SkyFile, isDir: boolean, version = null) {
         if (!file) {
             return;
         }
@@ -316,7 +329,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const startTime = new Date();
 
             this.zone.run(() => {
-                this.renterService.downloadFile(file.id, destPath)
+                this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
                         const fakeDelay = 1500;
                         const endTime = new Date();
@@ -537,8 +550,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(ViewFileDetailsComponent, {
             // width: '325px'
             data: {
-                file: file
+                file: file,
+                shared: this.shared
             }
+        });
+        const sub = dialogRef.componentInstance.onDownloadVersion
+            .subscribe(args => {
+                // console.log(args);
+                const f = args[0];
+                const versionNum = args[1];
+                this.downloadFile(f, false, versionNum);
+                // this.renterService.downloadFileVersion(args[0], args[1], args[2]);
+            });
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
         });
     }
 

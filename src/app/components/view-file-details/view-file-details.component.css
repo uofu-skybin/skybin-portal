@@ -1,3 +1,24 @@
 .detail-content {
     margin-bottom: 16px;
 }
+
+.version-number {
+    margin-right: 0.5em;
+}
+
+.version-size {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+#version-dropdown {
+    margin-bottom: 1em;
+}
+
+#version-table {
+    width: 100%;
+}
+
+.version-row {
+    border-top: 1px solid gray;
+}

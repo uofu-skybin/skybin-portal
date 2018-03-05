@@ -23,7 +23,7 @@ import {
     MatSnackBarModule,
     MatSnackBar,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule, MatExpansionModule
 } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatSliderModule } from '@angular/material/slider';
@@ -46,6 +46,7 @@ import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
 import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
 import {NgDragDropModule} from 'ng-drag-drop';
 import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
+
 
 @NgModule({
     entryComponents: [
@@ -106,6 +107,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         MatSortModule,
         MatTableModule,
         MatTabsModule,
+        MatExpansionModule,
         NgxElectronModule,
         RoutingModule,
     ],
