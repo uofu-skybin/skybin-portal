@@ -237,4 +237,11 @@ export class ProvideStorageComponent implements OnInit {
         });
     }
 
+    formatProviderId(providerId: string) {
+        if (providerId.length < 15) {
+            return providerId;
+        }
+        return providerId.slice(0, 15) + '...';
+    }
+
 }

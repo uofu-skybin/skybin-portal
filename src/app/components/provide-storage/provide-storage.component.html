@@ -4,7 +4,7 @@
             <div class="row">
                 <mat-card class="stats-card">
                     <h3>Summary</h3>
-                    Provider Node ID: {{providerInfo.providerId}} 
+                    Provider Node ID: {{formatProviderId(providerInfo.providerId)}} 
                     <br> Server Status: Running
                     <br> Storage Available: {{providerInfo.storageAllocated | bytes}}
                     <mat-card-actions>
