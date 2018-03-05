@@ -4,7 +4,7 @@
     <p>Size: {{ latestVersion(file).size| bytes }}</p>
     <!--<p>Versions: {{ file.versions.length }}</p>-->
 
-    <mat-expansion-panel>
+    <mat-expansion-panel *ngIf="!data.shared && file.versions.length > 1" id="version-dropdown">
         <mat-expansion-panel-header>
             <mat-panel-title>
                 <span *ngIf="file.versions.length === 1">
@@ -20,19 +20,19 @@
         </mat-expansion-panel-header>
 
 
-        <table>
+        <table id="version-table">
             <thead>
             <tr>
-                <td>Version #</td>
+                <td>#</td>
                 <td>Size</td>
                 <td>Download</td>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let version of file.versions; let i = index;">
+            <tr class="version-row" *ngFor="let version of file.versions; let i = index;">
                 <td>{{i}}</td>
-                <td>{{version.size}}</td>
-                <td><button mat-button class="skybin-btn-primary">Download</button></td>
+                <td>{{version.size | bytes}}</td>
+                <td><button (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
             </tr>
             </tbody>
         </table>

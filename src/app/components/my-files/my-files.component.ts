@@ -311,7 +311,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
 
-    downloadFile(file: SkyFile, isDir: boolean) {
+    downloadFile(file: SkyFile, isDir: boolean, version = null) {
         if (!file) {
             return;
         }
@@ -330,7 +330,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const startTime = new Date();
 
             this.zone.run(() => {
-                this.renterService.downloadFile(file.id, destPath)
+                this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
                         const fakeDelay = 1500;
                         const endTime = new Date();
@@ -558,8 +558,20 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(ViewFileDetailsComponent, {
             // width: '325px'
             data: {
-                file: file
+                file: file,
+                shared: this.shared
             }
+        });
+        const sub = dialogRef.componentInstance.onDownloadVersion
+            .subscribe(args => {
+                // console.log(args);
+                const f = args[0];
+                const versionNum = args[1];
+                this.downloadFile(f, false, versionNum);
+                // this.renterService.downloadFileVersion(args[0], args[1], args[2]);
+            });
+        dialogRef.afterClosed().subscribe(() => {
+            sub.unsubscribe();
         });
     }
 
