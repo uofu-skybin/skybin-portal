@@ -25,6 +25,7 @@
             <tr>
                 <td>#</td>
                 <td>Size</td>
+                <td>Date Uploaded</td>
                 <td>Download</td>
             </tr>
             </thead>
@@ -32,6 +33,7 @@
             <tr class="version-row" *ngFor="let version of file.versions; let i = index;">
                 <td>{{i}}</td>
                 <td>{{version.size | bytes}}</td>
+                <td>{{getDateString(version.modTime)}}</td>
                 <td><button (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
             </tr>
             </tbody>
