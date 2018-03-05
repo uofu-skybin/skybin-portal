@@ -72,3 +72,10 @@ ol.breadcrumb {
     font-style: italic;
     color: gray;
 }
+
+.file-table-header {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
