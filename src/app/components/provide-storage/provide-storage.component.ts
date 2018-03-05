@@ -23,10 +23,10 @@ export class ProvideStorageComponent implements OnInit {
 
     providerInfo: ProviderInfo = {
         providerId: 'asdasdkjfiawejfklasdjfl;ajsfd',
-        storageAllocated: 1e9,
-        storageFree: 1e3,
-        storageReserved: 1e6,
-        storageUsed: 1e4,
+        storageAllocated: 10 * 1e9,
+        storageFree: 3 * 1e9,
+        storageReserved: 7 * 1e9,
+        storageUsed: 3 * 1e9,
         totalContracts: 234,
         totalBlocks: 3587,
         totalRenters: 128,
@@ -89,16 +89,19 @@ export class ProvideStorageComponent implements OnInit {
             data: {
                 datasets: [{
                     data: [
-                        this.providerInfo.storageAllocated,
+                        this.providerInfo.storageFree,
+                        this.providerInfo.storageReserved - this.providerInfo.storageUsed,
                         this.providerInfo.storageUsed,
                     ],
                     backgroundColor: [
-                        'red',
-                        'blue'
+                        'rgb(255, 109, 95)',
+                        'rgb(69, 154, 255)',
+                        'rgb(177, 204, 35)',
                     ],
                 }],
                 labels: [
-                    'Allocated',
+                    'Unused',
+                    'Reserved',
                     'Used',
                 ],
             },
