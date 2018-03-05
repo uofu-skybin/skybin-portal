@@ -126,22 +126,22 @@ export class ProvideStorageComponent implements OnInit {
             {
                 label: 'Block Uploads',
                 data: counters.blockUploads,
-                backgroundColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgb(73, 91, 204)',
             },
             {
                 label: 'Block Downloads',
                 data: counters.blockDownloads,
-                backgroundColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgb(103, 110, 153)',
             },
             {
                 label: 'Block Deletions',
                 data: counters.blockDeletions,
-                backgroundColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(69, 193, 255)',
             },
             {
                 label: 'Storage Reservations',
                 data: counters.storageReservations,
-                backgroundColor: 'rgb(153, 102, 255)',
+                backgroundColor: 'rgb(255, 183, 133)',
             },
         ];
         const title = `Request Activity - Last ${labels.length} Hours`;
