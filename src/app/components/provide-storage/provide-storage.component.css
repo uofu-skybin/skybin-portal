@@ -7,18 +7,25 @@
     height: 100%;
 }
 
-/* Overrides on bootstrap defaults to make 
-   carousel navigation buttons more visible. */
-.carousel-control-next-icon:after {
-  content: '>';
-  font-size: 20px;
-  color: #111;
+#provider-charts-container {
+    padding-left: 20px;
 }
 
-.carousel-control-prev-icon:after {
-  content: '<';
-  font-size: 20px;
-  color: #111;
+#provider-charts-container-inner {
+    padding-bottom: 25px;
+}
+
+.carousel-indicators li {
+    background-color: grey;
+}
+
+.carousel-indicators .active {
+    background-color: black;
+}
+
+#provider-carousel-indicators {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
 }
 
 #provider-settings-button {
@@ -31,10 +38,6 @@
 .stats-card {
     width: 100%;
     margin-bottom: 20px;
-}
-
-#charts-container {
-    padding-left: 20px;
 }
 
 #mat-tab-content-0-0 > div {

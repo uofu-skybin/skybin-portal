@@ -4,7 +4,7 @@
             <div class="row">
                 <mat-card class="stats-card">
                     <h3>Summary</h3>
-                    Provider Node ID: {{formatProviderId(providerInfo.providerId)}} 
+                    Provider Node ID: {{formatProviderId(providerInfo.providerId)}}
                     <br> Server Status: Running
                     <br> Storage Available: {{providerInfo.storageAllocated | bytes}}
                     <mat-card-actions>
@@ -35,25 +35,32 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div id="charts-container">
-                <mat-card class="chart-container">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+            <div id="provider-charts-container">
+                <mat-card>
+                    <div id="provider-carousel-content" class="carousel slide" data-ride="carousel">
+                        <ol id="provider-carousel-indicators" class="carousel-indicators">
+                            <li data-target="#provider-carousel-content" data-slide-to="0" class="active"></li>
+                            <li data-target="#provider-carousel-content" data-slide-to="1"></li>
+                            <li data-target="#provider-carousel-content" data-slide-to="2"></li>
+                        </ol>
                         <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <canvas id="requests-chart" width="300" height="200"></canvas>
-                            </div>
-                            <div class="carousel-item">
-                                <canvas id="throughput-chart" width="300" height="200"></canvas>
-                            </div>
-                            <div class="carousel-item">
-                                <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+                            <div id="provider-charts-container-inner">
+                                <div class="carousel-item active">
+                                    <canvas id="requests-chart" width="300" height="200"></canvas>
+                                </div>
+                                <div class="carousel-item">
+                                    <canvas id="throughput-chart" width="300" height="200"></canvas>
+                                </div>
+                                <div class="carousel-item">
+                                    <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                        <a class="carousel-control-prev" href="#provider-carousel-content" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
                         </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <a class="carousel-control-next" href="#provider-carousel-content" role="button" data-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="sr-only">Next</span>
                         </a>
