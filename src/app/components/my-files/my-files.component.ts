@@ -548,7 +548,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
     viewDetails(file) {
         const dialogRef = this.dialog.open(ViewFileDetailsComponent, {
-            // width: '325px'
+            width: '40em',
             data: {
                 file: file,
                 shared: this.shared
