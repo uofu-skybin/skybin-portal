@@ -180,7 +180,7 @@ export class ProvideStorageComponent implements OnInit {
                         type: 'time',
                             time: {
                                 unit: 'hour',
-                                unitStepSize: 2,
+                                unitStepSize: 1,
                                 displayFormats: {
                                     'hour': 'h:mm a',
                                 },
@@ -205,19 +205,21 @@ export class ProvideStorageComponent implements OnInit {
         const counters = this.providerStats.activityCounters;
 
         const labels = counters.timestamps
-            // .map(dateString => new Date(dateString))
-            // .map(date => date.getHours().toString());
 
         const datasets = [
             {
                 label: 'Bytes Uploaded',
                 data: counters.bytesUploaded,
                 backgroundColor: 'rgb(69, 154, 255)',
+                borderColor: 'rgb(69, 154, 255)',
+                fill: false,
             },
             {
                 label: 'Bytes Downloaded',
                 data: counters.bytesDownloaded,
                 backgroundColor: 'rgb(177, 204, 35)',
+                borderColor: 'rgb(177, 204, 35)',
+                fill: false,
             },
         ];
 
@@ -225,7 +227,7 @@ export class ProvideStorageComponent implements OnInit {
 
         let ctxt = document.getElementById('throughput-chart');
         let chart = new Chart(ctxt, {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: datasets,
@@ -238,7 +240,7 @@ export class ProvideStorageComponent implements OnInit {
                 scales: {
                     xAxes: [{
                         display: true,
-                        stacked: true,
+                        // stacked: true,
                         scaleLabel: {
                             display: true,
                             labelString: 'Hour',
@@ -246,7 +248,7 @@ export class ProvideStorageComponent implements OnInit {
                         type: 'time',
                         time: {
                             unit: 'hour',
-                            unitStepSize: 2,
+                            unitStepSize: 1,
                             displayFormats: {
                                 'hour': 'h:mm a',
                             },
@@ -254,7 +256,7 @@ export class ProvideStorageComponent implements OnInit {
                     }],
                     yAxes: [{
                         display: true,
-                        stacked: true,
+                        // stacked: true,
                         scaleLabel: {
                             display: true,
                             labelString: 'Bytes Transferred',
