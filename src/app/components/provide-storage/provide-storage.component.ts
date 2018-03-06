@@ -7,6 +7,7 @@ import * as d3 from 'd3';
 import * as Rickshaw from 'rickshaw';
 import * as Chart from 'chart.js';
 import { MatDialog } from '@angular/material';
+import {beautifyBytes} from '../../pipes/bytes.pipe';
 
 console.log('got rickshaw!');
 console.log('rickshaw:', Rickshaw);
@@ -60,25 +61,27 @@ export class ProvideStorageComponent implements OnInit {
     ngOnInit() {
         this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
             this.providerInfo = info;
+            this.drawStorageUsedChart();
         }, (error) => {
             console.error('Error fetching provider info');
             console.error(error);
         });
         this.http.get(`${appConfig['providerAddress']}/stats`).subscribe((stats: any) => {
             this.providerStats = stats;
+            this.drawRequestsChart();
+            this.drawThroughputChart();
         }, (error) => {
             console.error('Error fetching provider stats');
             console.error(error);
         });
-
-        this.drawStorageUsedChart();
-        this.drawRequestsChart();
-        this.drawThroughputChart();
     }
 
     settingsClicked() {
         const settingsDialog = this.dialog.open(ConfigureProviderComponent, {
             width: '600px',
+        });
+        settingsDialog.afterClosed().subscribe(() => {
+            this.ngOnInit();
         });
     }
 
@@ -89,9 +92,9 @@ export class ProvideStorageComponent implements OnInit {
             data: {
                 datasets: [{
                     data: [
-                        this.providerInfo.storageFree,
-                        this.providerInfo.storageReserved - this.providerInfo.storageUsed,
                         this.providerInfo.storageUsed,
+                        this.providerInfo.storageReserved - this.providerInfo.storageUsed,
+                        this.providerInfo.storageFree,
                     ],
                     backgroundColor: [
                         'rgb(255, 109, 95)',
@@ -100,9 +103,9 @@ export class ProvideStorageComponent implements OnInit {
                     ],
                 }],
                 labels: [
-                    'Unused',
-                    'Reserved',
                     'Used',
+                    'Reserved',
+                    'Unused',
                 ],
             },
             options: {
@@ -118,10 +121,7 @@ export class ProvideStorageComponent implements OnInit {
         const counters = this.providerStats.activityCounters;
 
         // Get hours of the counter timestamps as x-axis labels.
-        const labels = counters.timestamps
-            .map(dateString => new Date(dateString))
-            .map(date => date.getHours().toString());
-
+        const labels = counters.timestamps;
         const datasets = [
             {
                 label: 'Block Uploads',
@@ -165,6 +165,14 @@ export class ProvideStorageComponent implements OnInit {
                             display: true,
                             labelString: 'Hour',
                         },
+                        type: 'time',
+                            time: {
+                                unit: 'hour',
+                                unitStepSize: 2,
+                                displayFormats: {
+                                    'hour': 'h:mm a',
+                                },
+                            },
                     }],
                     yAxes: [{
                         display: true,
@@ -185,8 +193,8 @@ export class ProvideStorageComponent implements OnInit {
         const counters = this.providerStats.activityCounters;
 
         const labels = counters.timestamps
-            .map(dateString => new Date(dateString))
-            .map(date => date.getHours().toString());
+            // .map(dateString => new Date(dateString))
+            // .map(date => date.getHours().toString());
 
         const datasets = [
             {
@@ -223,6 +231,14 @@ export class ProvideStorageComponent implements OnInit {
                             display: true,
                             labelString: 'Hour',
                         },
+                        type: 'time',
+                        time: {
+                            unit: 'hour',
+                            unitStepSize: 2,
+                            displayFormats: {
+                                'hour': 'h:mm a',
+                            },
+                        },
                     }],
                     yAxes: [{
                         display: true,
@@ -232,6 +248,7 @@ export class ProvideStorageComponent implements OnInit {
                             labelString: 'Bytes Transferred',
                         },
                     }],
+
                 },
                 legend: {
                 },
