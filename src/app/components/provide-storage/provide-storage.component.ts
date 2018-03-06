@@ -41,17 +41,29 @@ export class ProvideStorageComponent implements OnInit {
             storageReservations: [2, 1, 3, 0, 5],
             bytesUploaded: [20000, 30000, 21000, 23000, 34000],
             bytesDownloaded: [19384, 23842, 38492, 29384, 10245],
-        }
-    };
-    pastWeekSummary: any = {
-        period: 'Week',
-        counters: {
-            blockUploads: 485,
-            blockDownloads: 236,
-            blockDeletions: 22,
-            storageReservations: 12,
+        },
+        recentSummary: {
+            hour: {
+                blockUploads: 485,
+                blockDownloads: 236,
+                blockDeletions: 22,
+                storageReservations: 12,
+            },
+            day: {
+                blockUploads: 485,
+                blockDownloads: 236,
+                blockDeletions: 22,
+                storageReservations: 12,
+            },
+            week: {
+                blockUploads: 485,
+                blockDownloads: 236,
+                blockDeletions: 22,
+                storageReservations: 12,
+            },
         },
     };
+
 
     constructor(private http: HttpClient,
         private dialog: MatDialog,
