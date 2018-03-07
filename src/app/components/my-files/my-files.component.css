@@ -82,7 +82,7 @@ button:focus {outline:0;}
 }
 
 #my-files-buttons {
-    min-width: 1088px;
+    min-width: 705px;
 }
 
 #search-button {
@@ -180,6 +180,26 @@ button:focus {outline:0;}
     /*background: #00A7F3;*/
     background: #4c4c4c;
     box-shadow: none !important;
+}
+
+/*
+    Hides some stuff when the screen gets too small.
+*/
+@media only screen and (max-width: 1283px) {
+    #my-files-search-container {
+        display: none;
+    }
+
+    #my-files-storage-management-container {
+        float: right;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+
+    #free-space-label {
+        display: none;
+    }
 }
 
 /*#uploads-overlay {*/

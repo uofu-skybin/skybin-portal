@@ -7,7 +7,7 @@
     <div class="detail-content">
         Shared With:
         <span *ngIf="file.accessList.length === 0">Nobody</span>
-        <li *ngFor="let permission of file.accessList">permission.renterId</li>
+        <li *ngFor="let permission of file.accessList">{{permission.renterAlias}}</li>
     </div>
 
     <mat-expansion-panel *ngIf="!data.shared && file.versions.length > 1" id="version-dropdown">
