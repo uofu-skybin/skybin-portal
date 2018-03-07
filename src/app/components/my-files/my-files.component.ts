@@ -448,6 +448,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.getFiles();
     }
 
+    onNewFolder(e) {
+        // this.allFiles = [];
+        this.newFolderClicked();
+    }
+
     hideUploads() {
         this.showUploads = false;
         this.uploads = this.uploads.filter(e => e.state === TRANSFER_RUNNING);

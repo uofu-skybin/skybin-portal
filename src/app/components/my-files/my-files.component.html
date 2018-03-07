@@ -15,10 +15,10 @@
         <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
             Share
         </button>
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
-                name='my-files-new-folder-button'>
-            New Folder
-        </button>
+        <!--<button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'-->
+                <!--name='my-files-new-folder-button'>-->
+            <!--New Folder-->
+        <!--</button>-->
 
         <!-- Group storage info views. -->
         <span *ngIf="!shared" id='my-files-storage-management-container'>
@@ -82,6 +82,7 @@
                      (onFileSelected)='onFileSelected($event)'
                      (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)"
                      (onFolderMoved)="onFolderMoved($event)"
+                     (onNewFolder)="onNewFolder($event)"
                      (dragover)="onDragOver($event)"></app-filebrowser>
 
     <!-- Uploads popup -->
@@ -141,7 +142,8 @@
                                      <!--alt="">-->
                                 <!--<img *ngIf="!downloadBodyVisible" src="assets/ic_keyboard_arrow_up_white_24px.svg" alt="">-->
                             <!--</button>-->
-                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()"><img
+                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()">
+                                <img
                                 src="assets/ic_clear_white_24px.svg"
                                 alt="">
                             </button>
