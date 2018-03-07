@@ -5,7 +5,7 @@
             <button (click)='uploadClicked(false)' mat-menu-item>New File</button>
             <button (click)='uploadClicked(true)' mat-menu-item>New Folder</button>
         </mat-menu>
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='upload()' [matMenuTriggerFor]="appMenu" name='my-files-upload-button'>
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' [matMenuTriggerFor]="appMenu" name='my-files-upload-button'>
             Upload
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
