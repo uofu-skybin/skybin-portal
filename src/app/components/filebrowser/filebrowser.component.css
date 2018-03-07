@@ -88,3 +88,7 @@ ol.breadcrumb {
     margin-right: 0.75em;
     cursor: pointer;
 }
+
+#folder-breadcrumb-divider {
+    margin-right: 0.75em;
+}
