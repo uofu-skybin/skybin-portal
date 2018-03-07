@@ -26,6 +26,7 @@ export class FilebrowserComponent {
     @Output() onFileSelected = new EventEmitter<SkyFile>();
     @Output() onFileContextClick = new EventEmitter<MouseEvent>();
     @Output() onFolderMoved = new EventEmitter();
+    @Output() onNewFolder = new EventEmitter();
 
 
     constructor(private ref: ChangeDetectorRef,
@@ -181,5 +182,9 @@ export class FilebrowserComponent {
     }
 
     onFileDragOver(e: any, dir: SkyFile) {
+    }
+
+    newFolder(): void {
+        this.onNewFolder.emit();
     }
 }

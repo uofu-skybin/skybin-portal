@@ -1,6 +1,14 @@
 <div id="file-browser-container">
     <div id="file-breadcrumb" aria-label="breadcrumb" role="navigation">
         <ol class="breadcrumb">
+            <img
+                matTooltip="Create a new folder"
+                id="new-folder-icon"
+                (click)="newFolder()"
+                src="assets/ic_create_new_folder_black_24px.svg"
+                alt="">
+            <span id="folder-breadcrumb-divider"> | </span>
+            <!--<button (click)="newFolder()" mat-raised-button><i class="fa fa-plus"></i><i class="fa fa-folder"></i></button>-->
             <li class="breadcrumb-item dir-link" (click)="homeClicked()" aria-current="page" droppable
                 [dragOverClass]="'drag-over-breadcrumb'" (onDrop)="onFileDrop($event, '', 0)">Home
             </li>

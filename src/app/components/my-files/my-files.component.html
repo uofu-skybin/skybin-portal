@@ -1,11 +1,12 @@
 <div id='my-files-container'>
     <div id='my-files-buttons'>
         <!-- Primary my-files functionality buttons. -->
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(false)' name='my-files-upload-button'>
-            Upload File
-        </button>
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(true)' name='my-files-upload-button'>
-            Upload Folder
+        <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false">
+            <button (click)='uploadClicked(false)' mat-menu-item>New File</button>
+            <button (click)='uploadClicked(true)' mat-menu-item>New Folder</button>
+        </mat-menu>
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' [matMenuTriggerFor]="appMenu" name='my-files-upload-button'>
+            Upload
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
                 name='my-files-download-button'>
@@ -14,10 +15,10 @@
         <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='shareClicked()' name='my-files-share-button'>
             Share
         </button>
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'
-                name='my-files-new-folder-button'>
-            New Folder
-        </button>
+        <!--<button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'-->
+                <!--name='my-files-new-folder-button'>-->
+            <!--New Folder-->
+        <!--</button>-->
 
         <!-- Group storage info views. -->
         <span *ngIf="!shared" id='my-files-storage-management-container'>
@@ -30,7 +31,8 @@
                     matTooltip="Reserve more space"
                     class='skybin-btn-primary'
                     name='my-files-new-folder-button' (click)='storageSettingsClicked()'>
-                <i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>
+                <!--<i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>-->
+                <i id='settings-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
         </span>
 
@@ -81,6 +83,7 @@
                      (onFileSelected)='onFileSelected($event)'
                      (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)"
                      (onFolderMoved)="onFolderMoved($event)"
+                     (onNewFolder)="onNewFolder($event)"
                      (dragover)="onDragOver($event)"></app-filebrowser>
 
     <!-- Uploads popup -->
@@ -140,7 +143,8 @@
                                      <!--alt="">-->
                                 <!--<img *ngIf="!downloadBodyVisible" src="assets/ic_keyboard_arrow_up_white_24px.svg" alt="">-->
                             <!--</button>-->
-                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()"><img
+                            <button mat-mini-fab class="close-download-progress-button" (click)="hideDownloads()">
+                                <img
                                 src="assets/ic_clear_white_24px.svg"
                                 alt="">
                             </button>

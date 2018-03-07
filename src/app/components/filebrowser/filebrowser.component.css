@@ -79,3 +79,16 @@ ol.breadcrumb {
     -ms-user-select: none;
     user-select: none;
 }
+
+.icon-ic_create_new_folder_black_48px:before {
+    content: "\e900";
+}
+
+#new-folder-icon {
+    margin-right: 0.75em;
+    cursor: pointer;
+}
+
+#folder-breadcrumb-divider {
+    margin-right: 0.75em;
+}
