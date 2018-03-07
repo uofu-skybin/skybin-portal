@@ -23,7 +23,7 @@
         <span *ngIf="!shared" id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
             <span id='available-space-container'>
-                <b>Free Space:</b> {{renterInfo.freeStorage | bytes}}
+                <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
             </span>
             <!-- Storage management widgets. -->
             <button id='reserve-space-button' mat-mini-fab
