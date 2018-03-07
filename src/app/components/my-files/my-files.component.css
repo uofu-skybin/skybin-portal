@@ -182,6 +182,19 @@ button:focus {outline:0;}
     box-shadow: none !important;
 }
 
+/*
+    Hides some stuff when the screen gets too small.
+*/
+@media only screen and (max-width: 1200px) {
+    #my-files-search-container {
+        display: none;
+    }
+
+    #my-files-storage-management-container {
+        float: none;
+    }
+}
+
 /*#uploads-overlay {*/
     /*position: fixed;*/
     /*bottom: 20px;*/
