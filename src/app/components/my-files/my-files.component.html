@@ -1,11 +1,12 @@
 <div id='my-files-container'>
     <div id='my-files-buttons'>
         <!-- Primary my-files functionality buttons. -->
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(false)' name='my-files-upload-button'>
-            Upload File
-        </button>
-        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='uploadClicked(true)' name='my-files-upload-button'>
-            Upload Folder
+        <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="after" [overlapTrigger]="false">
+            <button (click)='uploadClicked(false)' mat-menu-item>New File</button>
+            <button (click)='uploadClicked(true)' mat-menu-item>New Folder</button>
+        </mat-menu>
+        <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='upload()' [matMenuTriggerFor]="appMenu" name='my-files-upload-button'>
+            Upload
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
                 name='my-files-download-button'>

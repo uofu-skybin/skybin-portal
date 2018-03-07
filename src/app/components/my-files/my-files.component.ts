@@ -240,6 +240,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
     }
 
+    upload(): void {
+        console.log('uploadin');
+    }
+
     uploadClicked(isDir: boolean): void {
         let options: OpenDialogOptions;
         if (isDir) {
