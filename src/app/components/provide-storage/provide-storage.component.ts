@@ -264,6 +264,11 @@ export class ProvideStorageComponent implements OnInit {
                     }],
 
                 },
+                elements: {
+                    line: {
+                        tension: 0, // disables bezier curves
+                    }
+                },
                 legend: {
                 },
             },
