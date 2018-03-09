@@ -20,6 +20,7 @@ export class FilebrowserComponent {
 
     @Input() allFiles: SkyFile[];
     @Input() filesToDisplay: SkyFile[];
+    @Input() shared: boolean;
     currentPath: string[] = [];
     selectedFile: SkyFile = null;
     @Output() onPathChanged = new EventEmitter<string>();

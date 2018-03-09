@@ -79,7 +79,7 @@
         </div>
     </div>
 
-    <app-filebrowser [allFiles]="allFiles" [filesToDisplay]='filteredFiles' (onPathChanged)='onPathChanged($event)'
+    <app-filebrowser [allFiles]="allFiles" [filesToDisplay]='filteredFiles' [shared]='shared' (onPathChanged)='onPathChanged($event)'
                      (onFileSelected)='onFileSelected($event)'
                      (onFileContextClick)='onContextClick($event)' (drop)="onDrop($event)"
                      (onFolderMoved)="onFolderMoved($event)"
