@@ -322,15 +322,21 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 sourcePath: file.name,
                 destPath,
                 state: TRANSFER_RUNNING,
-                isDir: file.isDir
+                isDir: file.isDir,
+                totalTime: null,
+                blocks: []
             };
             this.downloads.unshift(download);
+
             this.showDownloads = true;
             const startTime = new Date();
 
             this.zone.run(() => {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
+                        const dlFile = res.files[0];
+                        download.totalTime = res.totalTimeMs;
+                        download.blocks = dlFile.blocks;
                         const fakeDelay = 1500;
                         const endTime = new Date();
                         const elapsedMs = endTime.getTime() - startTime.getTime();

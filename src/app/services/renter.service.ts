@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse, DownloadResponse} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -87,7 +87,10 @@ export class RenterService {
                 destPath: destPath
             };
         }
-        return this.http.post(url, body);
+        return this.http.post<DownloadResponse>(url, body)
+            .pipe(
+                catchError(this.handleError('downloadFile', new DownloadResponse()))
+            );
     }
 
     createFolder(folderPath: string) {
