@@ -73,11 +73,15 @@ ol.breadcrumb {
     color: gray;
 }
 
-.file-table-header {
+.file-table-header, .no-select {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.file-table-header {
+    cursor: pointer;
 }
 
 .icon-ic_create_new_folder_black_48px:before {
@@ -91,4 +95,7 @@ ol.breadcrumb {
 
 #folder-breadcrumb-divider {
     margin-right: 0.75em;
+    cursor: pointer;
 }
+
+
