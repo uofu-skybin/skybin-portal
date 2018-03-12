@@ -66,6 +66,8 @@ export class Transfer {
     isDir: boolean;
     totalTime: number;
     blocks: any[];
+    correctBlocks: number;
+    failedBlocks: number;
 }
 
 export class ProviderConfig {

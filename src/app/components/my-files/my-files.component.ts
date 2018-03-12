@@ -324,7 +324,9 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 state: TRANSFER_RUNNING,
                 isDir: file.isDir,
                 totalTime: null,
-                blocks: []
+                blocks: [],
+                correctBlocks: 0,
+                failedBlocks: 0
             };
             this.downloads.unshift(download);
 
@@ -337,6 +339,14 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                         const dlFile = res.files[0];
                         download.totalTime = res.totalTimeMs;
                         download.blocks = dlFile.blocks;
+                        for (const block of download.blocks) {
+                            if (block.error) {
+                                download.failedBlocks++;
+                            } else {
+                                download.correctBlocks++;
+                            }
+                        }
+
                         const fakeDelay = 1500;
                         const endTime = new Date();
                         const elapsedMs = endTime.getTime() - startTime.getTime();

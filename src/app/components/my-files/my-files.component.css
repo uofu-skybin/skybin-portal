@@ -172,7 +172,7 @@ button:focus {outline:0;}
 }
 
 #uploads-overlay > div > div > div.modal-body > div > div > button {
-    background: white;
+    /*background: white;*/
 }
 
 #downloads-overlay > div > div > div.modal-header > div > button:nth-child(1), #downloads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
