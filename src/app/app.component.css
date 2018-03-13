@@ -74,3 +74,18 @@ a {
     margin-top: 0;
 }
 
+.nav-row {
+    width: 12em;
+}
+
+.nav-row:hover {
+    border-right: 4px solid #b2def3;
+}
+
+.active-nav {
+    border-right: 4px solid #00A7F3 !important;
+}
+
+#nav-element {
+    padding-top: 15px;
+}

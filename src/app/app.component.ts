@@ -11,6 +11,7 @@ import {RenterInfo} from './models/common';
 })
 export class AppComponent implements OnInit {
     renterInfo: RenterInfo = new RenterInfo();
+    currentPage = 'my-files';
 
     constructor(private electronService: ElectronService,
                 private router: Router,

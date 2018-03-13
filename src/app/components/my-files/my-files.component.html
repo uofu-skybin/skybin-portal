@@ -43,11 +43,23 @@
         <!-- TODO: Remove bootstrap styling in favor of goog mat design. -->
         <!-- Search/filter for my-files. -->
         <div id='my-files-search-container' class='input-group'>
-            <input id='my-files-search'
-                   [(ngModel)]='currentSearch'
-                   (input)='onSearchChanged()'
-                   type='text' class='form-control'
-                   placeholder='&#xf002; Filter...' aria-label='Filter...'>
+            <!--<input matInput placeholder="Filter">-->
+            <form>
+                <mat-form-field>
+                    <input matInput
+                           type="text"
+                           name="search"
+                           placeholder="Filter"
+                           [(ngModel)]="currentSearch"
+                           (input)='onSearchChanged()'
+                    />
+                </mat-form-field>
+            </form>
+            <!--<input id='my-files-search'-->
+                   <!--[(ngModel)]='currentSearch'-->
+                   <!--(input)='onSearchChanged()'-->
+                   <!--type='text' class='form-control'-->
+                   <!--placeholder='&#xf002; Filter...' aria-label='Filter...'>-->
         </div>
     </div>
 

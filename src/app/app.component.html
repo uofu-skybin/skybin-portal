@@ -7,45 +7,35 @@
     </div>
     <div id='content-row' class='row'>
         <div id="nav-container" class='col'>
-            <nav class='nav flex-column'>
+            <nav id="nav-element" class='nav flex-column'>
                 <!--TODO: later implementations will have login/register as the first views -->
                 <!--<a routerLink="/login" routerLinkActive="active">Login</a>-->
                 <!--<a routerLink="/register" routerLinkActive="active">Register</a>-->
 
-                <div class='row'>
-                    <a class='nav-link' routerLink='/my-files' routerLinkActive='active'>
+                <div class='row nav-row' [ngClass]="{'active-nav': currentPage === 'my-files'}">
+                    <a (click)="currentPage = 'my-files'" class='nav-link' routerLink='/my-files' routerLinkActive='active'>
                         <i class="fa fa-file" aria-hidden="true"></i>
                         My Files
                     </a>
                 </div>
-                <div class='row'>
-                    <a class='nav-link' routerLink='/shared-with-me' routerLinkActive='active'>
+                <div class='row nav-row' [ngClass]="{'active-nav': currentPage === 'shared-with-me'}">
+                    <a (click)="currentPage = 'shared-with-me'" class='nav-link' routerLink='/shared-with-me' routerLinkActive='active'>
                         <i class="fa fa-share-alt" aria-hidden="true"></i>
                         Shared With Me
                     </a>
                 </div>
-                <div class='row'>
-                    <a class='nav-link' routerLink='/provide-storage' routerLinkActive='active'>
+                <div class='row nav-row' [ngClass]="{'active-nav': currentPage === 'provide-storage'}">
+                    <a (click)="currentPage = 'provide-storage'" class='nav-link' routerLink='/provide-storage' routerLinkActive='active'>
                         <i class="fa fa-handshake-o" aria-hidden="true"></i>
                         Provide Storage
                     </a>
                 </div>
-                <div class='row'>
-                    <a class='nav-link' routerLink='/my-wallet' routerLinkActive='active'>
+                <div class='row nav-row' [ngClass]="{'active-nav': currentPage === 'my-wallet'}">
+                    <a (click)="currentPage = 'my-wallet'" class='nav-link' routerLink='/my-wallet' routerLinkActive='active'>
                         <i class="fa fa-usd" aria-hidden="true"></i>
                         My Wallet
                     </a>
                 </div>
-
-                <!--<mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="above" xPosition="before" [overlapTrigger]="false">-->
-                    <!--<p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>-->
-                    <!--<p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>-->
-                    <!--<hr class='profile-menu-divider'>-->
-                    <!--<button (click)="exportRenterKey()" mat-menu-item>Export key identity</button>-->
-                <!--</mat-menu>-->
-                <!--<div matTooltip="View your renter information"  class='row' id='profile-icon-container'>-->
-                    <!--<button mat-fab id="profile-button" [matMenuTriggerFor]="appMenu"><i class="fa fa-user" aria-hidden="true"></i></button>-->
-                <!--</div>-->
             </nav>
         </div>
         <div id="main-content" class='col'>
