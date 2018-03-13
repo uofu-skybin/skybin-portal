@@ -59,8 +59,9 @@ a {
 }
 
 #profile-icon-container {
-    position: fixed;
-    bottom: 4em;
+    /*position: fixed;*/
+    /*bottom: 4em;*/
+    margin-top: 1em;
     margin-left: 3.5em;
 }
 
@@ -97,4 +98,16 @@ a {
 
 #main-row {
     height: 100%;
+}
+
+.nav-divider {
+    border-bottom: 1px solid #d5d5fa;
+    padding-bottom: 2em;
+}
+
+#nav-storage {
+    padding: .5rem 1rem;
+    color: #848080;
+    font-size: .85em;
+    margin-top: 1.5em;
 }
