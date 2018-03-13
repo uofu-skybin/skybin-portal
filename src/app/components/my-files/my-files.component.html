@@ -26,9 +26,9 @@
         <!-- Group storage info views. -->
         <span *ngIf="!shared" id='my-files-storage-management-container'>
             <!-- Show available/reserved storage space. -->
-            <span id='available-space-container'>
-                <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
-            </span>
+            <!--<span id='available-space-container'>-->
+                <!--<span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}-->
+            <!--</span>-->
             <!-- Storage management widgets. -->
             <button id='reserve-space-button' mat-mini-fab
                     matTooltip="Reserve more space"
@@ -44,8 +44,8 @@
         <!-- Search/filter for my-files. -->
         <div id='my-files-search-container' class='input-group'>
             <!--<input matInput placeholder="Filter">-->
-            <form>
-                <mat-form-field>
+            <form style="width: 100%;">
+                <mat-form-field style="width: 100%;">
                     <input matInput
                            type="text"
                            name="search"
