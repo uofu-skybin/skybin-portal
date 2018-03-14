@@ -646,4 +646,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
     }
 
+    copyBlockIdToClip(blockId: string): void {
+        this.electronService.clipboard.writeText(blockId);
+        this.showErrorNotification('Copied to clipboard!');
+    }
+
+
 }

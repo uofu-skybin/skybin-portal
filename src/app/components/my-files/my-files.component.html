@@ -183,10 +183,10 @@
                                     <i
                                         class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
                                 </button>
-                                <mat-menu class='download-stats-container'  [overlapTrigger]="false" xPosition="before"
+                                <mat-menu class='download-stats-container' [overlapTrigger]="false" xPosition="before"
                                           yPosition="above"
                                           #appMenu="matMenu">
-                                    <div (click)="$event.stopPropagation()">
+                                    <div (click)="$event.stopPropagation()" id='inner-download-stats-container'>
                                         <div class='download-block-container'>
                                             <span class='download-subtitle'>Elapsed Time</span>:
                                             <span class='download-value'>{{download.totalTime}}ms</span>
@@ -219,25 +219,23 @@
                                             <tbody>
                                             <tr  *ngFor="let block of download.blocks">
                                                 <td class='download-block-td block-id'>
-                                                    {{block.blockId.split('-')[0]}}-...
-                                                    <!--{{block.blockId}}-->
+                                                    <div
+                                                        class="download-stats-td">
+                                                        <i matTooltip='Copy block ID to clipboard' class="fa fa-clipboard copy-block-button" (click)='copyBlockIdToClip(block.blockId)' aria-hidden="true"></i>
+                                                        <span matTooltip={{block.blockId}}>
+                                                            {{block.blockId.split('-')[0]}}-...
+                                                        </span>
+                                                    </div>
                                                 </td>
                                                 <td class='download-block-td download-status-td'>
-                                                    <i *ngIf="block.error" class='fa fa-times-circle transfer-icon red'
-                                                       aria-hidden='true'></i>
-                                                    <i *ngIf="!block.error" class='fa fa-check-circle transfer-icon green'
-                                                       aria-hidden='true'></i>
+                                                    <div class="download-stats-td">
+                                                        <i *ngIf="block.error" class='fa fa-times-circle transfer-icon red'
+                                                           aria-hidden='true'></i>
+                                                        <i *ngIf="!block.error" class='fa fa-check-circle transfer-icon green'
+                                                           aria-hidden='true'></i>
+                                                    </div>
                                                 </td>
                                             </tr>
-                                            <!--TODO: Delete this-->
-                                            <!--<tr>-->
-                                            <!--<td class='download-block-td block-id'>-->
-                                            <!--f3609382-...-->
-                                            <!--</td>-->
-                                            <!--<td class='download-block-td download-status-td'>-->
-                                            <!--<i class='fa fa-times-circle transfer-icon red' aria-hidden='true'></i>-->
-                                            <!--</td>-->
-                                            <!--</tr>-->
                                             </tbody>
                                         </table>
 

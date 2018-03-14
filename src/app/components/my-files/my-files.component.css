@@ -229,18 +229,35 @@ button:focus {outline:0;}
 }
 
 .download-stats-container {
-    width: 300px;
+    /*width: 300px;*/
+    /*overflow: hidden;*/
 }
 
 .download-block-td {
-    padding-right: 2em;
+    padding-right: 1em;
     padding-bottom: 1em;
+    padding-left: 15px !important;
 }
 
 .download-status-td {
     text-align: center;
 }
 
+.download-stats-td {
+    /*height: 40px;*/
+    /*white-space: nowrap;*/
+    /*overflow-x: auto;*/
+    /*width: 0%;*/
+}
+
+#inner-download-stats-container {
+    /*overflow: hidden;*/
+}
+
+.copy-block-button {
+    color: black;
+    cursor: pointer;
+}
 
 /*
     Hides some stuff when the screen gets too small.
