@@ -106,6 +106,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         MatSnackBarModule,
         MatSortModule,
         MatTableModule,
+        MatTooltipModule,
         MatTabsModule,
         MatExpansionModule,
         NgxElectronModule,

@@ -183,61 +183,65 @@
                                     <i
                                         class='fa fa-exclamation-circle transfer-icon' aria-hidden='true'></i>
                                 </button>
-                                <mat-menu class='download-stats-container' [overlapTrigger]="false" xPosition="before"
+                                <mat-menu class='download-stats-container'  [overlapTrigger]="false" xPosition="before"
                                           yPosition="above"
                                           #appMenu="matMenu">
-                                    <div class='download-block-container'>
-                                        <span class='download-subtitle'>Elapsed Time</span>:
-                                        <span class='download-value'>{{download.totalTime}}ms</span>
+                                    <div (click)="$event.stopPropagation()">
+                                        <div class='download-block-container'>
+                                            <span class='download-subtitle'>Elapsed Time</span>:
+                                            <span class='download-value'>{{download.totalTime}}ms</span>
+                                        </div>
+                                        <div class='download-block-container'>
+                                            <span class='download-subtitle'>Total Blocks</span>:
+                                            <span class='download-value'>{{download.blocks.length}}</span>
+                                        </div>
+                                        <div class='download-block-container'>
+                                            <span class='download-subtitle'>Correct Blocks</span>:
+                                            <span class='success-blocks download-value'>{{download.correctBlocks}}</span>
+                                        </div>
+                                        <div class='download-block-container'>
+                                            <span class='download-subtitle'>Failed Blocks</span>:
+                                            <span class='failed-blocks download-value'>{{download.failedBlocks}}</span>
+                                        </div>
+                                        <hr>
+                                        <!--<div class='download-block-container download-block'-->
+                                        <!--*ngFor="let block of download.blocks">-->
+                                        <!--{{block.blockId.split('-')[0]}} - -->
+                                        <!--<i class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>-->
+                                        <!--</div>-->
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <td class='download-block-td'><b>Block ID</b></td>
+                                                <td class='download-block-td'><b>Status</b></td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr  *ngFor="let block of download.blocks">
+                                                <td class='download-block-td block-id'>
+                                                    {{block.blockId.split('-')[0]}}-...
+                                                    <!--{{block.blockId}}-->
+                                                </td>
+                                                <td class='download-block-td download-status-td'>
+                                                    <i *ngIf="block.error" class='fa fa-times-circle transfer-icon red'
+                                                       aria-hidden='true'></i>
+                                                    <i *ngIf="!block.error" class='fa fa-check-circle transfer-icon green'
+                                                       aria-hidden='true'></i>
+                                                </td>
+                                            </tr>
+                                            <!--TODO: Delete this-->
+                                            <!--<tr>-->
+                                            <!--<td class='download-block-td block-id'>-->
+                                            <!--f3609382-...-->
+                                            <!--</td>-->
+                                            <!--<td class='download-block-td download-status-td'>-->
+                                            <!--<i class='fa fa-times-circle transfer-icon red' aria-hidden='true'></i>-->
+                                            <!--</td>-->
+                                            <!--</tr>-->
+                                            </tbody>
+                                        </table>
+
                                     </div>
-                                    <div class='download-block-container'>
-                                        <span class='download-subtitle'>Total Blocks</span>:
-                                        <span class='download-value'>{{download.blocks.length}}</span>
-                                    </div>
-                                    <div class='download-block-container'>
-                                        <span class='download-subtitle'>Correct Blocks</span>:
-                                        <span class='success-blocks download-value'>{{download.correctBlocks}}</span>
-                                    </div>
-                                    <div class='download-block-container'>
-                                        <span class='download-subtitle'>Failed Blocks</span>:
-                                        <span class='failed-blocks download-value'>{{download.failedBlocks}}</span>
-                                    </div>
-                                    <hr>
-                                    <!--<div class='download-block-container download-block'-->
-                                    <!--*ngFor="let block of download.blocks">-->
-                                    <!--{{block.blockId.split('-')[0]}} - -->
-                                    <!--<i class='fa fa-check-circle transfer-icon green' aria-hidden='true'></i>-->
-                                    <!--</div>-->
-                                    <table>
-                                        <thead>
-                                        <tr>
-                                            <td class='download-block-td'><b>Block ID</b></td>
-                                            <td class='download-block-td'><b>Status</b></td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr *ngFor="let block of download.blocks">
-                                            <td class='download-block-td block-id'>
-                                                {{block.blockId.split('-')[0]}}-...
-                                            </td>
-                                            <td class='download-block-td download-status-td'>
-                                                <i *ngIf="block.error" class='fa fa-times-circle transfer-icon red'
-                                                   aria-hidden='true'></i>
-                                                <i *ngIf="!block.error" class='fa fa-check-circle transfer-icon green'
-                                                   aria-hidden='true'></i>
-                                            </td>
-                                        </tr>
-                                        <!--TODO: Delete this-->
-                                        <!--<tr>-->
-                                        <!--<td class='download-block-td block-id'>-->
-                                        <!--f3609382-...-->
-                                        <!--</td>-->
-                                        <!--<td class='download-block-td download-status-td'>-->
-                                        <!--<i class='fa fa-times-circle transfer-icon red' aria-hidden='true'></i>-->
-                                        <!--</td>-->
-                                        <!--</tr>-->
-                                        </tbody>
-                                    </table>
                                 </mat-menu>
                                 <button [matMenuTriggerFor]="appMenu" *ngIf="download.state === 'TRANSFER_DONE'"
                                         class='post-download-button' mat-icon-button>
