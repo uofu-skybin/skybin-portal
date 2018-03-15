@@ -3,15 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { appConfig } from '../../models/config';
 import { ConfigureProviderComponent } from '../dialogs/configure-provider/configure-provider.component';
 import { Activity, ActivityResponse, Contract, ContractsResponse, ProviderInfo } from '../../models/common';
-import * as d3 from 'd3';
-import * as Rickshaw from 'rickshaw';
 import * as Chart from 'chart.js';
 import { MatDialog } from '@angular/material';
 import {beautifyBytes} from '../../pipes/bytes.pipe';
 
-console.log('got rickshaw!');
-console.log('rickshaw:', Rickshaw);
-console.log('d3:', d3);
+// import * as d3 from 'd3';
+// import * as Rickshaw from 'rickshaw';
+// console.log('got rickshaw!');
+// console.log('rickshaw:', Rickshaw);
+// console.log('d3:', d3);
 console.log('chartjs', Chart);
 
 @Component({
@@ -86,6 +86,9 @@ export class ProvideStorageComponent implements OnInit {
             console.error('Error fetching provider stats');
             console.error(error);
         });
+        this.drawRequestsChart();
+        this.drawThroughputChart();
+        this.drawStorageUsedChart();
     }
 
     settingsClicked() {
@@ -125,7 +128,17 @@ export class ProvideStorageComponent implements OnInit {
                     display: true,
                     text: 'Storage Used',
                 },
+                tooltips: {
+                    callbacks: {
+                        label: function(item, data) {
+                            var dataset = data.datasets[item.datasetIndex];
+                            return data.labels[item.index] + ": " +
+                                beautifyBytes(dataset.data[item.index]);
+                        },
+                    },
+                },
             },
+
         });
     }
 
@@ -197,6 +210,18 @@ export class ProvideStorageComponent implements OnInit {
                 },
                 legend: {
                 },
+                    tooltips: {
+                        mode: 'x-axis',
+                        callbacks: {
+                            title: function (item, data) {
+                                var start = new Date(item[0].xLabel);
+                                var end = new Date(item[0].xLabel);
+                                end.setHours(start.getHours() + 1);
+                                return start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                                    + "-" + end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            },
+                        },
+                },
             },
         });
     }
@@ -261,6 +286,11 @@ export class ProvideStorageComponent implements OnInit {
                             display: true,
                             labelString: 'Bytes Transferred',
                         },
+                        ticks: {
+                            userCallback: function (item) {
+                                return beautifyBytes(item);
+                            },
+                        },
                     }],
 
                 },
@@ -270,6 +300,22 @@ export class ProvideStorageComponent implements OnInit {
                     }
                 },
                 legend: {
+                },
+                tooltips: {
+                    mode: 'x-axis',
+                    callbacks: {
+                        label: function (item, data) {
+                            var dataset = data.datasets[item.datasetIndex];
+                            return beautifyBytes(dataset.data[item.index]);
+                        },
+                        title: function (item, data) {
+                            var start = new Date(item[0].xLabel);
+                            var end = new Date(item[0].xLabel);
+                            end.setHours(start.getHours() + 1);
+                            return start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                                + "-" + end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        },
+                    },
                 },
             },
         });
