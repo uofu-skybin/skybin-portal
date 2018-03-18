@@ -64,7 +64,7 @@ export class Transfer {
     destPath: string;
     state: string;
     isDir: boolean;
-    totalTime: number;
+    totalTime: string;
     blocks: any[];
     correctBlocks: number;
     failedBlocks: number;

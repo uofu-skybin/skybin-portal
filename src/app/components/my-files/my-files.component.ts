@@ -337,7 +337,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
                         const dlFile = res.files[0];
-                        download.totalTime = res.totalTimeMs;
+                        download.totalTime = (res.totalTimeMs > 1000) ? res.totalTimeMs / 1000 + ' sec' : res.totalTimeMs + ' ms';
                         download.blocks = dlFile.blocks;
                         for (const block of download.blocks) {
                             if (block.error) {
