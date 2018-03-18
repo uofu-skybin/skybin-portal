@@ -15,6 +15,8 @@ export class ProviderRegistrationComponent implements OnInit {
 
     private storageAmountGb = 0;
     private errorMessage = '';
+    private showRegistrationProgress = false;
+    private progressText = '';
 
     constructor(
         private electronService: ElectronService,
@@ -36,16 +38,20 @@ export class ProviderRegistrationComponent implements OnInit {
         this.electronService.ipcRenderer.once('setupProviderDone', (event, result) => {
             this.zone.run(() => {
                 if (result.error) {
+                    this.showRegistrationProgress = false;
                     this.errorMessage = result.error.toString();
                     return;
                 }
-                this.router.navigate(['provide-storage']);
+                this.progressText = 'Done!';
+                setTimeout(() => this.router.navigate(['provide-storage']), 250);
             });
         });
         const providerOptions = {
             storageSpace: storageSpace,
         };
         this.electronService.ipcRenderer.send('setupProvider', providerOptions);
+        this.progressText = 'Setting up your provider.';
+        this.showRegistrationProgress = true;
     }
 
 }

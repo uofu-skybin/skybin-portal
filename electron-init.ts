@@ -46,7 +46,7 @@ ipcMain
                 });
             });
         } catch (error) {
-            event.sender.send('providerSetupDone', {
+            event.sender.send('setupProviderDone', {
                 error: makeMsg(error)
             });
         }

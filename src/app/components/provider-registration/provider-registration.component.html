@@ -1,5 +1,5 @@
 <div id="provider-registration-container">
-    <h1 id="provider-registration-title">Provider Registration</h1>
+    <h2 id="provider-registration-title">Provider Registration</h2>
     <div>
         <p>
             It looks like you haven't set up a provider node yet!
@@ -18,9 +18,15 @@
             {{errorMessage}}
         </mat-error>
     </div>
-    <div>
+    <div *ngIf="!showRegistrationProgress">
         <button mat-raised-button class="skybin-btn-primary" (click)="registerClicked()">
             Register
         </button>
+    </div>
+    <div *ngIf="showRegistrationProgress">
+        <div id="provider-registration-progress-content">
+            <mat-progress-bar id="provider-registration-progress-spinner" mode="indeterminate"></mat-progress-bar>
+            <p>{{progressText}}</p>
+        </div>
     </div>
 </div>

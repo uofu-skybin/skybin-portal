@@ -2,8 +2,14 @@
 #provider-registration-container {
     margin-left: 20%;
     margin-top: 20px;
+    display: inline-block;
 }
 
 #provider-registration-title {
     margin-bottom: 20px;
+}
+
+#provider-registration-progress-content {
+    text-align: center;
+    margin-top: 50px;
 }
