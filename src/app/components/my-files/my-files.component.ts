@@ -322,15 +322,36 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 sourcePath: file.name,
                 destPath,
                 state: TRANSFER_RUNNING,
-                isDir: file.isDir
+                isDir: file.isDir,
+                totalTime: null,
+                blocks: [],
+                correctBlocks: 0,
+                failedBlocks: 0
             };
             this.downloads.unshift(download);
+
             this.showDownloads = true;
             const startTime = new Date();
 
             this.zone.run(() => {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
+                        let longestDlTime = res.files[0].totalTimeMs;
+                        for (const dlFile of res.files) {
+                            if (dlFile.totalTimeMs > longestDlTime) {
+                                longestDlTime = dlFile.totalTimeMs;
+                            }
+                            download.blocks = download.blocks.concat(dlFile.blocks);
+                            for (const block of download.blocks) {
+                                if (block.error) {
+                                    download.failedBlocks++;
+                                } else {
+                                    download.correctBlocks++;
+                                }
+                            }
+
+                        }
+                        download.totalTime = (res.totalTimeMs > 1000) ? res.totalTimeMs / 1000 + ' sec' : res.totalTimeMs + ' ms';
                         const fakeDelay = 1500;
                         const endTime = new Date();
                         const elapsedMs = endTime.getTime() - startTime.getTime();
@@ -629,5 +650,11 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             });
         });
     }
+
+    copyBlockIdToClip(blockId: string): void {
+        this.electronService.clipboard.writeText(blockId);
+        this.showErrorNotification('Copied to clipboard!');
+    }
+
 
 }
