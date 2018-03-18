@@ -422,6 +422,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 file: this.selectedFile
             }
         });
+        dialogRef.afterClosed()
+            .subscribe(() => {
+                this.getFiles();
+            });
     }
 
     deleteFile(file) {
