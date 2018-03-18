@@ -336,17 +336,22 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             this.zone.run(() => {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
-                        const dlFile = res.files[0];
-                        download.totalTime = (res.totalTimeMs > 1000) ? res.totalTimeMs / 1000 + ' sec' : res.totalTimeMs + ' ms';
-                        download.blocks = dlFile.blocks;
-                        for (const block of download.blocks) {
-                            if (block.error) {
-                                download.failedBlocks++;
-                            } else {
-                                download.correctBlocks++;
+                        let longestDlTime = res.files[0].totalTimeMs;
+                        for (const dlFile of res.files) {
+                            if (dlFile.totalTimeMs > longestDlTime) {
+                                longestDlTime = dlFile.totalTimeMs;
                             }
-                        }
+                            download.blocks = download.blocks.concat(dlFile.blocks);
+                            for (const block of download.blocks) {
+                                if (block.error) {
+                                    download.failedBlocks++;
+                                } else {
+                                    download.correctBlocks++;
+                                }
+                            }
 
+                        }
+                        download.totalTime = (res.totalTimeMs > 1000) ? res.totalTimeMs / 1000 + ' sec' : res.totalTimeMs + ' ms';
                         const fakeDelay = 1500;
                         const endTime = new Date();
                         const elapsedMs = endTime.getTime() - startTime.getTime();

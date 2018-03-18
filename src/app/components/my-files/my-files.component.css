@@ -259,6 +259,11 @@ button:focus {outline:0;}
     cursor: pointer;
 }
 
+#download-stats-table {
+    display: block;
+    max-height: 500px;
+}
+
 /*
     Hides some stuff when the screen gets too small.
 */
