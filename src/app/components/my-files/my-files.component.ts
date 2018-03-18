@@ -342,7 +342,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                                 longestDlTime = dlFile.totalTimeMs;
                             }
                             download.blocks = download.blocks.concat(dlFile.blocks);
-                            for (const block of download.blocks) {
+                            for (const block of dlFile.blocks) {
                                 if (block.error) {
                                     download.failedBlocks++;
                                 } else {
