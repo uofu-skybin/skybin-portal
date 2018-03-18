@@ -7,12 +7,10 @@ import * as d3 from 'd3';
 import * as Rickshaw from 'rickshaw';
 import * as Chart from 'chart.js';
 import { MatDialog } from '@angular/material';
-import {beautifyBytes} from '../../pipes/bytes.pipe';
-
-console.log('got rickshaw!');
-console.log('rickshaw:', Rickshaw);
-console.log('d3:', d3);
-console.log('chartjs', Chart);
+import { beautifyBytes } from '../../pipes/bytes.pipe';
+import { ElectronService } from 'ngx-electron';
+import { ProviderRegistrationComponent } from '../provider-registration/provider-registration.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-provide-storage',
@@ -64,13 +62,25 @@ export class ProvideStorageComponent implements OnInit {
         },
     };
 
-
     constructor(private http: HttpClient,
         private dialog: MatDialog,
-        private ref: ChangeDetectorRef) {
+        private ref: ChangeDetectorRef,
+        private electronService: ElectronService,
+        private router: Router) {
+
+        const isProviderSetup = this.electronService.ipcRenderer.sendSync('isProviderSetup');
+        if (isProviderSetup) {
+            this.fetchStats();
+        } else {
+            this.router.navigate(['provider-registration']);
+        }
     }
 
     ngOnInit() {
+
+    }
+
+    fetchStats() {
         this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
             this.providerInfo = info;
             this.drawStorageUsedChart();
@@ -178,13 +188,13 @@ export class ProvideStorageComponent implements OnInit {
                             labelString: 'Hour',
                         },
                         type: 'time',
-                            time: {
-                                unit: 'hour',
-                                unitStepSize: 1,
-                                displayFormats: {
-                                    'hour': 'h:mm a',
-                                },
+                        time: {
+                            unit: 'hour',
+                            unitStepSize: 1,
+                            displayFormats: {
+                                'hour': 'h:mm a',
                             },
+                        },
                     }],
                     yAxes: [{
                         display: true,
