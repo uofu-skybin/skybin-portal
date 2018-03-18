@@ -61,8 +61,7 @@ a {
 }
 
 #profile-button {
-    background-color: #00A7F3;
-    font-size: 1.5em;
+    float: right;
 }
 
 .profile-menu-info {
@@ -74,3 +73,6 @@ a {
     margin-top: 0;
 }
 
+#profile-button {
+    background: #00a7f3 !important;
+}

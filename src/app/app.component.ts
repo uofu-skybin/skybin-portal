@@ -3,6 +3,8 @@ import {ElectronService} from 'ngx-electron';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RenterService} from './services/renter.service';
 import {RenterInfo} from './models/common';
+import {MatSnackBar} from '@angular/material';
+import {NotificationComponent} from './components/notification/notification.component';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +18,8 @@ export class AppComponent implements OnInit {
                 private router: Router,
                 private route: ActivatedRoute,
                 private zone: NgZone,
-                private renterService: RenterService) {
+                private renterService: RenterService,
+                private snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -42,8 +45,26 @@ export class AppComponent implements OnInit {
 
     exportRenterKey(): void {
         this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
-            this.electronService.ipcRenderer.send('exportRenterKey', destPath);
+            const exportRetVal = this.electronService.ipcRenderer.sendSync('exportRenterKey', destPath);
+            if (exportRetVal.error) {
+                this.showSnackNotification(exportRetVal.error);
+            } else {
+                this.showSnackNotification(exportRetVal.msg);
+            }
         });
 
+    }
+
+    // TODO: duplicate code in my-files, move to common
+    showSnackNotification(message) {
+        const scope = this;
+        this.zone.run(() => {
+            scope.snackBar.openFromComponent(NotificationComponent, {
+                data: message,
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+            });
+        });
     }
 }
