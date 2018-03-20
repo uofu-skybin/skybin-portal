@@ -62,12 +62,10 @@ ipcMain
             fs.writeFileSync(destPath, keyFile);
             event.returnValue = {
                 error: null,
-                msg: `Exported key identity to ${destPath}`
             };
         } catch (ex) {
             event.returnValue = {
                 error: `Unable to export renter id. Error: ${ex}`,
-                msg: null
             };
         }
     });
