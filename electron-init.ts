@@ -129,22 +129,18 @@ ipcMain
             error: null,
         };
     })
-
     .on('exportRenterKey' , (event, destPath) => {
         const keyPath = `${skybinHome}/renter/renterid`;
-
         const keyFile = fs.readFileSync(keyPath);
 
         try {
             fs.writeFileSync(destPath, keyFile);
             event.returnValue = {
                 error: null,
-                msg: `Exported key identity to ${destPath}`
             };
         } catch (ex) {
             event.returnValue = {
                 error: `Unable to export renter id. Error: ${ex}`,
-                msg: null
             };
         }
     })

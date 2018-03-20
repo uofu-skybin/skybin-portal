@@ -45,11 +45,14 @@ export class AppComponent implements OnInit {
 
     exportRenterKey(): void {
         this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
+            if (!destPath) {
+                return;
+            }
             const exportRetVal = this.electronService.ipcRenderer.sendSync('exportRenterKey', destPath);
             if (exportRetVal.error) {
                 this.showSnackNotification(exportRetVal.error);
             } else {
-                this.showSnackNotification(exportRetVal.msg);
+                this.showSnackNotification(`Exported key identity to ${destPath}`);
             }
         });
 
