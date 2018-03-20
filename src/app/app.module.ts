@@ -109,6 +109,7 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         MatSnackBarModule,
         MatSortModule,
         MatTableModule,
+        MatTooltipModule,
         MatTabsModule,
         MatExpansionModule,
         NgxElectronModule,

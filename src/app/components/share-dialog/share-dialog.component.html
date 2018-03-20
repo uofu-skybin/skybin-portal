@@ -6,7 +6,7 @@
                 <i>Shared with:</i>
             </p>
             <mat-list dense>
-                <mat-list-item *ngFor="let renter of sharedFile.accessList" class="user-name">{{ renter.renterId.slice(0, 15) }}...</mat-list-item>
+                <mat-list-item *ngFor="let renter of sharedFile.accessList" class="user-name">{{ renter.renterAlias }}</mat-list-item>
             </mat-list>
         </div>
         <mat-form-field id="share-input">

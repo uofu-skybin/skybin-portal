@@ -53,6 +53,23 @@ ipcMain
     })
     .on('getProviderConfig', (event) => {
         event.returnValue = providerConfig;
+    })
+    .on('exportRenterKey' , (event, destPath) => {
+        const keyPath = `${skybinHome}/renter/renterid`;
+        const keyFile = fs.readFileSync(keyPath);
+
+        try {
+            fs.writeFileSync(destPath, keyFile);
+            event.returnValue = {
+                error: null,
+                msg: `Exported key identity to ${destPath}`
+            };
+        } catch (ex) {
+            event.returnValue = {
+                error: `Unable to export renter id. Error: ${ex}`,
+                msg: null
+            };
+        }
     });
 
 function loadConfig(path) {
@@ -66,7 +83,7 @@ function pingService(url, callback) {
 }
 
 function checkServiceStartup(url, callback) {
-    let maxRetries = 5;
+    const maxRetries = 5;
     let retries = 0;
     const checkError = (error) => {
         if (error && retries > maxRetries) {
@@ -176,8 +193,8 @@ function init() {
     // If the user has setup a renter or provider already,
     // delay showing the app until we've started both services.
     let pendingServices = 0;
-    let showApp = () => window.loadURL(`file://${__dirname}/dist/index.html`);
-    let callback = (error) => {
+    const showApp = () => window.loadURL(`file://${__dirname}/dist/index.html`);
+    const callback = (error) => {
         if (error) {
             console.error(error);
             app.quit();
