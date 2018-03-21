@@ -86,6 +86,7 @@ export class ProvideStorageComponent implements OnInit {
             console.error('Error fetching provider stats');
             console.error(error);
         });
+        // debug for ng serve
         this.drawRequestsChart();
         this.drawThroughputChart();
         this.drawStorageUsedChart();
@@ -111,10 +112,15 @@ export class ProvideStorageComponent implements OnInit {
                         this.providerInfo.storageReserved - this.providerInfo.storageUsed,
                         this.providerInfo.storageFree,
                     ],
+                    // backgroundColor: [
+                    //     'rgb(255, 109, 95)',
+                    //     'rgb(69, 154, 255)',
+                    //     'rgb(177, 204, 35)',
+                    // ],
                     backgroundColor: [
-                        'rgb(255, 109, 95)',
-                        'rgb(69, 154, 255)',
-                        'rgb(177, 204, 35)',
+                        'darkblue',
+                        'lightblue',
+                        'lightgrey',
                     ],
                 }],
                 labels: [
