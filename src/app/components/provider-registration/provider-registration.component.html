@@ -1,0 +1,32 @@
+<div id="provider-registration-container">
+    <h2 id="provider-registration-title">Provider Registration</h2>
+    <div>
+        <p>
+            It looks like you haven't set up a provider node yet!
+        </p>
+        <p>
+            Set up a provider node to rent out your disk space to other SkyBin users.
+        </p>
+        <p>
+            You just need to say how much space you want to let SkyBin use.
+        </p>
+        <mat-form-field>
+            <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Amount" type="number">
+        </mat-form-field>
+        Gigabytes
+        <mat-error *ngIf="errorMessage.length > 0">
+            {{errorMessage}}
+        </mat-error>
+    </div>
+    <div *ngIf="!showRegistrationProgress">
+        <button mat-raised-button class="skybin-btn-primary" (click)="registerClicked()">
+            Register
+        </button>
+    </div>
+    <div *ngIf="showRegistrationProgress">
+        <div id="provider-registration-progress-content">
+            <mat-progress-bar id="provider-registration-progress-spinner" mode="indeterminate"></mat-progress-bar>
+            <p>{{progressText}}</p>
+        </div>
+    </div>
+</div>

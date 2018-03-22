@@ -1,133 +1,58 @@
 const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
-const { spawn, exec, spawnSync } = require('child_process');
-const {
-    initRenter,
-    initRenterDaemon,
-    initProvider,
-    initProviderDaemon
-} = require('./lib/skybin-setup');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const request = require('request');
+const { SKYBIN_BINARY_PATH, initRenter, initProvider } = require('./lib/skybin-setup');
 
-// window object
-let win;
-
+let window = null;
 let skybinHome = null;
-let isRenterSetup = false;
-let isProviderSetup = false;
 let renterConfig = null;
 let providerConfig = null;
-
-// Loads a JSON config file from the given file path.
-function loadConfig(path) {
-    const data = fs.readFileSync(path);
-    return JSON.parse(data);
-}
-
-// Attempts to ping the renter daemon running at the
-// given address in 'host:port' form. Calls callback
-// with the resulting error (if one occurred).
-function pingRenter(address, callback) {
-    const url = `http://${address}/info`;
-    request(url, (error, response, body) => {
-        callback(error);
-    });
-}
-
-// Application entry point
-function init() {
-    skybinHome = `${process.env.HOME}/.skybin`;
-    if (process.env.SKYBIN_HOME) {
-        skybinHome = process.env.SKYBIN_HOME;
-    }
-
-    isRenterSetup = fs.existsSync(`${skybinHome}/renter`);
-    isProviderSetup = fs.existsSync(`${skybinHome}/provider`);
-
-    if (isRenterSetup) {
-        renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
-    }
-    if (isProviderSetup) {
-        providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
-    }
-
-    launchApp();
-}
+let renterProcess = null;
+let providerProcess = null;
 
 ipcMain
     .on('isRenterSetup', (event) => {
-        event.returnValue = isRenterSetup;
+        event.returnValue = renterConfig !== null;
     })
     .on('setupRenter', (event, options) => {
+        const makeMsg = (error) => `Unable to setup skybin renter. Error: ${error.toString()}`;
         try {
-            initRenter(options);
-            initRenterDaemon();
+            setupRenter(options, (error) => {
+                const message = error ? makeMsg(error) : null;
+                event.sender.send('setupRenterDone', {
+                    error: message,
+                });
+            });
         } catch (err) {
             event.sender.send('setupRenterDone', {
-                error: err.toString()
+                error: makeMsg(err)
             });
-            return;
         }
-
-        isRenterSetup = true;
-        try {
-            renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
-        } catch (err) {
-            event.sender.send('setupRenterDone', {
-                error: `Unable to load skybin renter config. Error: ${err}`
-            });
-            return;
-        }
-
-        // Wait 1 second and ensure we can ping the renter.
-        setTimeout(() => {
-            pingRenter(renterConfig['apiAddress'], (error) => {
-                const response = {error: null};
-                if (error) {
-                    console.error('Error pinging renter: ', error);
-                    response.error = 'Error starting skybin renter daemon';
-                }
-                event.sender.send('setupRenterDone', response);
-            });
-        }, 1000);
     })
-    .on('loadRenterConfig', (event) => {
-        if (renterConfig === null) {
-            event.returnValue = {
-                config: null,
-                error: 'No renter config present. Have you set up a renter yet?',
-            };
-            return;
-        }
-        event.returnValue = {
-            config: renterConfig,
-        };
+    .on('getRenterConfig', (event) => {
+        event.returnValue = renterConfig;
     })
     .on('isProviderSetup', (event) => {
-        event.returnValue = isProviderSetup;
+        event.returnValue = providerConfig !== null;
     })
     .on('setupProvider', (event, options) => {
+        const makeMsg = (error) => `Unable to setup skybin provider. Error: ${error.toString()}`;
         try {
-            initProvider(options);
-            initProviderDaemon();
-        } catch (err) {
-            event.returnValue = {
-                error: err,
-            };
-            return;
+            setupProvider(options, (error) => {
+                const message = error ? makeMsg(error) : null;
+                event.sender.send('setupProviderDone', {
+                    error: message,
+                });
+            });
+        } catch (error) {
+            event.sender.send('setupProviderDone', {
+                error: makeMsg(error)
+            });
         }
-        isProviderSetup = true;
-        try {
-            providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
-        } catch (err) {
-            event.returnValue = {
-                error: `Unable to load skybin provider config. Error: ${err}`,
-            };
-            return;
-        }
-        event.returnValue = {
-            error: null,
-        };
+    })
+    .on('getProviderConfig', (event) => {
+        event.returnValue = providerConfig;
     })
     .on('exportRenterKey' , (event, destPath) => {
         const keyPath = `${skybinHome}/renter/renterid`;
@@ -143,53 +68,177 @@ ipcMain
                 error: `Unable to export renter id. Error: ${ex}`,
             };
         }
-    })
-
-    .on('loadProviderConfig', (event) => {
-        if (providerConfig === null) {
-            event.returnValue = {
-                config: null,
-                error: 'No provider config present. Have you set up a provider yet?',
-            };
-            return;
-        }
-        event.returnValue = {
-            config: providerConfig,
-        };
     });
 
+function loadConfig(path) {
+    return JSON.parse(fs.readFileSync(path));
+}
 
-// Launches the app window.
-function launchApp() {
+function pingService(url, callback) {
+    request(url, (error, response, body) => {
+        callback(error);
+    });
+}
 
-    // Create the browser window.
-    win = new BrowserWindow({
+function checkServiceStartup(url, callback) {
+    const maxRetries = 5;
+    let retries = 0;
+    const checkError = (error) => {
+        if (error && retries > maxRetries) {
+            callback(`Unable to start service. Maximum retries exceeded. Error: ${error}`);
+        } else if (error) {
+            setTimeout(() => pingService(url, checkError), 100);
+            retries++;
+        } else {
+            callback();
+        }
+    };
+    pingService(url, checkError);
+}
+
+function startRenter(callback) {
+    const args = ['renter', 'daemon'];
+    const env = Object.create(process.env);
+    renterProcess = spawn(SKYBIN_BINARY_PATH, args, {
+        env: env,
+    });
+    renterProcess.stderr.on('data', (data) => {
+        console.error(`renter process stderr: ${data.toString()}`);
+    });
+    renterProcess.on('close', (code) => {
+        console.log(`renter process exited with code ${code}`);
+    });
+    renterProcess.on('error', (error) => {
+        console.error(`renter process exited with error: ${error}`);
+    });
+    const url = `http://${renterConfig['apiAddress']}/info`;
+    checkServiceStartup(url, callback);
+}
+
+function maybeStartRenter(callback) {
+    const url = `http://${renterConfig['apiAddress']}/info`;
+    pingService(url, error => {
+        if (error) {
+            startRenter(callback);
+        } else {
+            callback();
+        }
+    });
+}
+
+function setupRenter(options, callback) {
+    initRenter(options);
+    renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+    startRenter(callback);
+}
+
+function startProvider(callback) {
+    const args = ['provider', 'daemon'];
+    const env = Object.create(process.env);
+    providerProcess = spawn(SKYBIN_BINARY_PATH, args, {
+        env: env,
+    });
+    providerProcess.stderr.on('data', (data) => {
+        console.error('provider process stderr: ', data.toString());
+    });
+    providerProcess.on('close', (code) => {
+        console.error(`provider process exited with code ${code}`);
+    });
+    providerProcess.on('error', (error) => {
+        console.error(`provider process exited with error: ${error}`);
+    });
+    const url = `http://${providerConfig['localApiAddress']}/info}`;
+    checkServiceStartup(url, callback);
+}
+
+function maybeStartProvider(callback) {
+    const url = `http://${providerConfig['localApiAddress']}/info`;
+    pingService(url, error => {
+        if (error) {
+            startProvider(callback);
+        } else {
+            callback();
+        }
+    });
+}
+
+function setupProvider(options, callback) {
+    initProvider(options);
+    providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
+    startProvider(callback);
+}
+
+function init() {
+    window = new BrowserWindow({
         width: 1440,
         height: 900,
         backgroundColor: '#ffffff',
         titleBarStyle: 'hiddenInset'
     });
-    win.loadURL(`file://${__dirname}/dist/index.html`);
 
-    // Uncomment to enable the menu bar.
-    win.setMenu(null);
-
-    win.maximize();
-
-    // uncomment below to open the DevTools.
+    window.setMenu(null);
+    window.maximize();
     // win.webContents.openDevTools();
-    win.on('closed', function () {
-        win = null;
+    window.on('closed', function () {
+        window = null;
     });
+
+    skybinHome = `${process.env.HOME}/.skybin`;
+    if (process.env.SKYBIN_HOME) {
+        skybinHome = process.env.SKYBIN_HOME;
+    }
+
+    // If the user has setup a renter or provider already,
+    // delay showing the app until we've started both services.
+    let pendingServices = 0;
+    const showApp = () => window.loadURL(`file://${__dirname}/dist/index.html`);
+    const callback = (error) => {
+        if (error) {
+            console.error(error);
+            app.quit();
+            return;
+        }
+        pendingServices--;
+        if (pendingServices === 0) {
+            showApp();
+        }
+    };
+
+    const isRenterSetup = fs.existsSync(`${skybinHome}/renter`);
+    if (isRenterSetup) {
+        pendingServices++;
+        renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+        maybeStartRenter(callback);
+    }
+
+    const isProviderSetup = fs.existsSync(`${skybinHome}/provider`);
+    if (isProviderSetup) {
+        pendingServices++;
+        providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
+        maybeStartProvider(callback);
+    }
+
+    if (pendingServices === 0) {
+        showApp();
+    }
+}
+
+function onQuit() {
+    if (renterProcess !== null) {
+        console.log('killing renter service');
+        renterProcess.kill();
+    }
+    if (providerProcess !== null) {
+        console.log('killing provider service');
+        providerProcess.kill();
+    }
 }
 
 // Create window on electron initialization.
 app.on('ready', init);
 
 // Clean up background services upon application shutdown.
-app.on('quit', () => {
-    console.log('quitting. . .');
-});
+app.on('quit', onQuit);
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -201,7 +250,7 @@ app.on('window-all-closed', function () {
 
 app.on('activate', function () {
     // macOS specific close process.
-    if (win === null) {
+    if (window === null) {
         init();
     }
 });
