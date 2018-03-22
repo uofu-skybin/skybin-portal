@@ -12,12 +12,13 @@ import {appConfig} from '../../../models/config';
 export class ConfigureProviderComponent implements OnInit {
     public settings: any = {
         publicApiAddress: '165.123.12.12:8003',
-        publicApiIp: '165.123.12.12',
-        publicApiPort: ':8003',
         localApiAddress: '165.123.12.12:8004',
         spaceAvail: 9999999999,
         storageRate: 30,
     };
+    public storageAmountGb = 0;
+    public publicApiIp: '165.123.12.12';
+    public publicApiPort: ':8003';
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureProviderComponent>) {
@@ -33,9 +34,9 @@ export class ConfigureProviderComponent implements OnInit {
                 this.settings = response;
                 let ip = response.publicApiAddress;
                 // split ip from port
-                this.settings.publicApiIp = ip.substr(0, ip.indexOf(':'));
-                this.settings.publicApiPort = ip.substr(ip.indexOf(':') + 1);
-
+                this.publicApiIp = ip.substr(0, ip.indexOf(':'));
+                this.publicApiPort = ip.substr(ip.indexOf(':') + 1);
+                this.storageAmountGb = this.settings.spaceAvail / 1e9;
             }, (error: HttpErrorResponse) => {
                 console.error('Unable to load provider configuration.');
                 console.error('Error:', error);
@@ -45,7 +46,8 @@ export class ConfigureProviderComponent implements OnInit {
     updateProviderSettings() {
         // TODO: add validation checks on ip and port
         // TODO: dialog suggesting reboot of application if ip changed
-        this.settings.publicApiAddress =  this.settings.publicApiIp + ":" + this.settings.publicApiPort;
+        this.settings.publicApiAddress =  this.publicApiIp + ':' + this.publicApiPort;
+        this.settings.spaceAvail = this.storageAmountGb * 1e9;
         this.http.post(`${appConfig['providerAddress']}/config`, this.settings)
             .subscribe((response: any) => {
                 console.log(response);
@@ -55,11 +57,12 @@ export class ConfigureProviderComponent implements OnInit {
             });
         this.dialogRef.close();
     }
-    // function ValidateIPaddress(ipaddress) {
-    //     if (/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(ipaddress)) {
-    //         return true;
-    //     }
-    //     alert("You have entered an invalid IP address!");
-    //     return false;
-    // }
+
+    autoUpdateIp(){
+        this.http.get('http://ipinfo.io')
+            .subscribe((response: any) => {
+                this.publicApiIp = response.ip;
+                console.log(response);
+            });
+    }
 }

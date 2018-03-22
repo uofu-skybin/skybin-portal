@@ -3,27 +3,28 @@
         Settings
     </mat-card-title>
     <mat-dialog-content>
+        <div class="example-container">
         <mat-list>
             <mat-list-item>
                 <mat-form-field>
-                    <input matInput [(ngModel)]='settings.publicApiIp' placeholder='Public IP Address' type='string'>
+                    <input matInput [(ngModel)]='publicApiIp' placeholder='Public IP Address' type='string'>
+                    <button matSuffix id="auto-ip-button" (click)="autoUpdateIp()">
+                        Auto
+                    </button>
                 </mat-form-field>
-                <mat-form-field>
-                    <input matInput [(ngModel)]='settings.publicApiPort' placeholder='Port' type='string'>
+                <mat-form-field id="port-field">
+                    <input matInput [(ngModel)]='publicApiPort' placeholder='Port' type='string'>
+                    <span matPrefix>:&nbsp;</span>
                 </mat-form-field>
             </mat-list-item>
-            <!--<br>-->
-            <!--<mat-list-item>-->
-            <!--<mat-form-field>-->
-            <!--<input matInput [(ngModel)]='settings.localApiAddress' placeholder='Local IP Address' type='string'>-->
-            <!--</mat-form-field>-->
-            <!--</mat-list-item>-->
-            <!--<br>-->
 
+            <br>
             <mat-list-item>
                 <mat-form-field>
-                    <input matInput [(ngModel)]='settings.spaceAvail' placeholder='Total Space Allocated' type='number'>
+                    <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Amount" type="number">
+                    <!--<span matSuffix>Gigabytes&nbsp;</span>-->
                 </mat-form-field>
+                Gigabytes
             </mat-list-item>
             <br>
             <mat-list-item>
@@ -32,11 +33,18 @@
                 </mat-form-field>
             </mat-list-item>
         </mat-list>
+        </div>
     </mat-dialog-content>
     <mat-dialog-actions>
+        <div >
         <button mat-raised-button class="skybin-btn-primary"
                 (click)="updateProviderSettings()">
             Update Settings
         </button>
+        </div>
+        <!--<button mat-raised-button class="skybin-btn-primary"-->
+                <!--(click)="dialogRef.close()">-->
+            <!--Cancel-->
+        <!--</button>-->
     </mat-dialog-actions>
 </div>

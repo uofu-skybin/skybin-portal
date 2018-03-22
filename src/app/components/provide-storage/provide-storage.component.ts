@@ -60,6 +60,7 @@ export class ProvideStorageComponent implements OnInit {
         },
     };
 
+
     constructor(private http: HttpClient,
         private dialog: MatDialog,
         private ref: ChangeDetectorRef,
@@ -75,7 +76,7 @@ export class ProvideStorageComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.fetchStats();
     }
 
     fetchStats() {
@@ -97,9 +98,9 @@ export class ProvideStorageComponent implements OnInit {
             console.error(error);
         });
         // debug for ng serve
-        this.drawRequestsChart();
-        this.drawThroughputChart();
-        this.drawStorageUsedChart();
+        // this.drawRequestsChart();
+        // this.drawThroughputChart();
+        // this.drawStorageUsedChart();
     }
 
     settingsClicked() {

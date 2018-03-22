@@ -1,6 +1,7 @@
 import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Router } from '@angular/router';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 
 @Component({
     selector: 'app-provider-registration',
@@ -17,8 +18,11 @@ export class ProviderRegistrationComponent implements OnInit {
     private errorMessage = '';
     private showRegistrationProgress = false;
     private progressText = '';
+    public publicApiIp: '';
+    public publicApiPort: ':8003';
 
     constructor(
+        private http: HttpClient,
         private electronService: ElectronService,
         private zone: NgZone,
         private router: Router,
@@ -48,10 +52,19 @@ export class ProviderRegistrationComponent implements OnInit {
         });
         const providerOptions = {
             storageSpace: storageSpace,
+            publicApiAddr: this.publicApiIp + ':' + this.publicApiPort,
         };
         this.electronService.ipcRenderer.send('setupProvider', providerOptions);
         this.progressText = 'Setting up your provider.';
         this.showRegistrationProgress = true;
+    }
+
+    autoUpdateIp(){
+        this.http.get('http://ipinfo.io')
+            .subscribe((response: any) => {
+                this.publicApiIp = response.ip;
+                console.log(response);
+            });
     }
 
 }
