@@ -5,14 +5,10 @@ import { ConfigureProviderComponent } from '../dialogs/configure-provider/config
 import { Activity, ActivityResponse, Contract, ContractsResponse, ProviderInfo } from '../../models/common';
 import * as Chart from 'chart.js';
 import { MatDialog } from '@angular/material';
-import {beautifyBytes} from '../../pipes/bytes.pipe';
-
-// import * as d3 from 'd3';
-// import * as Rickshaw from 'rickshaw';
-// console.log('got rickshaw!');
-// console.log('rickshaw:', Rickshaw);
-// console.log('d3:', d3);
-console.log('chartjs', Chart);
+import { beautifyBytes } from '../../pipes/bytes.pipe';
+import { ElectronService } from 'ngx-electron';
+import { ProviderRegistrationComponent } from '../provider-registration/provider-registration.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-provide-storage',
@@ -64,15 +60,28 @@ export class ProvideStorageComponent implements OnInit {
         },
     };
 
-
     constructor(private http: HttpClient,
         private dialog: MatDialog,
-        private ref: ChangeDetectorRef) {
+        private ref: ChangeDetectorRef,
+        private electronService: ElectronService,
+        private router: Router) {
+
+        const isProviderSetup = this.electronService.ipcRenderer.sendSync('isProviderSetup');
+        if (isProviderSetup) {
+            this.fetchStats();
+        } else {
+            this.router.navigate(['provider-registration']);
+        }
     }
 
     ngOnInit() {
+
+    }
+
+    fetchStats() {
         this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
             this.providerInfo = info;
+            console.log('info: ', info);
             this.drawStorageUsedChart();
         }, (error) => {
             console.error('Error fetching provider info');
@@ -80,6 +89,7 @@ export class ProvideStorageComponent implements OnInit {
         });
         this.http.get(`${appConfig['providerAddress']}/stats`).subscribe((stats: any) => {
             this.providerStats = stats;
+            console.log('stats: ', stats);
             this.drawRequestsChart();
             this.drawThroughputChart();
         }, (error) => {
@@ -136,7 +146,7 @@ export class ProvideStorageComponent implements OnInit {
                 },
                 tooltips: {
                     callbacks: {
-                        label: function(item, data) {
+                        label: function (item, data) {
                             var dataset = data.datasets[item.datasetIndex];
                             return data.labels[item.index] + ": " +
                                 beautifyBytes(dataset.data[item.index]);
@@ -197,13 +207,13 @@ export class ProvideStorageComponent implements OnInit {
                             labelString: 'Hour',
                         },
                         type: 'time',
-                            time: {
-                                unit: 'hour',
-                                unitStepSize: 1,
-                                displayFormats: {
-                                    'hour': 'h:mm a',
-                                },
+                        time: {
+                            unit: 'hour',
+                            unitStepSize: 1,
+                            displayFormats: {
+                                'hour': 'h:mm a',
                             },
+                        },
                     }],
                     yAxes: [{
                         display: true,
@@ -216,17 +226,17 @@ export class ProvideStorageComponent implements OnInit {
                 },
                 legend: {
                 },
-                    tooltips: {
-                        mode: 'x-axis',
-                        callbacks: {
-                            title: function (item, data) {
-                                var start = new Date(item[0].xLabel);
-                                var end = new Date(item[0].xLabel);
-                                end.setHours(start.getHours() + 1);
-                                return start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                                    + "-" + end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                            },
+                tooltips: {
+                    mode: 'x-axis',
+                    callbacks: {
+                        title: function (item, data) {
+                            var start = new Date(item[0].xLabel);
+                            var end = new Date(item[0].xLabel);
+                            end.setHours(start.getHours() + 1);
+                            return start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                + "-" + end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                         },
+                    },
                 },
             },
         });
@@ -318,8 +328,8 @@ export class ProvideStorageComponent implements OnInit {
                             var start = new Date(item[0].xLabel);
                             var end = new Date(item[0].xLabel);
                             end.setHours(start.getHours() + 1);
-                            return start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                                + "-" + end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                            return start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                + "-" + end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                         },
                     },
                 },

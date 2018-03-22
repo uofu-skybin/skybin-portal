@@ -32,6 +32,7 @@ export class Block {
     size: number;
     sha256hash: string;
     location: any;
+    error: any;
 }
 
 // Metadata for a single version of a file.
@@ -63,6 +64,11 @@ export class Transfer {
     sourcePath: string;
     destPath: string;
     state: string;
+    isDir: boolean;
+    totalTime: string;
+    blocks: any[];
+    correctBlocks: number;
+    failedBlocks: number;
 }
 
 export class ProviderConfig {
@@ -110,4 +116,19 @@ export class Activity {
 
 export class ShareResponse {
     message: string;
+}
+
+export class DownloadFile {
+    blocks: Block[];
+    destPath: string;
+    fileId: string;
+    isDir: boolean;
+    name: string;
+    totalTimeMs: number;
+    versionNum: number;
+}
+
+export class DownloadResponse {
+    files: DownloadFile[];
+    totalTimeMs: number;
 }
