@@ -18,8 +18,8 @@ export class ProviderRegistrationComponent implements OnInit {
     private errorMessage = '';
     private showRegistrationProgress = false;
     private progressText = '';
-    public publicApiIp: '';
-    public publicApiPort: ':8003';
+    public publicApiIp = '';
+    public publicApiPort = '8003';
 
     constructor(
         private http: HttpClient,
@@ -50,9 +50,10 @@ export class ProviderRegistrationComponent implements OnInit {
                 setTimeout(() => this.router.navigate(['provide-storage']), 250);
             });
         });
+        let providerAddr = this.publicApiIp + ':' + this.publicApiPort;
         const providerOptions = {
             storageSpace: storageSpace,
-            publicApiAddr: this.publicApiIp + ':' + this.publicApiPort,
+            publicApiAddr: providerAddr
         };
         this.electronService.ipcRenderer.send('setupProvider', providerOptions);
         this.progressText = 'Setting up your provider.';

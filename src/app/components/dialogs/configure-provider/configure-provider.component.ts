@@ -17,8 +17,8 @@ export class ConfigureProviderComponent implements OnInit {
         storageRate: 30,
     };
     public storageAmountGb = 0;
-    public publicApiIp: '165.123.12.12';
-    public publicApiPort: ':8003';
+    public publicApiIp = '165.123.12.12';
+    public publicApiPort = ':8003';
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureProviderComponent>) {
