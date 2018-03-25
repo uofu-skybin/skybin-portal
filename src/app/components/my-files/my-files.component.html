@@ -18,10 +18,6 @@
                 name='my-files-share-button'>
             Share
         </button>
-        <!--<button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='newFolderClicked()'-->
-        <!--name='my-files-new-folder-button'>-->
-        <!--New Folder-->
-        <!--</button>-->
 
         <!-- Group storage info views. -->
         <span *ngIf="!shared" id='my-files-storage-management-container'>
@@ -29,14 +25,14 @@
             <span id='available-space-container'>
                 <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
             </span>
-            <!-- Storage management widgets. -->
-            <button id='reserve-space-button' mat-mini-fab
-                    matTooltip="Reserve more space"
-                    class='skybin-btn-primary'
-                    name='my-files-new-folder-button' (click)='storageSettingsClicked()'>
-                <!--<i id='settings-icon' class='fa fa-cog' aria-hidden='true'></i>-->
-                <i id='settings-icon' class='fa fa-plus' aria-hidden='true'></i>
-            </button>
+            <i id='reserve-space-button' class='fa fa-plus' (click)='storageSettingsClicked()' aria-hidden='true' matTooltip="Reserve more space"></i>
+            <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
+            <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
+            <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
+            <hr class='profile-menu-divider'>
+            <button (click)="exportRenterKey()" mat-menu-item>Export key identity</button>
+            </mat-menu>
+            <i id='profile-button' [matMenuTriggerFor]="appMenu" matTooltip="Renter profile" class="fa fa-user" aria-hidden="true"></i>
         </span>
 
         <!-- TODO: Move the search bar into the next row up. -->

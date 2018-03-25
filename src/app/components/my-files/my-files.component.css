@@ -110,13 +110,11 @@ button:focus {outline:0;}
 }
 
 #reserve-space-button, #configure-space-button {
-    margin-left: 0.5em;
-    background-color: white;
+    margin-left: .5em;
+    color: #00a7f3 !important;
+    font-size: 1.5em;
 }
 
-#settings-icon {
-    color: #00A7F3;
-}
 
 #available-space-container {
     color: #6ab6f3;
@@ -262,6 +260,12 @@ button:focus {outline:0;}
 #download-stats-table {
     display: block;
     max-height: 500px;
+}
+
+#profile-button {
+    color: #00a7f3 !important;
+    margin-left: 1em;
+    font-size: 1.5em;
 }
 
 /*

@@ -655,6 +655,21 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
     }
 
+    exportRenterKey(): void {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
+            if (!destPath) {
+                return;
+            }
+            const exportRetVal = this.electronService.ipcRenderer.sendSync('exportRenterKey', destPath);
+            if (exportRetVal.error) {
+                this.showErrorNotification(exportRetVal.error);
+            } else {
+                this.showErrorNotification(`Exported key identity to ${destPath}`);
+            }
+        });
+
+    }
+
     copyBlockIdToClip(blockId: string): void {
         this.electronService.clipboard.writeText(blockId);
         this.showErrorNotification('Copied to clipboard!');
