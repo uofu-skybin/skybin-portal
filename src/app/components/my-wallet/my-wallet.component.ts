@@ -15,6 +15,8 @@ export class MyWalletComponent implements OnInit {
     @ViewChild('paypalButton') paypalButton: ElementRef;
 
     renterId: string;
+    renterBalance: number;
+    depositAmount: number;
 
     constructor(private renterService: RenterService) { 
         this.renterService.getRenterInfo()
@@ -30,8 +32,10 @@ export class MyWalletComponent implements OnInit {
     ngAfterViewInit() {
         paypal.Button.render({
             env: 'sandbox',
-            payment: function() {
-                return paypal.request.post(`${appConfig['renterAddress']}/paypal/create`)
+            payment: () => {
+                return paypal.request.post(
+                    `${appConfig['renterAddress']}/paypal/create`,
+                    {'amount': this.depositAmount})
                         .then(function(data) { return data.id; });
             },
     
