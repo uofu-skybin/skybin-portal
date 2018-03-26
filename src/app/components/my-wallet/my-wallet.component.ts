@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import {appConfig} from '../../models/config';
-import * as $ from  'jquery';
+import { RenterInfo } from '../../models/common';
+import {RenterService} from '../../services/renter.service';
 import paypal = require('paypal-checkout');
 
 @Component({
@@ -13,7 +14,14 @@ import paypal = require('paypal-checkout');
 export class MyWalletComponent implements OnInit {
     @ViewChild('paypalButton') paypalButton: ElementRef;
 
-    constructor() { }
+    renterId: string;
+
+    constructor(private renterService: RenterService) { 
+        this.renterService.getRenterInfo()
+            .subscribe(res => {
+                this.renterId = res.id;
+            });
+    }
 
     ngOnInit() {
         
@@ -30,11 +38,19 @@ export class MyWalletComponent implements OnInit {
             // Pass a function to be called when the customer approves the payment,
             // then call execute payment on your server:
     
-            onAuthorize: function(data) {
-    
-                console.log('The payment was authorized!');
-                console.log('Payment ID = ',   data.paymentID);
-                console.log('PayerID = ', data.payerID);
+            onAuthorize: (data) => {
+                console.log(this.renterId);
+                return paypal.request.post(`${appConfig['renterAddress']}/paypal/execute`,
+                {
+                    paymentID: data.paymentID,
+                    payerID: data.payerID,
+                    renterID: this.renterId,
+                }).then(() => {
+                    console.log('payment success');
+                })
+                // console.log('The payment was authorized!');
+                // console.log('Payment ID = ',   data.paymentID);
+                // console.log('PayerID = ', data.payerID);
     
                 // At this point, the payment has been authorized, and you will need to call your back-end to complete the
                 // payment. Your back-end should invoke the PayPal Payment Execute api to finalize the transaction.
