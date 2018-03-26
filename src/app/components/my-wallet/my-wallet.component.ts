@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import {appConfig} from '../../models/config';
+import * as $ from  'jquery';
 import paypal = require('paypal-checkout');
 
 @Component({
@@ -19,19 +21,10 @@ export class MyWalletComponent implements OnInit {
 
     ngAfterViewInit() {
         paypal.Button.render({
+            env: 'sandbox',
             payment: function() {
-                return new paypal.Promise(function(resolve, reject) {
-    
-                    // Make an ajax call to get the Payment ID. This should call your back-end,
-                    // which should invoke the PayPal Payment Create api to retrieve the Payment ID.
-    
-                    // When you have a Payment ID, you need to call the `resolve` method, e.g `resolve(data.paymentID)`
-                    // Or, if you have an error from your server side, you need to call `reject`, e.g. `reject(err)`
-    
-                    // $.post('/my-api/create-payment')
-                        // .done(function(data) { resolve(data.paymentID); })
-                        // .fail(function(err)  { reject(err); });
-                });
+                return paypal.request.post(`${appConfig['renterAddress']}/paypal/create`)
+                        .then(function(data) { return data.id; });
             },
     
             // Pass a function to be called when the customer approves the payment,
