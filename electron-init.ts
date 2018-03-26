@@ -150,13 +150,16 @@ ipcMain
 
 // Launches the app window.
 function launchApp() {
-
+    app.commandLine.appendSwitch('disable-web-security'); // try add this line
     // Create the browser window.
     win = new BrowserWindow({
         width: 1440,
         height: 900,
         backgroundColor: '#ffffff',
-        titleBarStyle: 'hiddenInset'
+        titleBarStyle: 'hiddenInset',
+        webPreferences: {
+            webSecurity: false
+        }
     });
     win.loadURL(`file://${__dirname}/dist/index.html`);
 

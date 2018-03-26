@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 import {appConfig} from '../../models/config';
 import { RenterInfo } from '../../models/common';
+import { Location } from '@angular/common';
 import {RenterService} from '../../services/renter.service';
 import paypal = require('paypal-checkout');
 
@@ -18,7 +20,11 @@ export class MyWalletComponent implements OnInit {
     renterBalance: number;
     depositAmount: number;
 
-    constructor(private renterService: RenterService) { 
+    constructor(
+        private renterService: RenterService,
+        private router: Router,
+        private location: Location,
+    ) { 
         this.renterService.getRenterInfo()
             .subscribe(res => {
                 this.renterId = res.id;
@@ -33,10 +39,20 @@ export class MyWalletComponent implements OnInit {
         paypal.Button.render({
             env: 'sandbox',
             payment: () => {
+                console.log(window.location.href);
+                console.log(this.location)
+                console.log(this.location.prepareExternalUrl(this.router.url))
+                console.log(this.router.url)
+                let url = window.location.href.replace('my-wallet', 'index.html');
+                console.log(url)
                 return paypal.request.post(
                     `${appConfig['renterAddress']}/paypal/create`,
-                    {'amount': this.depositAmount})
-                        .then(function(data) { return data.id; });
+                    {
+                        'amount': this.depositAmount,
+                        'returnURL': url,
+                        'cancelURL': url,
+                    }
+                ).then(function(data) { return data.id; });
             },
     
             // Pass a function to be called when the customer approves the payment,
