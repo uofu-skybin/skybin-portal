@@ -146,7 +146,20 @@ ipcMain
         event.returnValue = {
             config: providerConfig,
         };
-    });
+    })
+    
+    .on(
+        'close-paypal',
+        () => {
+            BrowserWindow.getAllWindows().forEach((win) => {
+                // The Paypal window would fail to load contents due to security 
+                // restrictions and return an empty URL
+                if (!win.webContents.getURL()) {
+                    win.close();
+                }
+            });
+        }
+    );;
 
 // Launches the app window.
 function launchApp() {

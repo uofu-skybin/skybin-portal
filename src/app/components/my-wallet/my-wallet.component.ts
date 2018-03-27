@@ -5,6 +5,7 @@ import {appConfig} from '../../models/config';
 import { RenterInfo } from '../../models/common';
 import { Location } from '@angular/common';
 import {RenterService} from '../../services/renter.service';
+import {ElectronService} from 'ngx-electron';
 import paypal = require('paypal-checkout');
 
 @Component({
@@ -24,6 +25,7 @@ export class MyWalletComponent implements OnInit {
         private renterService: RenterService,
         private router: Router,
         private location: Location,
+        public electronService: ElectronService,
     ) { 
         this.renterService.getRenterInfo()
             .subscribe(res => {
@@ -39,6 +41,7 @@ export class MyWalletComponent implements OnInit {
         paypal.Button.render({
             env: 'sandbox',
             payment: () => {
+                this.electronService.ipcRenderer.send('close-paypal', '');
                 console.log(window.location.href);
                 console.log(this.location)
                 console.log(this.location.prepareExternalUrl(this.router.url))
