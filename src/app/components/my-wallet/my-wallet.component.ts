@@ -27,10 +27,7 @@ export class MyWalletComponent implements OnInit {
         private location: Location,
         public electronService: ElectronService,
     ) { 
-        this.renterService.getRenterInfo()
-            .subscribe(res => {
-                this.renterId = res.id;
-            });
+        this.updateBalance();
     }
 
     ngOnInit() {
@@ -42,10 +39,6 @@ export class MyWalletComponent implements OnInit {
             env: 'sandbox',
             payment: () => {
                 this.electronService.ipcRenderer.send('close-paypal', '');
-                console.log(window.location.href);
-                console.log(this.location)
-                console.log(this.location.prepareExternalUrl(this.router.url))
-                console.log(this.router.url)
                 let url = window.location.href.replace('my-wallet', 'index.html');
                 console.log(url)
                 return paypal.request.post(
@@ -70,6 +63,7 @@ export class MyWalletComponent implements OnInit {
                     renterID: this.renterId,
                 }).then(() => {
                     console.log('payment success');
+                    this.updateBalance();
                 })
                 // console.log('The payment was authorized!');
                 // console.log('Payment ID = ',   data.paymentID);
@@ -92,5 +86,13 @@ export class MyWalletComponent implements OnInit {
             }
     
         }, this.paypalButton.nativeElement);
+    }
+
+    updateBalance() {
+        this.renterService.getRenterInfo()
+            .subscribe(res => {
+                this.renterId = res.id;
+                this.renterBalance = res.balance;
+            });
     }
 }

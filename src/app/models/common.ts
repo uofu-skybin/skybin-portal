@@ -55,6 +55,7 @@ export class RenterInfo {
     reservedStorage: number;
     freeStorage: number;
     totalContracts: number;
+    balance: number;
 }
 
 // An upload or download.
