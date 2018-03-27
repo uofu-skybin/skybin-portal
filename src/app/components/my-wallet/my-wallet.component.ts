@@ -20,6 +20,8 @@ export class MyWalletComponent implements OnInit {
     renterId: string;
     renterBalance: number;
     depositAmount: number;
+    withdrawAmount: number;
+    withdrawEmail: string;
 
     constructor(
         private renterService: RenterService,
@@ -94,5 +96,13 @@ export class MyWalletComponent implements OnInit {
                 this.renterId = res.id;
                 this.renterBalance = res.balance;
             });
+    }
+
+    withdrawClicked() {
+        this.renterService.withdraw(this.withdrawEmail, this.withdrawAmount)
+            .subscribe(() => {
+                console.log('successfully withdrew');
+                this.updateBalance();
+            })
     }
 }

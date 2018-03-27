@@ -111,6 +111,13 @@ export class RenterService {
             );
     }
 
+    withdraw(email: string, amount: number) {
+        return this.http.post(`${appConfig['renterAddress']}/paypal/withdraw`, {email: email, amount: amount})
+            .pipe(
+                catchError(this.handleError('withdraw', {}))
+            );
+    }
+
     /**
      * Handle Http operation that failed.
      * Let the app continue.

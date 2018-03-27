@@ -2,10 +2,19 @@
     <h3>Balance: ${{ renterBalance }}</h3>
 
     <h3>Deposit funds:</h3>
-    <mat-form-field class="example-full-width">
+    <mat-form-field>
         <input matInput [(ngModel)]='depositAmount' min="0.01" step="0.01" type="number" placeholder="Deposit amount" value="0">
     </mat-form-field>
     <div id='paypal-button' #paypalButton></div>
     
     <h3>Withdraw funds:</h3>
+    <mat-form-field>
+        <input matInput [(ngModel)]='withdrawAmount' min="0.01" step="0.01" type="number" placeholder="Withdraw amount" value="0">
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput [(ngModel)]='withdrawEmail' placeholder="Withdraw email">
+    </mat-form-field>
+    <button mat-raised-button class='skybin-btn-primary' (click)='withdrawClicked()'>
+        Withdraw
+    </button>
 </div>
