@@ -100,8 +100,19 @@ export class RenterService {
             );
     }
 
-    deleteFile(fileId: string) {
-        return this.http.post(`${appConfig['renterAddress']}/files/remove`, {fileId: fileId})
+    deleteFile(fileId: string, versionNum?: number) {
+        let body;
+        if (versionNum != null) {
+            body = {
+                fileId: fileId,
+                versionNum: versionNum
+            };
+        } else {
+            body = {
+                fileId: fileId
+            };
+        }
+        return this.http.post(`${appConfig['renterAddress']}/files/remove`, body)
             .pipe(
                 catchError(this.handleError('deleteFile', new SkyFile()))
             );

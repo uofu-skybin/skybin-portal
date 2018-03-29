@@ -37,14 +37,14 @@ export class Block {
 
 // Metadata for a single version of a file.
 export class Version {
-    num: number;
-    size: number;
     modTime: string;
-    uploadSize: number;
-    paddingBytes: number;
+    num: number;
     numDataBlocks: number;
     numParityBlocks: number;
-    blocks: any[];
+    paddingBytes: number;
+    size: number;
+    uploadSize: number;
+    uploadTime: string;
 }
 
 export class GetFilesResponse {
