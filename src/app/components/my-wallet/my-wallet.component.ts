@@ -46,7 +46,7 @@ export class MyWalletComponent implements OnInit {
                 return paypal.request.post(
                     `${appConfig['renterAddress']}/paypal/create`,
                     {
-                        'amount': this.depositAmount,
+                        'amount': this.depositAmount * 100,
                         'returnURL': url,
                         'cancelURL': url,
                     }
@@ -67,16 +67,6 @@ export class MyWalletComponent implements OnInit {
                     console.log('payment success');
                     this.updateBalance();
                 })
-                // console.log('The payment was authorized!');
-                // console.log('Payment ID = ',   data.paymentID);
-                // console.log('PayerID = ', data.payerID);
-    
-                // At this point, the payment has been authorized, and you will need to call your back-end to complete the
-                // payment. Your back-end should invoke the PayPal Payment Execute api to finalize the transaction.
-    
-                // jQuery.post('/my-api/execute-payment', { paymentID: data.paymentID, payerID: data.payerID })
-                //     .done(function(data) { /* Go to a success page */ })
-                //     .fail(function(err)  { /* Go to an error page  */  });
             },
     
             // Pass a function to be called when the customer cancels the payment
@@ -94,12 +84,12 @@ export class MyWalletComponent implements OnInit {
         this.renterService.getRenterInfo()
             .subscribe(res => {
                 this.renterId = res.id;
-                this.renterBalance = res.balance;
+                this.renterBalance = res.balance / 1000;
             });
     }
 
     withdrawClicked() {
-        this.renterService.withdraw(this.withdrawEmail, this.withdrawAmount)
+        this.renterService.withdraw(this.withdrawEmail, this.withdrawAmount * 100)
             .subscribe(() => {
                 console.log('successfully withdrew');
                 this.updateBalance();
