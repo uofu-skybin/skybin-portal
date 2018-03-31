@@ -30,7 +30,7 @@
             <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
             <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
             <hr class='profile-menu-divider'>
-            <button (click)="exportRenterKey()" mat-menu-item>Export key identity</button>
+            <button (click)="exportRenterKey()" mat-menu-item>Export user profile</button>
             </mat-menu>
             <i id='profile-button' [matMenuTriggerFor]="appMenu" matTooltip="Renter profile" matTooltipShowDelay="500" class="fa fa-user" aria-hidden="true"></i>
         </span>
