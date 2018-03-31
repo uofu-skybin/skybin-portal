@@ -23,6 +23,8 @@ export class MyWalletComponent implements OnInit {
     withdrawAmount: number;
     withdrawEmail: string;
 
+    isProviderSetup = false;
+
     constructor(
         private renterService: RenterService,
         private router: Router,
@@ -94,5 +96,9 @@ export class MyWalletComponent implements OnInit {
                 console.log('successfully withdrew');
                 this.updateBalance();
             })
+    }
+
+    providerInputDisabled() {
+        return this.isProviderSetup;
     }
 }
