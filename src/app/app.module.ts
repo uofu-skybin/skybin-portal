@@ -47,6 +47,7 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
 import { ProviderRegistrationComponent } from './components/provider-registration/provider-registration.component';
+import { DeleteFolderComponent } from './components/dialogs/delete-folder/delete-folder.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
+        DeleteFolderComponent
     ],
     declarations: [
         AddStorageComponent,
@@ -84,6 +86,7 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
+        DeleteFolderComponent,
     ],
     imports: [
         BrowserAnimationsModule,

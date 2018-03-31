@@ -100,16 +100,17 @@ export class RenterService {
             );
     }
 
-    deleteFile(fileId: string, versionNum?: number) {
+    deleteFile(fileId: string, versionNum?: number, recursive = false) {
         let body;
         if (versionNum != null) {
             body = {
                 fileId: fileId,
-                versionNum: versionNum
+                versionNum: versionNum,
             };
         } else {
             body = {
-                fileId: fileId
+                fileId: fileId,
+                recursive: recursive
             };
         }
         return this.http.post(`${appConfig['renterAddress']}/files/remove`, body)

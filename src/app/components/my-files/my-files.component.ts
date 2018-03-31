@@ -19,6 +19,7 @@ import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progre
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
 import {beautifyBytes} from '../../pipes/bytes.pipe';
 import {ActivatedRoute} from '@angular/router';
+import {DeleteFolderComponent} from '../dialogs/delete-folder/delete-folder.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -437,7 +438,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const hasChild = this.allFiles.some(e =>
                 e.name.startsWith(file.name) && e.id !== file.id);
             if (hasChild) {
-                this.showErrorNotification('That folder isn\'t empty!');
+                const childItems = this.allFiles.filter((f) => {
+                    return f.name.startsWith(file.name) && f.id !== file.id;
+                });
+                const deleteConfirmationDialog = this.dialog.open(DeleteFolderComponent, {
+                    width: '325px',
+                    data: {
+                        folder: file,
+                        childItemCount: childItems.length
+                    }
+                });
+                deleteConfirmationDialog.afterClosed()
+                    .subscribe((res) => {
+                        if (res) {
+                            this.getFiles();
+                            this.showErrorNotification(`${file.name} has been deleted!`);
+                        }
+                    });
+                // this.showErrorNotification('That folder isn\'t empty!');
                 return;
             }
         }
