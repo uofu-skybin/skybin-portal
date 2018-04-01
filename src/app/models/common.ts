@@ -86,6 +86,7 @@ export class ProviderInfo {
     totalContracts?: number;
     totalBlocks?: number;
     totalRenters?: number;
+    balance?: number;
 }
 
 export class Contract {

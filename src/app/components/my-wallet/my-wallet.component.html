@@ -17,18 +17,18 @@
                 <div class="form-section">
                     <h5>Withdraw:</h5>
                     <mat-form-field>
-                        <input matInput [(ngModel)]='withdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                        <input matInput [(ngModel)]='renterWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
                     </mat-form-field>
 
                     <br>
 
                     <mat-form-field>
-                        <input matInput [(ngModel)]='withdrawEmail' placeholder="Email">
+                        <input matInput [(ngModel)]='renterWithdrawEmail' placeholder="Email">
                     </mat-form-field>
 
                     <br>
 
-                    <button mat-raised-button class='skybin-btn-primary' (click)='withdrawClicked()'>
+                    <button mat-raised-button class='skybin-btn-primary' (click)='renterWithdrawClicked()'>
                         Withdraw
                     </button>
                 </div>
@@ -38,24 +38,24 @@
             <div class="col">
                 <mat-card >
                     <h3>Provider</h3>
-                    <h5 *ngIf="isProviderSetup">Balance: ${{ renterBalance }}</h5>
+                    <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
                     <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
     
                     <div class="form-section">
                         <h5>Withdraw:</h5>
                         <mat-form-field>
-                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='withdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
                         </mat-form-field>
     
                         <br>
     
                         <mat-form-field>
-                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='withdrawEmail' placeholder="Email">
+                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
                         </mat-form-field>
     
                         <br>
     
-                        <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='withdrawClicked()'>
+                        <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
                             Withdraw
                         </button>
                     </div>

@@ -2,10 +2,11 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@an
 import { MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 import {appConfig} from '../../models/config';
-import { RenterInfo } from '../../models/common';
+import { RenterInfo, ProviderInfo } from '../../models/common';
 import { Location } from '@angular/common';
 import {RenterService} from '../../services/renter.service';
 import {ElectronService} from 'ngx-electron';
+import { HttpClient } from '@angular/common/http';
 import paypal = require('paypal-checkout');
 
 @Component({
@@ -17,21 +18,29 @@ import paypal = require('paypal-checkout');
 export class MyWalletComponent implements OnInit {
     @ViewChild('paypalButton') paypalButton: ElementRef;
 
-    renterId: string;
     renterBalance: number;
+    providerBalance: number;
+
     depositAmount: number;
-    withdrawAmount: number;
-    withdrawEmail: string;
+
+    renterWithdrawAmount: number;
+    renterWithdrawEmail: string;
+
+    providerWithdrawAmount: number;
+    providerWithdrawEmail: string;
 
     isProviderSetup = false;
 
     constructor(
+        private http: HttpClient,
         private renterService: RenterService,
         private router: Router,
         private location: Location,
         public electronService: ElectronService,
     ) { 
-        this.updateBalance();
+        this.updateRenterBalance();
+        this.updateProviderBalance();
+        this.isProviderSetup = electronService.ipcRenderer.sendSync('isProviderSetup');
     }
 
     ngOnInit() {
@@ -59,15 +68,13 @@ export class MyWalletComponent implements OnInit {
             // then call execute payment on your server:
     
             onAuthorize: (data) => {
-                console.log(this.renterId);
                 return paypal.request.post(`${appConfig['renterAddress']}/paypal/execute`,
                 {
                     paymentID: data.paymentID,
                     payerID: data.payerID,
-                    renterID: this.renterId,
                 }).then(() => {
                     console.log('payment success');
-                    this.updateBalance();
+                    this.updateRenterBalance();
                 })
             },
     
@@ -82,20 +89,44 @@ export class MyWalletComponent implements OnInit {
         }, this.paypalButton.nativeElement);
     }
 
-    updateBalance() {
+    updateRenterBalance() {
         this.renterService.getRenterInfo()
             .subscribe(res => {
-                this.renterId = res.id;
                 this.renterBalance = res.balance / 1000;
             });
     }
 
-    withdrawClicked() {
-        this.renterService.withdraw(this.withdrawEmail, this.withdrawAmount * 100)
+    updateProviderBalance() {
+        this.http.get(`${appConfig['providerAddress']}/private-info`).subscribe((info: ProviderInfo) => {
+            this.providerBalance = info.balance / 1000;
+        }, (error) => {
+            console.error('Error fetching provider info');
+            console.error(error);
+        });
+    }
+
+    renterWithdrawClicked() {
+        this.renterService.withdraw(
+            this.renterWithdrawEmail, 
+            this.renterWithdrawAmount * 100)
             .subscribe(() => {
                 console.log('successfully withdrew');
-                this.updateBalance();
+                this.updateRenterBalance();
             })
+    }
+
+    providerWithdrawClicked() {
+        let payload = {
+            email: this.providerWithdrawEmail,
+            amount: this.providerWithdrawAmount * 100
+        }
+        this.http.post(`${appConfig['providerAddress']}/paypal/withdraw`, payload)
+        .subscribe(() => {
+            this.updateProviderBalance()
+        }, (error) => {
+            console.error('Error depositing');
+            console.error(error);
+        });
     }
 
     providerInputDisabled() {
