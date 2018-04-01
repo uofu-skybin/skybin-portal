@@ -7,6 +7,8 @@ import { Location } from '@angular/common';
 import {RenterService} from '../../services/renter.service';
 import {ElectronService} from 'ngx-electron';
 import { HttpClient } from '@angular/common/http';
+import {MatSnackBar} from '@angular/material';
+import {NotificationComponent} from '../notification/notification.component';
 import paypal = require('paypal-checkout');
 
 @Component({
@@ -37,6 +39,7 @@ export class MyWalletComponent implements OnInit {
         private router: Router,
         private location: Location,
         public electronService: ElectronService,
+        public snackBar: MatSnackBar
     ) { 
         this.updateRenterBalance();
         this.updateProviderBalance();
@@ -52,8 +55,8 @@ export class MyWalletComponent implements OnInit {
             env: 'sandbox',
             payment: () => {
                 this.electronService.ipcRenderer.send('close-paypal', '');
+                // HACK! This gets the path to the file by swapping out the route with the file name.
                 let url = window.location.href.replace('my-wallet', 'index.html');
-                console.log(url)
                 return paypal.request.post(
                     `${appConfig['renterAddress']}/paypal/create`,
                     {
@@ -64,26 +67,22 @@ export class MyWalletComponent implements OnInit {
                 ).then(function(data) { return data.id; });
             },
     
-            // Pass a function to be called when the customer approves the payment,
-            // then call execute payment on your server:
-    
             onAuthorize: (data) => {
                 return paypal.request.post(`${appConfig['renterAddress']}/paypal/execute`,
                 {
                     paymentID: data.paymentID,
                     payerID: data.payerID,
                 }).then(() => {
-                    console.log('payment success');
                     this.updateRenterBalance();
+                    this.showNotification("Deposit successful!");
+                    this.depositAmount = null;
                 })
             },
     
             // Pass a function to be called when the customer cancels the payment
     
-            onCancel: function(data) {
-    
-                console.log('The payment was cancelled!');
-                console.log('Payment ID = ', data.paymentID);
+            onCancel: (data) => {
+                this.showNotification('Payment canceled!');
             }
     
         }, this.paypalButton.nativeElement);
@@ -110,8 +109,10 @@ export class MyWalletComponent implements OnInit {
             this.renterWithdrawEmail, 
             this.renterWithdrawAmount * 100)
             .subscribe(() => {
-                console.log('successfully withdrew');
                 this.updateRenterBalance();
+                this.showNotification("Withdrawal successful!")
+                this.renterWithdrawAmount = null;
+                this.renterWithdrawEmail = '';
             })
     }
 
@@ -120,9 +121,13 @@ export class MyWalletComponent implements OnInit {
             email: this.providerWithdrawEmail,
             amount: this.providerWithdrawAmount * 100
         }
+        // TODO: Make a providerService similar to the renter one.
         this.http.post(`${appConfig['providerAddress']}/paypal/withdraw`, payload)
         .subscribe(() => {
             this.updateProviderBalance()
+            this.showNotification("Withdrawal successful!")
+            this.providerWithdrawAmount = null;
+            this.providerWithdrawEmail = '';
         }, (error) => {
             console.error('Error depositing');
             console.error(error);
@@ -131,5 +136,14 @@ export class MyWalletComponent implements OnInit {
 
     providerInputDisabled() {
         return this.isProviderSetup;
+    }
+
+    showNotification(message) {
+        this.snackBar.openFromComponent(NotificationComponent, {
+            data: message,
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+        });
     }
 }
