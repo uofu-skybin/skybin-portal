@@ -1,66 +1,91 @@
-<div id="wallet-container">
-    <div class="container-fluid" id='my-wallet-container'>
-    <div class="row">
-        <div class="col">
-            <mat-card>
-                <h3>Renter</h3>
-                <h5>Balance: ${{ renterBalance }}</h5>
+<mat-tab-group>
+    <mat-tab label="Deposit/Withdraw">
+        <div class="tab-container">
+            <div class="container-fluid" id='my-wallet-container'>
+                <div class="row">
+                    <div class="col">
+                        <mat-card>
+                            <h3>Renter</h3>
+                            <h5>Balance: ${{ renterBalance }}</h5>
 
-                <div class="form-section">
-                    <h5>Deposit:</h5>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]='depositAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
-                    </mat-form-field>
-                    <div id='paypal-button' #paypalButton></div>
-                </div>
+                            <div class="form-section">
+                                <h5>Deposit:</h5>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]='depositAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                </mat-form-field>
+                                <div id='paypal-button' #paypalButton></div>
+                            </div>
 
-                <div class="form-section">
-                    <h5>Withdraw:</h5>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]='renterWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
-                    </mat-form-field>
+                            <div class="form-section">
+                                <h5>Withdraw:</h5>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]='renterWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                </mat-form-field>
 
-                    <br>
+                                <br>
 
-                    <mat-form-field>
-                        <input matInput [(ngModel)]='renterWithdrawEmail' placeholder="Email">
-                    </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]='renterWithdrawEmail' placeholder="Email">
+                                </mat-form-field>
 
-                    <br>
+                                <br>
 
-                    <button mat-raised-button class='skybin-btn-primary' (click)='renterWithdrawClicked()'>
-                        Withdraw
-                    </button>
-                </div>
-            </mat-card>
-        </div>
-
-            <div class="col">
-                <mat-card >
-                    <h3>Provider</h3>
-                    <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
-                    <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
-    
-                    <div class="form-section">
-                        <h5>Withdraw:</h5>
-                        <mat-form-field>
-                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
-                        </mat-form-field>
-    
-                        <br>
-    
-                        <mat-form-field>
-                            <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
-                        </mat-form-field>
-    
-                        <br>
-    
-                        <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
-                            Withdraw
-                        </button>
+                                <button mat-raised-button class='skybin-btn-primary' (click)='renterWithdrawClicked()'>
+                                    Withdraw
+                                </button>
+                            </div>
+                        </mat-card>
                     </div>
-                </mat-card>
+
+                    <div class="col">
+                        <mat-card >
+                            <h3>Provider</h3>
+                            <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
+                            <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
+            
+                            <div class="form-section">
+                                <h5>Withdraw:</h5>
+                                <mat-form-field>
+                                    <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                </mat-form-field>
+            
+                                <br>
+            
+                                <mat-form-field>
+                                    <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
+                                </mat-form-field>
+            
+                                <br>
+            
+                                <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
+                                    Withdraw
+                                </button>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </mat-tab>
+
+    <mat-tab label="Transactions">
+        <div class="tab-container">
+                <div class="container-fluid" id='my-wallet-container'>
+                        <div class="row">
+                            <div class="col-8">
+                                <mat-card>
+                                    <h3>Transactions</h3>
+                                    
+                                </mat-card>
+                            </div>
+        
+                            <div class="col">
+                                <mat-card >
+                                    
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
