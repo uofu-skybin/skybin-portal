@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
 import {appConfig} from '../../models/config';
 import { RenterInfo, ProviderInfo } from '../../models/common';
@@ -33,6 +33,14 @@ export class MyWalletComponent implements OnInit {
 
     isProviderSetup = false;
 
+    transactions = [];
+    dataSource = null;
+    displayedColumns = ['date', 'user', 'type', 'amount'];
+
+    pageSize = 5;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
     constructor(
         private http: HttpClient,
         private renterService: RenterService,
@@ -47,7 +55,9 @@ export class MyWalletComponent implements OnInit {
     }
 
     ngOnInit() {
-        
+        this.generateTransactions();
+        this.dataSource = new MatTableDataSource(this.transactions);
+        this.pageSize = this.calculateNumberOfItemsToShow();
     }
 
     ngAfterViewInit() {
@@ -86,6 +96,8 @@ export class MyWalletComponent implements OnInit {
             }
     
         }, this.paypalButton.nativeElement);
+
+        this.dataSource.paginator = this.paginator;
     }
 
     updateRenterBalance() {
@@ -145,5 +157,48 @@ export class MyWalletComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
         });
+    }
+
+    generateTransactions() {
+        const users = [
+            'Kincaid', 'Gradey', 'Zak', 'Alex'
+        ];
+        const types = [
+            'payment',
+            'receipt',
+        ];
+        const transactions = [];
+        for (let i = 0; i < 25; i++) {
+            const date = new Date(2017, Math.floor(Math.random() * 11 + 1), Math.floor(Math.random() * 30 + 1), 0, 0, 0, 0);
+            transactions.push({
+                'wallet': ['Renter', 'Provider'][Math.random() * 2],
+                'date': date,
+                'user': users[Math.round(Math.random() * (users.length - 1))],
+                'type': types[Math.round(Math.random() * (types.length - 1))],
+                'amount': Math.round(Math.random() * 100 * 100) / 100,
+            });
+        }
+        this.transactions = transactions;
+    }
+
+    /**
+     * Super gross hack to determine the number of rows to show in the table per page.
+     * 
+     * Basically just take the height of the window, subtract the height of everything that
+     * is not the table, then divide the remaining height by the height of an individual row.
+     */
+    calculateNumberOfItemsToShow() {
+        let rowHeight = 49; // 48 + 1 for border
+        let otherHeights = 22 +
+            81 +
+            48 +
+            40 +
+            24 +
+            48 +
+            56 +
+            24 +
+            40;
+        let windowHeight = window.innerHeight;
+        return Math.floor((windowHeight - otherHeights) / rowHeight);
     }
 }
