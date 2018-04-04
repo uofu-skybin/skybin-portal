@@ -98,6 +98,20 @@ export class ContractsResponse {
     contracts: Contract[];
 }
 
+export class Transaction {
+	userType: string;
+	userID: string;
+	contractID: string;
+	transactionType: string;
+	amount: number;
+	description: string;
+    date: string;
+}
+
+export class TransactionsResponse {
+    transactions: Transaction[];
+}
+
 export class ActivityResponse {
     activity: Activity[];
 }

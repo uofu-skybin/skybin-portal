@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef } from '@an
 import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { Router } from '@angular/router';
 import {appConfig} from '../../models/config';
-import { RenterInfo, ProviderInfo } from '../../models/common';
+import { RenterInfo, ProviderInfo, Transaction, TransactionsResponse } from '../../models/common';
 import { Location } from '@angular/common';
 import {RenterService} from '../../services/renter.service';
 import {ElectronService} from 'ngx-electron';
@@ -33,11 +33,11 @@ export class MyWalletComponent implements OnInit {
 
     isProviderSetup = false;
 
-    transactions = [];
+    transactions: Transaction[] = [];
     dataSource = null;
-    displayedColumns = ['date', 'user', 'type', 'amount'];
+    displayedColumns = ['date', 'wallet', 'type', 'amount'];
 
-    pageSize = 5;
+    pageSize = 0;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -55,9 +55,9 @@ export class MyWalletComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.generateTransactions();
         this.dataSource = new MatTableDataSource(this.transactions);
         this.pageSize = this.calculateNumberOfItemsToShow();
+        this.getTransactions();
     }
 
     ngAfterViewInit() {
@@ -159,28 +159,6 @@ export class MyWalletComponent implements OnInit {
         });
     }
 
-    generateTransactions() {
-        const users = [
-            'Kincaid', 'Gradey', 'Zak', 'Alex'
-        ];
-        const types = [
-            'payment',
-            'receipt',
-        ];
-        const transactions = [];
-        for (let i = 0; i < 25; i++) {
-            const date = new Date(2017, Math.floor(Math.random() * 11 + 1), Math.floor(Math.random() * 30 + 1), 0, 0, 0, 0);
-            transactions.push({
-                'wallet': ['Renter', 'Provider'][Math.random() * 2],
-                'date': date,
-                'user': users[Math.round(Math.random() * (users.length - 1))],
-                'type': types[Math.round(Math.random() * (types.length - 1))],
-                'amount': Math.round(Math.random() * 100 * 100) / 100,
-            });
-        }
-        this.transactions = transactions;
-    }
-
     /**
      * Super gross hack to determine the number of rows to show in the table per page.
      * 
@@ -200,5 +178,28 @@ export class MyWalletComponent implements OnInit {
             40;
         let windowHeight = window.innerHeight;
         return Math.floor((windowHeight - otherHeights) / rowHeight);
+    }
+
+    getTransactions() {
+        this.transactions = [];
+        this.renterService.getTransactions().subscribe(res => {
+            this.transactions = this.transactions.concat(res.transactions);
+            this.dataSource = new MatTableDataSource(this.transactions);
+            this.dataSource.paginator = this.paginator;
+        })
+
+        this.http.get<TransactionsResponse>(`${appConfig['providerAddress']}/transactions`).subscribe(res => {
+            this.transactions = this.transactions.concat(res.transactions);
+            this.dataSource = new MatTableDataSource(this.transactions);
+            this.dataSource.paginator = this.paginator;
+        },
+        (error) => {
+            this.showNotification(error);
+        });
+    }
+
+    getDate(time: string) {
+        let date =  new Date(time);
+        return date.toString();
     }
 }
