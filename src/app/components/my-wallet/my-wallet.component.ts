@@ -146,16 +146,31 @@ export class MyWalletComponent implements OnInit {
         return Math.floor((windowHeight - otherHeights) / rowHeight);
     }
 
+    compareByDate(x: Transaction, y: Transaction) {
+        let leftDate = new Date(x.date);
+        let rightDate = new Date(y.date);
+        // We want them in descending order, so we return 1 instead of -1 and vice-versa.
+        if (leftDate < rightDate) {
+            return 1;
+        } else if (leftDate > rightDate) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
     getTransactions() {
         this.transactions = [];
         this.renterService.getTransactions().subscribe(res => {
             this.transactions = this.transactions.concat(res.transactions);
+            this.transactions.sort(this.compareByDate);
             this.dataSource = new MatTableDataSource(this.transactions);
             this.dataSource.paginator = this.paginator;
         })
 
         this.http.get<TransactionsResponse>(`${appConfig['providerAddress']}/transactions`).subscribe(res => {
             this.transactions = this.transactions.concat(res.transactions);
+            this.transactions.sort(this.compareByDate);
             this.dataSource = new MatTableDataSource(this.transactions);
             this.dataSource.paginator = this.paginator;
         },
@@ -180,7 +195,7 @@ export class MyWalletComponent implements OnInit {
     }
 
     renderPaypal() {
-        console.log('rendering paypal butotn');
+        console.log('rendering paypal button');
         paypal.Button.render({
             env: 'sandbox',
             payment: () => {
