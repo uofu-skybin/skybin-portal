@@ -229,7 +229,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                                 this.allFiles.push(file);
                             }
 
-                            if (isDir) {
+                            if (file.isDir) {
                                 this.getFiles();
                             }
                         }, uploadTime);
