@@ -20,24 +20,43 @@ import paypal = require('paypal-checkout');
 export class MyWalletComponent implements OnInit {
     @ViewChild('paypalButton') paypalButton: ElementRef;
 
+    // Whether or not the local provider has been set up.
+    isProviderSetup = false;
+
+    // The current balances of the renter and provider.
     renterBalance: number;
     providerBalance: number;
 
+    // The amount to deposit into the renter's account.
     depositAmount: number;
 
+    // Renter withdraw information
     renterWithdrawAmount: number;
     renterWithdrawEmail: string;
 
+    // Provider withdraw information.
     providerWithdrawAmount: number;
     providerWithdrawEmail: string;
 
-    isProviderSetup = false;
-
+    // Transactions retrieved from the renter and provider's wallets.
     transactions: Transaction[] = [];
-    dataSource = null;
-    displayedColumns = ['date', 'wallet', 'type', 'amount'];
+    // Transactions after they have been filtered.
+    filteredTransactions: Transaction[] = [];
 
+    // dataSource used for mat table.
+    dataSource = null;
+    // Columns to display in the table.
+    displayedColumns = ['date', 'wallet', 'type', 'amount'];
+    // Number of elements to display in the mat table.
     pageSize = 0;
+
+    // Filter options.
+    filterWallet: string = null;
+    filterTransactionTypes: string[] = null;
+    filterNewerThan: Date = null;
+    filterOlderThan: Date = null;
+    filterLessThan: number = null;
+    filterMoreThan: number = null;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -164,19 +183,80 @@ export class MyWalletComponent implements OnInit {
         this.renterService.getTransactions().subscribe(res => {
             this.transactions = this.transactions.concat(res.transactions);
             this.transactions.sort(this.compareByDate);
-            this.dataSource = new MatTableDataSource(this.transactions);
+            this.filteredTransactions = this.applyFilters(this.transactions);
+            this.dataSource = new MatTableDataSource(this.filteredTransactions);
             this.dataSource.paginator = this.paginator;
         })
 
         this.http.get<TransactionsResponse>(`${appConfig['providerAddress']}/transactions`).subscribe(res => {
             this.transactions = this.transactions.concat(res.transactions);
             this.transactions.sort(this.compareByDate);
-            this.dataSource = new MatTableDataSource(this.transactions);
+            this.filteredTransactions = this.applyFilters(this.transactions);
+            this.dataSource = new MatTableDataSource(this.filteredTransactions);
             this.dataSource.paginator = this.paginator;
         },
         (error) => {
             this.showNotification(error);
         });
+    }
+
+    filtersChanged() {
+        this.filteredTransactions = this.applyFilters(this.transactions);
+        this.dataSource = new MatTableDataSource(this.filteredTransactions);
+        this.dataSource.paginator = this.paginator
+    }
+
+    clearFilters() {
+        this.filterWallet = null;
+        this.filterTransactionTypes = null;
+        this.filterNewerThan = null;
+        this.filterOlderThan = null;
+        this.filterLessThan = null;
+        this.filterMoreThan = null;
+        this.filteredTransactions = this.transactions;
+        this.dataSource = new MatTableDataSource(this.filteredTransactions);
+        this.dataSource.paginator = this.paginator
+    }
+
+    /**
+     * Filter the given transactions.
+     */
+    applyFilters(transactions: Transaction[]) {
+        let returnList = [];
+        for (let transaction of this.transactions) {
+            // Wallet filter
+            if (this.filterWallet != null && transaction.userType != this.filterWallet) {
+                continue;
+            }
+            // transaction type filter
+            if (this.filterTransactionTypes != null && 
+                this.filterTransactionTypes.indexOf(transaction.transactionType) == -1) {
+                continue;
+            }
+            let date = new Date(transaction.date);
+            // Newer than filter
+            if (this.filterNewerThan != null) {
+                if (date < this.filterNewerThan) {
+                    continue;
+                }
+            }
+            // Older than filter
+            if (this.filterOlderThan != null) {
+                if (date > this.filterOlderThan) {
+                    continue;
+                }
+            }
+            // Less than filter
+            if (this.filterLessThan != null && transaction.amount / 1000 > this.filterLessThan) {
+                continue;
+            }
+            // More than filter
+            if (this.filterMoreThan != null && transaction.amount / 1000 < this.filterMoreThan) {
+                continue;
+            }
+            returnList.push(transaction);
+        }
+        return returnList;
     }
 
     getDate(time: string) {
@@ -195,7 +275,6 @@ export class MyWalletComponent implements OnInit {
     }
 
     renderPaypal() {
-        console.log('rendering paypal button');
         paypal.Button.render({
             env: 'sandbox',
             payment: () => {

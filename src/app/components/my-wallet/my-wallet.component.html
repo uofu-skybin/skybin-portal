@@ -102,7 +102,69 @@
         
                             <div class="col">
                                 <mat-card >
-                                    
+                                    <h3>Filters</h3>
+
+                                    <mat-form-field>
+                                        <mat-select [(ngModel)]="filterWallet" (selectionChange)="filtersChanged()" placeholder="Wallet">
+                                            <mat-option value="renter">
+                                                renter
+                                            </mat-option>
+                                            <mat-option value="provider">
+                                                provider
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <mat-form-field>
+                                        <mat-select [(ngModel)]="filterTransactionTypes" (selectionChange)="filtersChanged()" placeholder="Transaction Type" multiple>
+                                            <mat-option value="deposit">
+                                                deposit
+                                            </mat-option>
+                                            <mat-option value="withdrawal">
+                                                withdrawal
+                                            </mat-option>
+                                            <mat-option value="payment">
+                                                payment
+                                            </mat-option>
+                                            <mat-option value="receipt">
+                                                receipt
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="filterNewerThan" (dateChange)="filtersChanged()" [matDatepicker]="newerThanPicker" placeholder="Newer Than">
+                                        <mat-datepicker-toggle matSuffix [for]="newerThanPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #newerThanPicker></mat-datepicker>
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="filterOlderThan" (dateChange)="filtersChanged()" [matDatepicker]="olderThanPicker" placeholder="Older Than">
+                                        <mat-datepicker-toggle matSuffix [for]="olderThanPicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #olderThanPicker></mat-datepicker>
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="filterLessThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="Less Than">
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="filterMoreThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="More Than">
+                                    </mat-form-field>
+
+                                    <br>
+
+                                    <button mat-raised-button (click)="clearFilters()" >Clear</button>
                                 </mat-card>
                             </div>
                         </div>
