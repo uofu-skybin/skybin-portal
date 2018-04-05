@@ -68,15 +68,17 @@ export class MyWalletComponent implements OnInit {
         public electronService: ElectronService,
         public snackBar: MatSnackBar
     ) { 
-        this.updateRenterBalance();
-        this.updateProviderBalance();
-        this.isProviderSetup = electronService.ipcRenderer.sendSync('isProviderSetup');
     }
 
     ngOnInit() {
+        this.isProviderSetup = this.electronService.ipcRenderer.sendSync('isProviderSetup');
         this.dataSource = new MatTableDataSource(this.transactions);
         this.pageSize = this.calculateNumberOfItemsToShow();
         this.getTransactions();
+        this.updateRenterBalance();
+        if (this.isProviderSetup) {
+            this.updateProviderBalance();
+        }
     }
 
     ngAfterViewInit() {
@@ -188,16 +190,19 @@ export class MyWalletComponent implements OnInit {
             this.dataSource.paginator = this.paginator;
         })
 
-        this.http.get<TransactionsResponse>(`${appConfig['providerAddress']}/transactions`).subscribe(res => {
-            this.transactions = this.transactions.concat(res.transactions);
-            this.transactions.sort(this.compareByDate);
-            this.filteredTransactions = this.applyFilters(this.transactions);
-            this.dataSource = new MatTableDataSource(this.filteredTransactions);
-            this.dataSource.paginator = this.paginator;
-        },
-        (error) => {
-            this.showNotification(error);
-        });
+        if (this.isProviderSetup) {
+            this.http.get<TransactionsResponse>(`${appConfig['providerAddress']}/transactions`).subscribe(res => {
+                this.transactions = this.transactions.concat(res.transactions);
+                this.transactions.sort(this.compareByDate);
+                this.filteredTransactions = this.applyFilters(this.transactions);
+                this.dataSource = new MatTableDataSource(this.filteredTransactions);
+                this.dataSource.paginator = this.paginator;
+            },
+            (error) => {
+                console.log(error);
+                this.showNotification(error);
+            });
+        }
     }
 
     filtersChanged() {
