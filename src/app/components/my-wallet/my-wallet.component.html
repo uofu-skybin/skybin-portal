@@ -1,4 +1,4 @@
-<mat-tab-group>
+<mat-tab-group (selectedTabChange)="onTabSwitched($event)">
     <mat-tab label="Deposit/Withdraw">
         <div class="tab-container">
             <div class="container-fluid" id='my-wallet-container'>
