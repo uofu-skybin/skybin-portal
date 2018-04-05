@@ -266,7 +266,7 @@ export class MyWalletComponent implements OnInit {
 
     getDate(time: string) {
         let date =  new Date(time);
-        return date.toString();
+        return date.toLocaleString();
     }
 
     onTabSwitched(event: MatTabChangeEvent) {
