@@ -29,7 +29,6 @@
     "@angular/platform-browser-dynamic": "^5.0.2",
     "@angular/router": "^5.0.2",
     "auto-launch": "^5.0.5",
-    "braintree": "^2.8.0",
     "chart.js": "^2.7.1",
     "core-js": "^2.4.1",
     "d3": "^4.13.0",
