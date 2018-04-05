@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse, DownloadResponse} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse, DownloadResponse, TransactionsResponse} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -123,6 +123,20 @@ export class RenterService {
         return this.http.post<ShareResponse>(`${appConfig['renterAddress']}/files/share`, {fileId: fileId, renterAlias: renterAlias})
             .pipe(
                 catchError(this.handleError('shareFile', new ShareResponse()))
+            );
+    }
+
+    withdraw(email: string, amount: number) {
+        return this.http.post(`${appConfig['renterAddress']}/paypal/withdraw`, {email: email, amount: amount})
+            .pipe(
+                catchError(this.handleError('withdraw', {}))
+            );
+    }
+
+    getTransactions() {
+        return this.http.get<TransactionsResponse>(`${appConfig['renterAddress']}/transactions`)
+            .pipe(
+                catchError(this.handleError('getTransactions', new TransactionsResponse()))
             );
     }
 
