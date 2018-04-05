@@ -25,14 +25,14 @@ button:focus {outline:0;}
     display: block;
     float: right;
     margin-right: 20px;
-    max-height: 150px;
+    /*max-height: 150px;*/
     position: static;
     width: 300px;
 }
 
 .modal-dialog {
     width: 300px;
-    max-height: 150px;
+    /*max-height: 150px;*/
     margin: 0px;
     float: right;
 }
@@ -50,14 +50,13 @@ button:focus {outline:0;}
 }
 
 .modal-body {
-    max-height: 90px;
     overflow: scroll;
     padding: 0 !important;
 }
 
 .modal-content {
     overflow: auto;
-    max-height: 150px;
+    /*max-height: 150px;*/
 }
 
 .container-fluid {
@@ -66,8 +65,6 @@ button:focus {outline:0;}
 
 .transfer-icon {
     font-size: 1.3em;
-    margin-right: .5em;
-    float: right;
 }
 
 .transfer-icon:hover {
@@ -96,8 +93,10 @@ button:focus {outline:0;}
 
 .upload-item {
     /*margin-bottom: 10px;*/
-    border-bottom: 1px solid gray;
-    padding: 10px 10px 10px 15px;
+    border-bottom: 1px solid #d5d5fa;
+    /*padding: 10px 10px 10px 15px;*/
+    padding-left: 1em;
+    padding-right: 1em;
     height: 50px;
 }
 
@@ -111,13 +110,11 @@ button:focus {outline:0;}
 }
 
 #reserve-space-button, #configure-space-button {
-    margin-left: 0.5em;
-    background-color: white;
+    margin-left: .5em;
+    color: #00a7f3 !important;
+    font-size: 1.5em;
 }
 
-#settings-icon {
-    color: #00A7F3;
-}
 
 #available-space-container {
     color: #6ab6f3;
@@ -173,13 +170,102 @@ button:focus {outline:0;}
 }
 
 #uploads-overlay > div > div > div.modal-body > div > div > button {
-    background: white;
+    /*background: white;*/
 }
 
 #downloads-overlay > div > div > div.modal-header > div > button:nth-child(1), #downloads-overlay > div > div > div.modal-header > div > button:nth-child(2) {
     /*background: #00A7F3;*/
     background: #4c4c4c;
     box-shadow: none !important;
+}
+
+.download-file-name {
+    display: inline-block;
+    margin-top: 7px;
+}
+
+.post-download-button {
+    margin-top: 5px;
+    float: right;
+}
+
+.download-block-container {
+    margin-bottom: 1em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+.download-block {
+    text-align: center;
+}
+
+.download-subtitle {
+    color: gray;
+}
+
+.download-success-icon {
+    /*float: right;*/
+}
+
+.block-id {
+    /*border-right: 1px solid #d5d5fa;*/
+    /*border-bottom: 1px solid #d5d5fa;*/
+}
+
+
+.success-blocks {
+    color: green;
+}
+
+.failed-blocks {
+    color: red;
+}
+
+.download-value {
+    font-weight: bold;
+    float: right;
+}
+
+.download-stats-container {
+    /*width: 300px;*/
+    /*overflow: hidden;*/
+}
+
+.download-block-td {
+    padding-right: 1em;
+    padding-bottom: 1em;
+    padding-left: 15px !important;
+}
+
+.download-status-td {
+    text-align: center;
+}
+
+.download-stats-td {
+    /*height: 40px;*/
+    /*white-space: nowrap;*/
+    /*overflow-x: auto;*/
+    /*width: 0%;*/
+}
+
+#inner-download-stats-container {
+    /*overflow: hidden;*/
+}
+
+.copy-block-button {
+    color: black;
+    cursor: pointer;
+}
+
+#download-stats-table {
+    display: block;
+    max-height: 500px;
+}
+
+#profile-button {
+    color: #00a7f3 !important;
+    margin-left: 1em;
+    font-size: 1.5em;
 }
 
 /*

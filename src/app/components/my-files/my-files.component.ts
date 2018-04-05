@@ -19,6 +19,7 @@ import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progre
 import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
 import {beautifyBytes} from '../../pipes/bytes.pipe';
 import {ActivatedRoute} from '@angular/router';
+import {DeleteFolderComponent} from '../dialogs/delete-folder/delete-folder.component';
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -322,15 +323,36 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 sourcePath: file.name,
                 destPath,
                 state: TRANSFER_RUNNING,
-                isDir: file.isDir
+                isDir: file.isDir,
+                totalTime: null,
+                blocks: [],
+                correctBlocks: 0,
+                failedBlocks: 0
             };
             this.downloads.unshift(download);
+
             this.showDownloads = true;
             const startTime = new Date();
 
             this.zone.run(() => {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
+                        let longestDlTime = res.files[0].totalTimeMs;
+                        for (const dlFile of res.files) {
+                            if (dlFile.totalTimeMs > longestDlTime) {
+                                longestDlTime = dlFile.totalTimeMs;
+                            }
+                            download.blocks = download.blocks.concat(dlFile.blocks);
+                            for (const block of dlFile.blocks) {
+                                if (block.error) {
+                                    download.failedBlocks++;
+                                } else {
+                                    download.correctBlocks++;
+                                }
+                            }
+
+                        }
+                        download.totalTime = (res.totalTimeMs > 1000) ? res.totalTimeMs / 1000 + ' sec' : res.totalTimeMs + ' ms';
                         const fakeDelay = 1500;
                         const endTime = new Date();
                         const elapsedMs = endTime.getTime() - startTime.getTime();
@@ -401,6 +423,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                 file: this.selectedFile
             }
         });
+        dialogRef.afterClosed()
+            .subscribe(() => {
+                this.getFiles();
+            });
     }
 
     deleteFile(file) {
@@ -412,7 +438,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             const hasChild = this.allFiles.some(e =>
                 e.name.startsWith(file.name) && e.id !== file.id);
             if (hasChild) {
-                this.showErrorNotification('That folder isn\'t empty!');
+                const childItems = this.allFiles.filter((f) => {
+                    return f.name.startsWith(file.name) && f.id !== file.id;
+                });
+                const deleteConfirmationDialog = this.dialog.open(DeleteFolderComponent, {
+                    width: '325px',
+                    data: {
+                        folder: file,
+                        childItemCount: childItems.length
+                    }
+                });
+                deleteConfirmationDialog.afterClosed()
+                    .subscribe((res) => {
+                        if (res) {
+                            this.getFiles();
+                            this.showErrorNotification(`${file.name} has been deleted!`);
+                        }
+                    });
+                // this.showErrorNotification('That folder isn\'t empty!');
                 return;
             }
         }
@@ -629,5 +672,26 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             });
         });
     }
+
+    exportRenterKey(): void {
+        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
+            if (!destPath) {
+                return;
+            }
+            const exportRetVal = this.electronService.ipcRenderer.sendSync('exportRenterKey', destPath);
+            if (exportRetVal.error) {
+                this.showErrorNotification(exportRetVal.error);
+            } else {
+                this.showErrorNotification(`Exported key identity to ${destPath}`);
+            }
+        });
+
+    }
+
+    copyBlockIdToClip(blockId: string): void {
+        this.electronService.clipboard.writeText(blockId);
+        this.showErrorNotification('Copied to clipboard!');
+    }
+
 
 }

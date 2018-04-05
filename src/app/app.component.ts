@@ -3,6 +3,8 @@ import {ElectronService} from 'ngx-electron';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RenterService} from './services/renter.service';
 import {RenterInfo} from './models/common';
+import {MatSnackBar} from '@angular/material';
+import {NotificationComponent} from './components/notification/notification.component';
 
 @Component({
     selector: 'app-root',
@@ -38,12 +40,5 @@ export class AppComponent implements OnInit {
 
     onDragOver(e) {
         e.preventDefault();
-    }
-
-    exportRenterKey(): void {
-        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
-            this.electronService.ipcRenderer.send('exportRenterKey', destPath);
-        });
-
     }
 }

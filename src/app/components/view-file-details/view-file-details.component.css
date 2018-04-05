@@ -22,3 +22,8 @@
 .version-row {
     border-top: 1px solid gray;
 }
+
+.delete-version-button {
+    background: #f16e6e;
+    color: white;
+}

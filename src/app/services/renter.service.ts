@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from '@angular/core';
-import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse, TransactionsResponse} from '../models/common';
+import {GetFilesResponse, ContractsResponse, RenterInfo, SkyFile, ShareResponse, DownloadResponse, TransactionsResponse} from '../models/common';
 import {appConfig} from '../models/config';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
@@ -87,7 +87,10 @@ export class RenterService {
                 destPath: destPath
             };
         }
-        return this.http.post(url, body);
+        return this.http.post<DownloadResponse>(url, body)
+            .pipe(
+                catchError(this.handleError('downloadFile', new DownloadResponse()))
+            );
     }
 
     createFolder(folderPath: string) {
@@ -97,8 +100,20 @@ export class RenterService {
             );
     }
 
-    deleteFile(fileId: string) {
-        return this.http.post(`${appConfig['renterAddress']}/files/remove`, {fileId: fileId})
+    deleteFile(fileId: string, versionNum?: number, recursive = false) {
+        let body;
+        if (versionNum != null) {
+            body = {
+                fileId: fileId,
+                versionNum: versionNum,
+            };
+        } else {
+            body = {
+                fileId: fileId,
+                recursive: recursive
+            };
+        }
+        return this.http.post(`${appConfig['renterAddress']}/files/remove`, body)
             .pipe(
                 catchError(this.handleError('deleteFile', new SkyFile()))
             );

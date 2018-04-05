@@ -47,8 +47,10 @@ import { NotificationComponent } from './components/notification/notification.co
 import { RenterService } from './services/renter.service';
 import { ToHtmlPipe } from './pipes/to-html/to-html.pipe';
 import { ReserveStorageProgressComponent } from './components/dialogs/reserve-storage-progress/reserve-storage-progress.component';
-import {NgDragDropModule} from 'ng-drag-drop';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
+import { ProviderRegistrationComponent } from './components/provider-registration/provider-registration.component';
+import { DeleteFolderComponent } from './components/dialogs/delete-folder/delete-folder.component';
 
 
 @NgModule({
@@ -57,25 +59,29 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         ConfigureProviderComponent,
         NewFolderDialogComponent,
         NotificationComponent,
+        ProviderRegistrationComponent,
+        RenameFileDialogComponent,
+        RenterRegistrationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
-        RenterRegistrationComponent,
-        RenameFileDialogComponent
+        DeleteFolderComponent
     ],
     declarations: [
         AddStorageComponent,
         AppComponent,
         AuthenticationComponent,
         BytesPipe,
+        ConfigureProviderComponent,
         FilebrowserComponent,
-        RenterRegistrationComponent,
         MyFilesComponent,
         MyWalletComponent,
         NewFolderDialogComponent,
         NotificationComponent,
+        ProviderRegistrationComponent,
         ProvideStorageComponent,
-        ConfigureProviderComponent,
+        RenameFileDialogComponent,
+        RenterRegistrationComponent,
         RenterRegistrationComponent,
         ReserveStorageProgressComponent,
         ShareDialogComponent,
@@ -83,7 +89,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
-        RenameFileDialogComponent,
+        DeleteFolderComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -112,6 +118,7 @@ import { RenameFileDialogComponent } from './components/dialogs/rename-file-dial
         MatTableModule,
         MatDatepickerModule,
         MatPaginatorModule,
+        MatTooltipModule,
         MatTabsModule,
         MatExpansionModule,
         NgxElectronModule,
