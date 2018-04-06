@@ -4,7 +4,7 @@ const fs = require('fs');
 const request = require('request');
 const { SKYBIN_BINARY_PATH, initRenter, initProvider } = require('./lib/skybin-setup');
 
-let window = null;
+let appWindow = null;
 let skybinHome = null;
 let renterConfig = null;
 let providerConfig = null;
@@ -68,7 +68,18 @@ ipcMain
                 error: `Unable to export renter id. Error: ${ex}`,
             };
         }
-    });
+    })
+    .on('close-paypal',
+        () => {
+            BrowserWindow.getAllWindows().forEach((win) => {
+                // The Paypal window would fail to load contents due to security 
+                // restrictions and return an empty URL
+                if (!win.webContents.getURL()) {
+                    win.close();
+                }
+            });
+        }
+    );
 
 function loadConfig(path) {
     return JSON.parse(fs.readFileSync(path));
@@ -169,18 +180,21 @@ function setupProvider(options, callback) {
 }
 
 function init() {
-    window = new BrowserWindow({
+    appWindow = new BrowserWindow({
         width: 1440,
         height: 900,
         backgroundColor: '#ffffff',
-        titleBarStyle: 'hiddenInset'
+        titleBarStyle: 'hiddenInset',
+        webPreferences: {
+            webSecurity: false
+        }
     });
 
-    window.setMenu(null);
-    window.maximize();
+    appWindow.setMenu(null);
+    appWindow.maximize();
     // win.webContents.openDevTools();
-    window.on('closed', function () {
-        window = null;
+    appWindow.on('closed', function () {
+        appWindow = null;
     });
 
     skybinHome = `${process.env.HOME}/.skybin`;
@@ -191,7 +205,7 @@ function init() {
     // If the user has setup a renter or provider already,
     // delay showing the app until we've started both services.
     let pendingServices = 0;
-    const showApp = () => window.loadURL(`file://${__dirname}/dist/index.html`);
+    const showApp = () => appWindow.loadURL(`file://${__dirname}/dist/index.html`);
     const callback = (error) => {
         if (error) {
             console.error(error);
@@ -250,7 +264,7 @@ app.on('window-all-closed', function () {
 
 app.on('activate', function () {
     // macOS specific close process.
-    if (window === null) {
+    if (appWindow === null) {
         init();
     }
 });

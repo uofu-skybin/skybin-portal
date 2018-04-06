@@ -56,6 +56,7 @@ export class RenterInfo {
     reservedStorage: number;
     freeStorage: number;
     totalContracts: number;
+    balance: number;
 }
 
 // An upload or download.
@@ -91,6 +92,7 @@ export class ProviderInfo {
     totalContracts?: number;
     totalBlocks?: number;
     totalRenters?: number;
+    balance?: number;
 }
 
 export class Contract {
@@ -100,6 +102,20 @@ export class Contract {
 
 export class ContractsResponse {
     contracts: Contract[];
+}
+
+export class Transaction {
+	userType: string;
+	userID: string;
+	contractID: string;
+	transactionType: string;
+	amount: number;
+	description: string;
+    date: string;
+}
+
+export class TransactionsResponse {
+    transactions: Transaction[];
 }
 
 export class ActivityResponse {

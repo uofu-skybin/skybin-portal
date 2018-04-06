@@ -1,0 +1,33 @@
+.form-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.tab-container {
+    background: #f1f1f1;
+    margin: 0;
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Angular material is stupid and needs all this styling 
+so that the tab content takes up the entire window */
+
+.mat-tab-group{
+    height: 100%;
+}
+.mat-tab-body-wrapper {
+    flex-grow: 1;
+}
+
+.mat-tab-body {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.mat-tab-body-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
