@@ -109,12 +109,13 @@ button:focus {outline:0;}
     margin-right: 1em;
 }
 
-#reserve-space-button, #configure-space-button {
-    margin-left: .5em;
-    color: #00a7f3 !important;
-    font-size: 1.5em;
+#reserve-space-button {
 }
 
+#reserve-space-icon {
+    color: #00A7F3 !important;
+    font-size: 1.5em;
+}
 
 #available-space-container {
     color: #6ab6f3;
@@ -262,11 +263,42 @@ button:focus {outline:0;}
     max-height: 500px;
 }
 
-#profile-button {
-    color: #00a7f3 !important;
-    margin-left: 1em;
+#profile-button, #reserve-space-button {
+    background: white;
+}
+
+#profile-button:active, #reserve-space-button:active {
+    background: #c1e7f9;
+}
+
+#profile-button:hover, #reserve-space-button:hover {
+    background: #eaf1f5;
+}
+
+#profile-icon {
+    color: #00A7F3 !important;
     font-size: 1.5em;
 }
+
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+}
+
 
 /*
     Hides some stuff when the screen gets too small.
@@ -293,3 +325,5 @@ button:focus {outline:0;}
     /*bottom: 20px;*/
     /*right: 30px;*/
 /*}*/
+
+

@@ -25,14 +25,20 @@
             <span id='available-space-container'>
                 <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
             </span>
-            <i id='reserve-space-button' class='fa fa-plus' (click)='storageSettingsClicked()' aria-hidden='true' matTooltip="Reserve more space" matTooltipShowDelay="500"></i>
+            <button id="reserve-space-button" type="button" class="btn btn-default btn-circle" (click)='storageSettingsClicked()'>
+                <i id='reserve-space-icon' class='fa fa-plus'  aria-hidden='true' matTooltip="Reserve more space" matTooltipShowDelay="500"></i>
+            </button>
             <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
             <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
             <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
             <hr class='profile-menu-divider'>
             <button (click)="exportRenterKey()" mat-menu-item>Export user profile</button>
             </mat-menu>
-            <i id='profile-button' [matMenuTriggerFor]="appMenu" matTooltip="Renter profile" matTooltipShowDelay="500" class="fa fa-user" aria-hidden="true"></i>
+            <button id="profile-button" type="button" class="btn btn-default btn-circle" [matMenuTriggerFor]="appMenu">
+                <i id='profile-icon'  matTooltip="Renter profile" matTooltipShowDelay="500" class="fa fa-user" aria-hidden="true"></i>
+            </button>
+            <!--<button id="profile-button" mat-mini-fab>-->
+            <!--</button>-->
         </span>
 
         <!-- Search/filter for my-files. -->
@@ -54,10 +60,10 @@
             <mat-menu #menu='matMenu'>
                 <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
                 <button *ngIf="!shared" mat-menu-item (click)='shareClicked()'>Share</button>
-                <button *ngIf="!shared" mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
                 <!--<button *ngIf="shared" mat-menu-item (click)='deleteFile(selectedFile)'>Remove from shared</button>-->
                 <button mat-menu-item (click)='viewDetails(selectedFile)'>View Details</button>
                 <button *ngIf="!shared" mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
+                <button *ngIf="!shared" mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
             </mat-menu>
         </div>
     </div>
@@ -69,9 +75,9 @@
                 [matMenuTriggerFor]='menuFolder'></button>
         <div class='context-menu'>
             <mat-menu #menuFolder='matMenu'>
-                <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
                 <button mat-menu-item (click)='renameFile(selectedFile)'>Rename</button>
                 <button mat-menu-item (click)='downloadFile(selectedFile)'>Download</button>
+                <button mat-menu-item (click)='deleteFile(selectedFile)'>Delete</button>
             </mat-menu>
         </div>
     </div>
