@@ -42,6 +42,10 @@ export class AddStorageComponent {
             this.errorMessage = 'Must enter a storage amount';
             return;
         }
+        if (!Number.isInteger(this.storageAmount)) {
+            this.errorMessage = 'Storage amount must be a whole number';
+            return;
+        }
         if (!this.selectedUnits) {
             this.errorMessage = 'Must select units';
             return;

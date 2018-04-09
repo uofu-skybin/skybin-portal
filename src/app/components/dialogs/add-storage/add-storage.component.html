@@ -1,32 +1,19 @@
 <div>
     <mat-card-title>
-        User Info
-    </mat-card-title>
-    <mat-card-content>
-        <mat-list>
-            <mat-list-item>User Alias: {{renterInfo.alias}}</mat-list-item>
-            <mat-list-item>Total Files: {{renterInfo.totalFiles}}</mat-list-item>
-        </mat-list>
-    </mat-card-content>
-    <mat-card-title>
-        Storage Settings
-    </mat-card-title>
-    <mat-card-content>
-         <mat-list>
-            <mat-list-item>Reserved Space: {{renterInfo.reservedStorage | bytes}}</mat-list-item>
-            <mat-list-item>Free Space: {{renterInfo.freeStorage | bytes}}</mat-list-item>
-            <mat-list-item>Total Storage Contracts: {{renterInfo.totalContracts}}</mat-list-item>
-        </mat-list>
-    </mat-card-content>
-    <mat-card-title>
         Reserve More Space
     </mat-card-title>
     <br>
+    <br>
     <mat-card-content>
+        <div>
+            You currently have {{renterInfo.reservedStorage | bytes}} reserved and {{renterInfo.freeStorage | bytes}}
+            of free space.
+        </div>
+        <br>
         <mat-list>
             <mat-list-item>
                 <mat-form-field>
-                    <input matInput [(ngModel)]='storageAmount' placeholder='Amount' type='number'>
+                    <input matInput [(ngModel)]='storageAmount' placeholder='Amount' pattern="\d+" type='number'>
                 </mat-form-field>
                 <mat-form-field id="unit-selector">
                     <mat-select placeholder="Units" [(value)]="selectedUnits">
