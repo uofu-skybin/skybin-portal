@@ -14,15 +14,8 @@ export class AddStorageComponent {
 
     private renterInfo: any = {};
 
-    // Possible storage units the user can select from.
-    private storageUnits = [
-        'Megabytes',
-        'Gigabytes',
-    ];
-    private selectedUnits = 'Gigabytes';
-
     // Storage space to reserve with a click to reserve.
-    private storageAmount: number = null;
+    private requestedAmountGb: number = null;
     private errorMessage = '';
 
     // The storage amount requested after multiplying by
@@ -38,35 +31,26 @@ export class AddStorageComponent {
     }
 
     reserveClicked() {
-        if (!this.storageAmount) {
+        if (!this.requestedAmountGb) {
             this.errorMessage = 'Must enter a storage amount';
             return;
         }
-        if (!Number.isInteger(this.storageAmount)) {
+        if (!Number.isInteger(this.requestedAmountGb)) {
             this.errorMessage = 'Storage amount must be a whole number';
             return;
         }
-        if (!this.selectedUnits) {
-            this.errorMessage = 'Must select units';
-            return;
-        }
-        const multipliers = {
-            'Megabytes': 1e6,
-            'Gigabytes': 1e9,
-        };
-        const multiplier = multipliers[this.selectedUnits];
-        const requestedAmount = this.storageAmount * multiplier;
+        const requestedAmountBytes = this.requestedAmountGb * 1e9;
         const minAmount = appConfig['minStorageReservationAmount'];
         const maxAmount = appConfig['maxStorageReservationAmount'];
-        if (requestedAmount < minAmount) {
+        if (requestedAmountBytes < minAmount) {
             this.errorMessage = `Must reserve at least ${new BytesPipe().transform(minAmount)}`;
             return;
         }
-        if (requestedAmount > maxAmount) {
+        if (requestedAmountBytes > maxAmount) {
             this.errorMessage = `Must reserve no more than ${new BytesPipe().transform(maxAmount)}`;
             return;
         }
-        this.storageRequested = requestedAmount;
+        this.storageRequested = requestedAmountBytes;
         this.dialogRef.close();
    }
 

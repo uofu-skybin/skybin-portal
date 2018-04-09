@@ -13,15 +13,9 @@
         <mat-list>
             <mat-list-item>
                 <mat-form-field>
-                    <input matInput [(ngModel)]='storageAmount' placeholder='Amount' pattern="\d+" type='number'>
+                    <input matInput [(ngModel)]='requestedAmountGb' placeholder='Amount' pattern="\d+" type='number'>
                 </mat-form-field>
-                <mat-form-field id="unit-selector">
-                    <mat-select placeholder="Units" [(value)]="selectedUnits">
-                        <mat-option *ngFor="let unit of storageUnits" [value]="unit">
-                            {{ unit }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                Gigabytes
             </mat-list-item>
             <mat-error id="reserve-error-message" *ngIf="errorMessage.length > 0">
                 {{errorMessage}}
