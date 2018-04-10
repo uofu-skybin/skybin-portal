@@ -112,6 +112,7 @@ export class MyWalletComponent implements OnInit {
                 this.showNotification("Withdrawal successful!")
                 this.renterWithdrawAmount = null;
                 this.renterWithdrawEmail = '';
+                this.getTransactions();
             })
     }
 
@@ -127,6 +128,7 @@ export class MyWalletComponent implements OnInit {
             this.showNotification("Withdrawal successful!")
             this.providerWithdrawAmount = null;
             this.providerWithdrawEmail = '';
+            this.getTransactions();
         }, (error) => {
             console.error('Error depositing');
             console.error(error);
@@ -305,6 +307,7 @@ export class MyWalletComponent implements OnInit {
                     this.updateRenterBalance();
                     this.showNotification("Deposit successful!");
                     this.depositAmount = null;
+                    this.getTransactions();
                 })
             },
     
