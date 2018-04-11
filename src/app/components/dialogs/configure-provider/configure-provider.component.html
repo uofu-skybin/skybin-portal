@@ -31,6 +31,13 @@
                 <mat-form-field>
                     <input matInput [(ngModel)]='settings.storageRate' placeholder='$/GB/Month' type='number'>
                 </mat-form-field>
+                <mat-form-field id="mode-field">
+                    <mat-select placeholder="Select Rate" [(value)]='settings.rateMode'>
+                        <mat-option *ngFor="let unit of storageModes" [value]="unit">
+                            {{ unit }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </mat-list-item>
         </mat-list>
         </div>

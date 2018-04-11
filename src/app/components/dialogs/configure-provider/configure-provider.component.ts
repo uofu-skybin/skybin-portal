@@ -11,11 +11,19 @@ import {appConfig} from '../../../models/config';
 })
 export class ConfigureProviderComponent implements OnInit {
     public settings: any = {
-        publicApiAddress: '165.123.12.12:8003',
-        localApiAddress: '165.123.12.12:8004',
+        publicApiAddress: ':8003',
+        localApiAddress: ':8004',
         spaceAvail: 9999999999,
         storageRate: 30,
+        rateMode: 'Manual',
     };
+
+    private storageModes = [
+        'Manual',
+        'Passive',
+        'Balanced',
+        'Aggressive',
+    ];
     public storageAmountGb = 0;
     public publicApiIp = '165.123.12.12';
     public publicApiPort = ':8003';
