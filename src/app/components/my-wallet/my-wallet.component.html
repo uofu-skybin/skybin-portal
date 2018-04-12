@@ -11,7 +11,7 @@
                             <div class="form-section">
                                 <h5>Deposit:</h5>
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]='depositAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                    <input matInput currencyMask [(ngModel)]='depositAmount' placeholder="Amount">
                                 </mat-form-field>
                                 <div id='paypal-button' #paypalButton></div>
                             </div>
@@ -19,7 +19,7 @@
                             <div class="form-section">
                                 <h5>Withdraw:</h5>
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]='renterWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                    <input matInput currencyMask [(ngModel)]='renterWithdrawAmount'  placeholder="Amount">
                                 </mat-form-field>
 
                                 <br>
@@ -46,7 +46,7 @@
                             <div class="form-section">
                                 <h5>Withdraw:</h5>
                                 <mat-form-field>
-                                    <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' min="0.01" step="0.01" type="number" placeholder="Amount" value="0">
+                                    <input matInput currencyMask [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' placeholder="Amount">
                                 </mat-form-field>
             
                                 <br>
