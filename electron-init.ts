@@ -72,7 +72,7 @@ ipcMain
     .on('close-paypal',
         () => {
             BrowserWindow.getAllWindows().forEach((win) => {
-                // The Paypal window would fail to load contents due to security 
+                // The Paypal window would fail to load contents due to security
                 // restrictions and return an empty URL
                 if (!win.webContents.getURL()) {
                     win.close();
@@ -174,6 +174,7 @@ function maybeStartProvider(callback) {
 }
 
 function setupProvider(options, callback) {
+	// options.metaAddr = '159.89.148.233:8001';
     initProvider(options);
     providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
     startProvider(callback);

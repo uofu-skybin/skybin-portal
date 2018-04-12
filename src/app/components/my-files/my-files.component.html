@@ -25,8 +25,8 @@
             <span id='available-space-container'>
                 <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
             </span>
-            <button id="reserve-space-button" type="button" class="btn btn-default btn-circle" (click)='storageSettingsClicked()'>
-                <i id='reserve-space-icon' class='fa fa-plus'  aria-hidden='true' matTooltip="Reserve more space" matTooltipShowDelay="500"></i>
+            <button id="reserve-space-button" type="button" class="btn btn-default btn-circle" (click)='storageSettingsClicked()' matTooltip="Reserve more space" matTooltipShowDelay="500">
+                <i id='reserve-space-icon' class='fa fa-plus'  aria-hidden='true' ></i>
             </button>
             <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
             <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
@@ -34,8 +34,8 @@
             <hr class='profile-menu-divider'>
             <button (click)="exportRenterKey()" mat-menu-item>Export user profile</button>
             </mat-menu>
-            <button id="profile-button" type="button" class="btn btn-default btn-circle" [matMenuTriggerFor]="appMenu">
-                <i id='profile-icon'  matTooltip="Renter profile" matTooltipShowDelay="500" class="fa fa-user" aria-hidden="true"></i>
+            <button id="profile-button" type="button" class="btn btn-default btn-circle" [matMenuTriggerFor]="appMenu" matTooltip="Renter profile" matTooltipShowDelay="500">
+                <i id='profile-icon'   class="fa fa-user" aria-hidden="true"></i>
             </button>
             <!--<button id="profile-button" mat-mini-fab>-->
             <!--</button>-->
