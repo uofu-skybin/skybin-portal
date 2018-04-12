@@ -32,6 +32,10 @@ export class ShareDialogComponent implements OnInit {
             this.errorMessage = 'Must give user alias.';
             return;
         }
+        if (renterAlias === this.data.renterInfo.alias) {
+            this.errorMessage = 'You cannot share with yourself.';
+            return;
+        }
         const pathComponents = this.sharedFile.name.split('/');
         const sharedFileName = pathComponents[pathComponents.length - 1];
         this.renterService.shareFile(this.sharedFile.id, renterAlias)
