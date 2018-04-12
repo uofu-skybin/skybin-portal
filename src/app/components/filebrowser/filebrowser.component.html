@@ -23,33 +23,33 @@
         </ol>
     </div>
     <!--<div class="header-table-container">-->
-        <!--<table class="table header-table">-->
-            <!--<thead>-->
-            <!--<tr>-->
-                <!--<th>Name</th>-->
-                <!--<th>Size</th>-->
-                <!--<th>Last Modified</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--&lt;!&ndash; Hack: Sample rows so that the headers are properly spaced &ndash;&gt;-->
-            <!--<tbody>-->
-            <!--<tr>-->
-                <!--<td>-->
-                    <!--<i class="fa fa-folder" aria-hidden="true"></i>-->
-                    <!--{{getLongestFolderName()}}-->
-                <!--</td>-->
-                <!--<td>-</td>-->
-                <!--<td>-</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<td>-->
-                    <!--{{getLongestFileName()}}-->
-                <!--</td>-->
-                <!--<td>100 GB</td>-->
-                <!--<td>11-27-2017</td>-->
-            <!--</tr>-->
-            <!--</tbody>-->
-        <!--</table>-->
+    <!--<table class="table header-table">-->
+    <!--<thead>-->
+    <!--<tr>-->
+    <!--<th>Name</th>-->
+    <!--<th>Size</th>-->
+    <!--<th>Last Modified</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <!--&lt;!&ndash; Hack: Sample rows so that the headers are properly spaced &ndash;&gt;-->
+    <!--<tbody>-->
+    <!--<tr>-->
+    <!--<td>-->
+    <!--<i class="fa fa-folder" aria-hidden="true"></i>-->
+    <!--{{getLongestFolderName()}}-->
+    <!--</td>-->
+    <!--<td>-</td>-->
+    <!--<td>-</td>-->
+    <!--</tr>-->
+    <!--<tr>-->
+    <!--<td>-->
+    <!--{{getLongestFileName()}}-->
+    <!--</td>-->
+    <!--<td>100 GB</td>-->
+    <!--<td>11-27-2017</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+    <!--</table>-->
     <!--</div>-->
     <div id="file-list-container">
         <table class="table">
@@ -68,7 +68,7 @@
                 droppable [dragOverClass]="'drag-over-folder'" (onDragOver)="onFileDragOver($event, dir)"
                 (onDrop)="onFileDrop($event, dir)"
                 class='dir-link'>
-                <td >
+                <td>
                     <span draggable [dragData]='dir' [dragTransitClass]="'fileDrag'" class="file-folder-drag">
                     <i class="fa fa-folder" aria-hidden="true"></i>
                     {{baseName(dir.name)}}
@@ -82,9 +82,41 @@
                 (click)="selectFile(file)"
                 (contextmenu)="onContextClick($event, file)"
                 [class.selected]="file === selectedFile">
-                <td >
-                    <span draggable [dragData]='file' [dragTransitClass]="'fileDrag'"  class="file-folder-drag">
-                    <i *ngIf="file.versions.length < 2" class="fa fa-file-o" aria-hidden="true"></i>
+                <td>
+                    <span draggable [dragData]='file' [dragTransitClass]="'fileDrag'" class="file-folder-drag">
+                    <i *ngIf="file.versions.length < 2" class="fa" aria-hidden="true" [ngClass]="{
+                        'fa-file-text-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'txt',
+                        'fa-file-pdf-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'pdf',
+                        'fa-file-code-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'c'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'js'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'h'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'cpp'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'java'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'go'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'py',
+                        'fa-file-word-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'doc'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'docx',
+                        'fa-file-archive-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'zip'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'tar'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'bzip'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'bzip2',
+                        'fa-file-image-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'png'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'jpg'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'jpeg'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'gif',
+                        'fa-file-video-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'mov'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'mp4',
+                        'fa-file-audio-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'mp3'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'wav'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'flac',
+                        'fa-file-excel-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'xlsx'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'xlsm'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'xltx'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'xltm',
+                        'fa-file-powerpoint-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'pptx'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'pptm'
+                        || file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'ppt'
+                    }"></i>
                     <i *ngIf="file.versions.length >= 2" class="fa fa-files-o" aria-hidden="true"></i>
                     {{baseName(file.name)}}
                     </span>
