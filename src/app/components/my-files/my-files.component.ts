@@ -420,7 +420,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         }
         const dialogRef = this.dialog.open(ShareDialogComponent, {
             data: {
-                file: this.selectedFile
+                file: this.selectedFile,
+                renterInfo: this.renterInfo
             }
         });
         dialogRef.afterClosed()

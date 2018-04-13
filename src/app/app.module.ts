@@ -51,6 +51,7 @@ import { NgDragDropModule } from 'ng-drag-drop';
 import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
 import { ProviderRegistrationComponent } from './components/provider-registration/provider-registration.component';
 import { DeleteFolderComponent } from './components/dialogs/delete-folder/delete-folder.component';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 
 @NgModule({
@@ -99,6 +100,7 @@ import { DeleteFolderComponent } from './components/dialogs/delete-folder/delete
         CdkTableModule,
         FormsModule,
         HttpClientModule,
+        CurrencyMaskModule,
         MatButtonModule,
         MatButtonModule,
         MatCardModule,
