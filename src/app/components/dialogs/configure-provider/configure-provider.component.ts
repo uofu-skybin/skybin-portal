@@ -15,19 +15,16 @@ export class ConfigureProviderComponent implements OnInit {
         localApiAddress: ':8004',
         spaceAvail: 9999999999,
         storageRate: 30,
-        minStorageRate: 0,
-        maxStorageRate: 0,
-        rateMode: 'Passive',
+        minStorageRate: 80,
+        maxStorageRate: 200,
+        pricingPolicy: 'aggressive',
     };
 
-    private storageModes = [
-        'Passive',
-        'Aggressive',
-        'Fixed',
-    ];
     public storageAmountGb = 0;
     public publicApiIp = '';
-    public publicApiPort = ':8003';
+    public publicApiPort = 8003;
+    public minStorageRate = 80;
+    public maxStorageRate = 200;
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureProviderComponent>) {
@@ -44,8 +41,11 @@ export class ConfigureProviderComponent implements OnInit {
                 let ip = response.publicApiAddress;
                 // split ip from port
                 this.publicApiIp = ip.substr(0, ip.indexOf(':'));
-                this.publicApiPort = ip.substr(ip.indexOf(':') + 1);
+                this.publicApiPort = parseInt(ip.substr(ip.indexOf(':') + 1));
                 this.storageAmountGb = this.settings.spaceAvail / 1e9;
+                this.minStorageRate = this.settings.minStorageRate;
+                this.maxStorageRate = this.settings.maxStorageRate;
+                // this.pricingPolicy = this.settings.pricingPolicy;
             }, (error: HttpErrorResponse) => {
                 console.error('Unable to load provider configuration.');
                 console.error('Error:', error);
@@ -57,6 +57,9 @@ export class ConfigureProviderComponent implements OnInit {
         // TODO: dialog suggesting reboot of application if ip changed
         this.settings.publicApiAddress =  this.publicApiIp + ':' + this.publicApiPort;
         this.settings.spaceAvail = this.storageAmountGb * 1e9;
+        this.settings.minStorageRate = this.minStorageRate;
+        this.settings.maxStorageRate = this.maxStorageRate;
+        // this.settings.pricingPolicy = this.pricingPolicy;
         this.http.post(`${appConfig['providerAddress']}/config`, this.settings)
             .subscribe((response: any) => {
                 console.log(response);
@@ -73,5 +76,9 @@ export class ConfigureProviderComponent implements OnInit {
                 this.publicApiIp = response.ip;
                 console.log(response);
             });
+    }
+    portChanged(input) {
+        if (input.value < 1024) input.value = 1024;
+        if (input.value > 65535) input.value = 65535;
     }
 }

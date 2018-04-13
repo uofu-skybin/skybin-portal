@@ -24,7 +24,7 @@ export class ProvideStorageComponent implements OnInit {
         storageFree: 3 * 1e9,
         storageReserved: 7 * 1e9,
         storageUsed: 3 * 1e9,
-        storageRate: 1,
+        storageRate: 120,
         totalContracts: 234,
         totalBlocks: 3587,
         totalRenters: 128,
