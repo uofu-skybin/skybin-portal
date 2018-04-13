@@ -7,6 +7,7 @@
                     Provider Node ID: {{formatProviderId(providerInfo.providerId)}}
                     <br> Server Status: Running
                     <br> Storage Available: {{providerInfo.storageAllocated | bytes}}
+                    <br> Storage Rate: {{formatStorageRate(providerInfo.storageRate)}}
                     <mat-card-actions>
                         <button id="provider-settings-button" matTooltip="Settings" (click)="settingsClicked()">
                             <i id='plus-icon' class='fa fa-cog' aria-hidden='true'></i>

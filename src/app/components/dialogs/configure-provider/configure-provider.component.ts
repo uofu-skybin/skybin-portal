@@ -15,17 +15,18 @@ export class ConfigureProviderComponent implements OnInit {
         localApiAddress: ':8004',
         spaceAvail: 9999999999,
         storageRate: 30,
-        rateMode: 'Manual',
+        minStorageRate: 0,
+        maxStorageRate: 0,
+        rateMode: 'Passive',
     };
 
     private storageModes = [
-        'Manual',
         'Passive',
-        'Balanced',
         'Aggressive',
+        'Fixed',
     ];
     public storageAmountGb = 0;
-    public publicApiIp = '165.123.12.12';
+    public publicApiIp = '';
     public publicApiPort = ':8003';
 
     constructor(private http: HttpClient,

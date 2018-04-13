@@ -24,6 +24,7 @@ export class ProvideStorageComponent implements OnInit {
         storageFree: 3 * 1e9,
         storageReserved: 7 * 1e9,
         storageUsed: 3 * 1e9,
+        storageRate: 1,
         totalContracts: 234,
         totalBlocks: 3587,
         totalRenters: 128,
@@ -343,6 +344,9 @@ export class ProvideStorageComponent implements OnInit {
             return providerId;
         }
         return providerId.slice(0, 15) + '...';
+    }
+    formatStorageRate(storageRate: number) {
+        return '$' + (storageRate/1000).toFixed(3) + '/GB/Month';
     }
 
 }
