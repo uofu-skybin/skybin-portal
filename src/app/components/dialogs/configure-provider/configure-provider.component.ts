@@ -19,12 +19,15 @@ export class ConfigureProviderComponent implements OnInit {
         maxStorageRate: 200,
         pricingPolicy: 'aggressive',
     };
+    private MIN_STORAGE_GB = 1;
+    private MAX_STORAGE_GB = 10000;
 
     public storageAmountGb = 0;
     public publicApiIp = '';
     public publicApiPort = 8003;
     public minStorageRate = 80;
     public maxStorageRate = 200;
+    public errorMessage = '';
 
     constructor(private http: HttpClient,
                 public dialogRef: MatDialogRef<ConfigureProviderComponent>) {
@@ -55,6 +58,18 @@ export class ConfigureProviderComponent implements OnInit {
     updateProviderSettings() {
         // TODO: add validation checks on ip and port
         // TODO: dialog suggesting reboot of application if ip changed
+        this.errorMessage = '';
+        if (this.storageAmountGb < this.MIN_STORAGE_GB ||
+            this.storageAmountGb > this.MAX_STORAGE_GB) {
+            this.errorMessage = `You should provide between ${this.MIN_STORAGE_GB} and ${this.MAX_STORAGE_GB} gigabytes of space`;
+            return;
+        }
+
+        if (this.publicApiPort < 1024 || this.publicApiPort > 65535){
+            this.errorMessage = 'Port must be in the range 1024-65535';
+            return;
+        }
+
         this.settings.publicApiAddress =  this.publicApiIp + ':' + this.publicApiPort;
         this.settings.spaceAvail = this.storageAmountGb * 1e9;
         this.settings.minStorageRate = this.minStorageRate;

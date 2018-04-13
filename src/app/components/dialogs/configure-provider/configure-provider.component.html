@@ -51,6 +51,9 @@
                     <!--$/GB/Month-->
                 <!--</mat-list-item>-->
             </mat-list>
+            <mat-error *ngIf="errorMessage.length > 0">
+                {{errorMessage}}
+            </mat-error>
         </div>
     </mat-dialog-content>
     <mat-dialog-actions>
