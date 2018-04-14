@@ -32,6 +32,7 @@
                 <td>Size</td>
                 <td>Upload Date</td>
                 <td></td>
+                <td></td>
             </tr>
             </thead>
             <tbody>
@@ -39,7 +40,8 @@
                 <td>{{i}}</td>
                 <td>{{version.size | bytes}}</td>
                 <td>{{getDateString(version.uploadTime)}}</td>
-                <td><button (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
+                <td><button matTooltip="Download this version" (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
+                <td><button matTooltip="Delete this version" (click)="deleteFile(file, version)" mat-button class="delete-version-button">Delete</button></td>
             </tr>
             </tbody>
         </table>
@@ -52,6 +54,7 @@
             <!--</mat-list-item>-->
         <!--</mat-list>-->
     </mat-expansion-panel>
+    <p *ngIf="!data.shared && file.versions.length == 1" ><em>Only 1 version of this file</em></p>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
     <button mat-button [mat-dialog-close]="true" tabindex="2">Done</button>

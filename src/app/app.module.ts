@@ -14,11 +14,14 @@ import {
     MatCheckboxModule,
     MatDialogModule,
     MatListModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
     MatMenuModule,
     MatOptionModule,
     MatProgressBarModule,
     MatSelectModule, MatSortModule,
     MatTableModule,
+    MatPaginatorModule,
     MatTabsModule,
     MatSnackBarModule,
     MatSnackBar,
@@ -47,6 +50,8 @@ import { ReserveStorageProgressComponent } from './components/dialogs/reserve-st
 import { NgDragDropModule } from 'ng-drag-drop';
 import { RenameFileDialogComponent } from './components/dialogs/rename-file-dialog/rename-file-dialog.component';
 import { ProviderRegistrationComponent } from './components/provider-registration/provider-registration.component';
+import { DeleteFolderComponent } from './components/dialogs/delete-folder/delete-folder.component';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 
 @NgModule({
@@ -61,6 +66,7 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         ReserveStorageProgressComponent,
         ShareDialogComponent,
         ViewFileDetailsComponent,
+        DeleteFolderComponent
     ],
     declarations: [
         AddStorageComponent,
@@ -84,6 +90,7 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         ToHtmlPipe,
         TruncatePipe,
         ViewFileDetailsComponent,
+        DeleteFolderComponent,
     ],
     imports: [
         BrowserAnimationsModule,
@@ -93,10 +100,12 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         CdkTableModule,
         FormsModule,
         HttpClientModule,
+        CurrencyMaskModule,
         MatButtonModule,
         MatButtonModule,
         MatCardModule,
         MatCheckboxModule,
+        MatNativeDateModule,
         MatDialogModule,
         MatInputModule,
         MatListModule,
@@ -109,6 +118,8 @@ import { ProviderRegistrationComponent } from './components/provider-registratio
         MatSnackBarModule,
         MatSortModule,
         MatTableModule,
+        MatDatepickerModule,
+        MatPaginatorModule,
         MatTooltipModule,
         MatTabsModule,
         MatExpansionModule,

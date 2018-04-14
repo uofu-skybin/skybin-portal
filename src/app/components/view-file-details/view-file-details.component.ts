@@ -1,6 +1,7 @@
 import {Component, OnInit, Inject, Output, EventEmitter} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {SkyFile, latestVersion, Version} from '../../models/common';
+import {RenterService} from '../../services/renter.service';
 
 @Component({
     selector: 'app-view-file-details',
@@ -12,7 +13,8 @@ export class ViewFileDetailsComponent implements OnInit {
     file: SkyFile = null;
     @Output() onDownloadVersion = new EventEmitter<any[]>();
 
-    constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+                private renterService: RenterService) {
         this.file = <SkyFile>data.file;
     }
 
@@ -32,12 +34,6 @@ export class ViewFileDetailsComponent implements OnInit {
     getDateString(dateString: string): string {
         const date = new Date(dateString);
         return date.toLocaleString();
-    }
-
-    getFileLocations() {
-        const locations = latestVersion(this.file).blocks.map(e => e.location);
-        const addrs = locations.map(e => e.address);
-        return addrs;
     }
 
     latestVersion(file: SkyFile) {
@@ -62,4 +58,16 @@ export class ViewFileDetailsComponent implements OnInit {
         }
         this.onDownloadVersion.emit([file, version.num]);
     }
+
+    deleteFile(file: SkyFile, version: Version) {
+        this.latestVersion(file);
+        this.renterService.deleteFile(file.id, version.num)
+            .subscribe(res => {
+                console.log(res);
+                this.file.versions = this.file.versions.filter(ver => {
+                    return ver.num !== version.num;
+                });
+            });
+    }
 }
+
