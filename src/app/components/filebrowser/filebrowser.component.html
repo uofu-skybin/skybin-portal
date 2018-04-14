@@ -22,40 +22,12 @@
             </li>
         </ol>
     </div>
-    <!--<div class="header-table-container">-->
-    <!--<table class="table header-table">-->
-    <!--<thead>-->
-    <!--<tr>-->
-    <!--<th>Name</th>-->
-    <!--<th>Size</th>-->
-    <!--<th>Last Modified</th>-->
-    <!--</tr>-->
-    <!--</thead>-->
-    <!--&lt;!&ndash; Hack: Sample rows so that the headers are properly spaced &ndash;&gt;-->
-    <!--<tbody>-->
-    <!--<tr>-->
-    <!--<td>-->
-    <!--<i class="fa fa-folder" aria-hidden="true"></i>-->
-    <!--{{getLongestFolderName()}}-->
-    <!--</td>-->
-    <!--<td>-</td>-->
-    <!--<td>-</td>-->
-    <!--</tr>-->
-    <!--<tr>-->
-    <!--<td>-->
-    <!--{{getLongestFileName()}}-->
-    <!--</td>-->
-    <!--<td>100 GB</td>-->
-    <!--<td>11-27-2017</td>-->
-    <!--</tr>-->
-    <!--</tbody>-->
-    <!--</table>-->
-    <!--</div>-->
     <div id="file-list-container">
         <table class="table">
             <thead>
             <tr>
                 <th class="file-table-header">Name</th>
+                <th class="file-table-header" *ngIf="shared">Shared By</th>
                 <!--<th>Version</th>-->
                 <th class="file-table-header">Size</th>
                 <th class="file-table-header">Last Modified</th>
@@ -120,6 +92,9 @@
                     <i *ngIf="file.versions.length >= 2" class="fa fa-files-o" aria-hidden="true"></i>
                     {{baseName(file.name)}}
                     </span>
+                </td>
+                <td *ngIf="shared">
+                    {{file.ownerAlias}}
                 </td>
                 <!--<td>{{file.versions.length}}</td>-->
                 <td>

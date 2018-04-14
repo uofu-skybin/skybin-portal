@@ -119,6 +119,16 @@ export class RenterService {
             );
     }
 
+    removeSharedFile(fileId: string) {
+        const body = {
+            fileId
+        };
+        return this.http.post(`${appConfig['renterAddress']}/files/shared/remove`, body)
+            .pipe(
+                catchError(this.handleError('deleteSharedFile', new SkyFile()))
+            );
+    }
+
     shareFile(fileId: string, renterAlias: string) {
         return this.http.post<ShareResponse>(`${appConfig['renterAddress']}/files/share`, {fileId: fileId, renterAlias: renterAlias})
             .pipe(

@@ -123,7 +123,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                     this.allFiles = res.files;
                     this.filteredFiles = res.files;
                 });
-
         } else {
             this.renterService.getFiles()
                 .subscribe(res => {
@@ -474,6 +473,36 @@ export class MyFilesComponent implements OnInit, OnDestroy {
                     this.showErrorNotification(`${name} has been deleted!`);
                 });
         });
+    }
+
+    removeSharedFile(file: SkyFile): void {
+        if (!file) {
+            return;
+        }
+
+        this.zone.run(() => {
+            this.renterService.removeSharedFile(file.id)
+                .subscribe(removedSharedFile => {
+                    this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+                    this.onSearchChanged();
+                    this.getRenterInfo();
+                    const filePath = file.name.split('/');
+                    const name = (filePath.length === 1) ? filePath[0] : filePath[filePath.length - 1];
+                    this.showErrorNotification(`${name} has been removed!`);
+                });
+            // this.renterService.deleteFile(file.id)
+            //     .subscribe(deletedFile => {
+            //         this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+            //         // this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
+            //         this.onSearchChanged();
+            //         this.getRenterInfo();
+            //         // this.ref.detectChanges();
+            //         const filePath = file.name.split('/');
+            //         const name = (filePath.length === 1) ? filePath[0] : filePath[filePath.length - 1];
+            //         this.showErrorNotification(`${name} has been deleted!`);
+            //     });
+        });
+
     }
 
     onPathChanged(newPath) {

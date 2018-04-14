@@ -236,7 +236,7 @@ export class ProvideStorageComponent implements OnInit {
     drawThroughputChart() {
         const counters = this.providerStats.activityCounters;
 
-        const labels = counters.timestamps
+        const labels = counters.timestamps;
 
         const datasets = [
             {
