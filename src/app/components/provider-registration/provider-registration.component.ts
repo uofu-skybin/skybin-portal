@@ -2,6 +2,7 @@ import { Component, NgZone, OnInit, ViewEncapsulation } from '@angular/core';
 import { ElectronService } from 'ngx-electron';
 import { Router } from '@angular/router';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {CurrencyMaskModule} from 'ng2-currency-mask';
 
 @Component({
     selector: 'app-provider-registration',
@@ -14,12 +15,15 @@ export class ProviderRegistrationComponent implements OnInit {
     private MIN_STORAGE_GB = 1;
     private MAX_STORAGE_GB = 10000;
 
-    private storageAmountGb = 0;
     private errorMessage = '';
     private showRegistrationProgress = false;
     private progressText = '';
+
+    private storageAmountGb = 0;
     public publicApiIp = '';
-    public publicApiPort = '8003';
+    public publicApiPort = 8003;
+    public minStorageRate = 0.1;
+    public pricingPolicy = 'aggressive';
 
     constructor(
         private http: HttpClient,
@@ -38,7 +42,19 @@ export class ProviderRegistrationComponent implements OnInit {
             this.errorMessage = `You should provide between ${this.MIN_STORAGE_GB} and ${this.MAX_STORAGE_GB} gigabytes of space`;
             return;
         }
-        const storageSpace = this.storageAmountGb * 1e9;
+
+
+        if (this.publicApiPort < 1024 || this.publicApiPort > 65535){
+            this.errorMessage = 'Port must be in the range 1024-65535';
+            return;
+        }
+
+        if (this.minStorageRate < 0 || this.minStorageRate > 100) {
+            this.errorMessage = 'Storage Rate must be between 0.000 and 10.000';
+            return;
+        }
+
+
         this.electronService.ipcRenderer.once('setupProviderDone', (event, result) => {
             this.zone.run(() => {
                 if (result.error) {
@@ -50,10 +66,15 @@ export class ProviderRegistrationComponent implements OnInit {
                 setTimeout(() => this.router.navigate(['provide-storage']), 250);
             });
         });
-        let providerAddr = this.publicApiIp + ':' + this.publicApiPort;
+
+        const storageSpace = this.storageAmountGb * 1e9;
+        const providerAddr = this.publicApiIp + ':' + this.publicApiPort;
+        const minStorageRate = this.minStorageRate * 1000;
         const providerOptions = {
             storageSpace: storageSpace,
-            publicApiAddr: providerAddr
+            publicApiAddr: providerAddr,
+            minStorageRate: minStorageRate,
+            pricingPolicy: this.pricingPolicy,
         };
         this.electronService.ipcRenderer.send('setupProvider', providerOptions);
         this.progressText = 'Setting up your provider.';

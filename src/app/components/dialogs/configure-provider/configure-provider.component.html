@@ -21,35 +21,26 @@
                 <br>
                 <mat-list-item>
                     <mat-form-field>
-                        <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Amount" type="number">
-                        <!--<span matSuffix>Gigabytes&nbsp;</span>-->
+                        <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Amount" type="number" style="direction: rtl; margin-right: 15px;">
                     </mat-form-field>
-                    Gigabytes
+                    <span matSuffix>:&nbsp;</span>
+                    Gigabytes Allocated
                 </mat-list-item>
                 <br>
                 <mat-list-item>
                     <mat-form-field id="policy-field">
-                        <mat-select placeholder="Pricing Policy" [(value)]='settings.pricingPolicy'>
+                        <mat-select placeholder="Pricing Policy" [(value)]='settings.pricingPolicy' style="margin-right: 15px;">
                             <mat-option value="aggressive">Aggressive</mat-option>
                             <mat-option value="passive">Passive</mat-option>
                             <mat-option value="fixed">Fixed</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <mat-form-field>
+                        <input matInput currencyMask [(ngModel)]='minStorageRate' [options]="{ precision: 3, suffix: '  '}"  placeholder='Minimum Storage Rate'>
+                    </mat-form-field>
+                    /GB/Month
                 </mat-list-item>
                 <br>
-                <mat-list-item>
-                    <mat-form-field>
-                        <input matInput [(ngModel)]='minStorageRate' placeholder='Minimum Storage Rate' type='number'>
-                    </mat-form-field>
-                    $/GB/Month
-                </mat-list-item>
-                <!--<br>-->
-                <!--<mat-list-item>-->
-                    <!--<mat-form-field>-->
-                        <!--<input matInput [(ngModel)]='maxStorageRate' placeholder='Maximum Rate' type='number'>-->
-                    <!--</mat-form-field>-->
-                    <!--$/GB/Month-->
-                <!--</mat-list-item>-->
             </mat-list>
             <mat-error *ngIf="errorMessage.length > 0">
                 {{errorMessage}}
