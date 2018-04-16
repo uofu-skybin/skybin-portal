@@ -336,6 +336,10 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             this.zone.run(() => {
                 this.renterService.downloadFile(file.id, destPath, version)
                     .subscribe(res => {
+                        if (!res.files) {
+                            download.state = TRANSFER_ERROR;
+                            return;
+                        }
                         let longestDlTime = res.files[0].totalTimeMs;
                         for (const dlFile of res.files) {
                             if (dlFile.totalTimeMs > longestDlTime) {
