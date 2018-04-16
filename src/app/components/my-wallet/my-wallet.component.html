@@ -4,7 +4,7 @@
             <div class="container-fluid" id='my-wallet-container'>
                 <div class="row">
                     <div class="col">
-                        <mat-card>
+                        <mat-card class="wallet-card">
                             <h3>Renter</h3>
                             <h5>Balance: ${{ renterBalance }}</h5>
 
@@ -38,25 +38,25 @@
                     </div>
 
                     <div class="col">
-                        <mat-card >
+                        <mat-card class="wallet-card">
                             <h3>Provider</h3>
                             <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
                             <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
-            
+
                             <div class="form-section">
                                 <h5>Withdraw:</h5>
                                 <mat-form-field>
                                     <input matInput currencyMask [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' placeholder="Amount">
                                 </mat-form-field>
-            
+
                                 <br>
-            
+
                                 <mat-form-field>
                                     <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
                                 </mat-form-field>
-            
+
                                 <br>
-            
+
                                 <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
                                     Withdraw
                                 </button>
@@ -73,7 +73,7 @@
                 <div class="container-fluid" id='my-wallet-container'>
                         <div class="row">
                             <div class="col-8">
-                                <mat-card>
+                                <mat-card class="wallet-card">
                                     <mat-table id='transaction-container' [dataSource]='dataSource'>
                                         <ng-container matColumnDef='date'>
                                             <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
@@ -96,12 +96,12 @@
                                     </mat-table>
                                     <mat-paginator #paginator
                                                     [pageSize]="pageSize">
-                                    </mat-paginator>          
+                                    </mat-paginator>
                                 </mat-card>
                             </div>
-        
+
                             <div class="col">
-                                <mat-card >
+                                <mat-card class="wallet-card">
                                     <h3>Filters</h3>
 
                                     <mat-form-field>
@@ -164,7 +164,7 @@
 
                                     <br>
 
-                                    <button mat-raised-button (click)="clearFilters()" >Clear</button>
+                                    <button id="wallet-filter-bttn" mat-raised-button (click)="clearFilters()" >Clear</button>
                                 </mat-card>
                             </div>
                         </div>
