@@ -29,7 +29,7 @@
                         </div>
                     </mat-card-content>
                     <mat-card-actions>
-                        <button (click)="settingsClicked()" mat-button matTooltip="Configure your provider settings" matTooltipShowDelay="500">
+                        <button id="provider-settings-button" (click)="settingsClicked()" mat-button matTooltip="Configure your provider settings" matTooltipShowDelay="500">
                             <i id='plus-icon' class='fa fa-cog' aria-hidden='true'></i>
                             Settings
                         </button>
@@ -116,7 +116,7 @@
                                     </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    See a visual representation of your Skybin storage.
+                                    See a visual representation of your Skybin storage
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <canvas id="storage-pie-chart" width="300" height="200"></canvas>
@@ -134,7 +134,7 @@
                                     </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    Monitor your actions on the Skybin network.
+                                    Monitor SkyBin's network actions
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <canvas id="requests-chart" width="300" height="200"></canvas>
@@ -148,11 +148,11 @@
                                         <i class="fa fa-line-chart" aria-hidden="true"></i>
                                     </span>
                                     <span class="chart-title">
-                                        Network Throughput
+                                        Bandwidth Usage
                                     </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    Monitor your network throughput on the Skybin network.
+                                    Monitor SkyBin's use of your network bandwidth
                                 </mat-panel-description>
                             </mat-expansion-panel-header>
                             <canvas id="throughput-chart" width="300" height="200"></canvas>

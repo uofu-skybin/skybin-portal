@@ -29,10 +29,7 @@
 }
 
 #provider-settings-button {
-    margin-left: 20px;
-    background: none;
-    border: none;
-    cursor: pointer;
+    margin-left: 1em;
 }
 
 .stats-card {
