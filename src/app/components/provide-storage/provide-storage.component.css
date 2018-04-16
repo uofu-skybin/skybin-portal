@@ -1,6 +1,6 @@
 
 #provider-dashboard-container {
-    background: #f1f1f1;
+    /*background: #f1f1f1;*/
     margin: 0;
     padding: 40px;
     width: 100%;
@@ -36,6 +36,7 @@
 }
 
 .stats-card {
+    background: #fbfafa;
     width: 100%;
     margin-bottom: 20px;
 }
@@ -87,3 +88,58 @@
     color: #00A7F3;
 }
 
+.chart-icon {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 1em;
+    /*margin-left: 5em;*/
+}
+
+.chart-title {
+    /*margin-right: 3em;*/
+}
+
+.provider-stat-body {
+    line-height: 2em;
+}
+
+.provider-stat-card {
+    margin-bottom: 0 !important;
+}
+
+.running-status-color {
+    color: #15c377;
+}
+
+#status-text {
+    margin-right: 1em;
+}
+
+.provider-stat-value {
+    margin-left: 15%;
+    font-weight: 500;
+}
+
+.provider-td {
+    padding-left: 0 !important;
+}
+
+.running-status-icon {
+    margin-right: 0.5em;
+}
+
+.provider-stat-desc {
+    color: #6f6f6f;
+}
+
+.x-pad {
+    padding-right: 1em;
+}
+
+.provider-stat-table {
+    /*width: 100% !important;*/
+}
+
+#long-ass-provider-td {
+    white-space: nowrap;
+}

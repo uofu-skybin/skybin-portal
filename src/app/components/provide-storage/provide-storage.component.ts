@@ -83,6 +83,9 @@ export class ProvideStorageComponent implements OnInit {
     fetchStats() {
         this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
             this.providerInfo = info;
+            if (!this.providerInfo.storageRate) {
+                this.providerInfo.storageRate = 120;
+            }
             console.log('info: ', info);
             this.drawStorageUsedChart();
         }, (error) => {
@@ -247,7 +250,7 @@ export class ProvideStorageComponent implements OnInit {
     drawThroughputChart() {
         const counters = this.providerStats.activityCounters;
 
-        const labels = counters.timestamps
+        const labels = counters.timestamps;
 
         const datasets = [
             {

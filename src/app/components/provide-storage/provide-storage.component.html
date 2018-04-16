@@ -3,13 +3,33 @@
         <div class="col-md-4">
             <div class="row">
                 <mat-card class="stats-card">
-                    <h3>Summary</h3>
-                    Provider Node ID: {{formatProviderId(providerInfo.providerId)}}
-                    <br> Server Status: Running
-                    <br> Storage Available: {{providerInfo.storageAllocated | bytes}}
-                    <br> Storage Rate: {{formatStorageRate(providerInfo.storageRate)}}
+                    <mat-card-title>
+                        Summary
+                    </mat-card-title>
+                    <mat-card-content class="provider-stat-card">
+                        <div class="provider-stat-body">
+                            <table>
+                                <tr>
+                                    <td class="provider-td"><span id="status-text" class="provider-stat-desc">Server Status: </span></td>
+                                    <td><span class="provider-stat-value"><i class="fa fa-circle running-status-color running-status-icon" aria-hidden="true"></i> Running</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td"><span class="provider-stat-desc">Provider Node ID:</span></td>
+                                    <td><span class="provider-stat-value">{{formatProviderId(providerInfo.providerId)}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td"><span class="provider-stat-desc">Storage Available: </span></td>
+                                    <td><span class="provider-stat-value">{{providerInfo.storageAllocated | bytes}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td"><span class="provider-stat-desc">Storage Rate: </span></td>
+                                    <td><span class="provider-stat-value">{{formatStorageRate(providerInfo.storageRate)}}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
                     <mat-card-actions>
-                        <button id="provider-settings-button" matTooltip="Settings" (click)="settingsClicked()">
+                        <button (click)="settingsClicked()" mat-button matTooltip="Configure your provider settings" matTooltipShowDelay="500">
                             <i id='plus-icon' class='fa fa-cog' aria-hidden='true'></i>
                             Settings
                         </button>
@@ -18,100 +38,126 @@
             </div>
             <div class="row">
                 <mat-card class="stats-card">
-                    <h3>Past Week</h3>
-                    {{providerStats.recentSummary.week.blockUploads}} blocks uploaded
-                    <br> {{providerStats.recentSummary.week.blockDownloads}} blocks downloaded
-                    <br> {{providerStats.recentSummary.week.blockDeletions}} blocks removed
-                    <br> {{providerStats.recentSummary.week.storageReservations}} new storage contracts
+                    <mat-card-title>
+                        Past Week
+                    </mat-card-title>
+                    <mat-card-content class="provider-stat-card">
+                        <div class="provider-stat-body">
+                            <table>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Blocks Uploaded: </span></td>
+                                    <td><span class="provider-stat-value">{{providerStats.recentSummary.week.blockUploads}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Blocks Downloaded: </span></td>
+                                    <td><span class="provider-stat-value">{{providerStats.recentSummary.week.blockDownloads}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Blocks Removed: </span></td>
+                                    <td><span class="provider-stat-value">{{providerStats.recentSummary.week.blockDeletions}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">New Storage Contracts: </span></td>
+                                    <td><span class="provider-stat-value">{{providerStats.recentSummary.week.storageReservations}}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
                 </mat-card>
             </div>
             <div class="row">
                 <mat-card class="stats-card">
-                    <h3>Totals</h3>
-                    {{providerInfo.totalContracts}} storage contracts with {{providerInfo.totalRenters}} unique renters
-                    <br> {{providerInfo.storageReserved | bytes}} reserved space
-                    <br> {{providerInfo.storageUsed | bytes}} used
-                    <br> {{providerInfo.totalBlocks}} blocks stored
+                    <mat-card-title>
+                        Totals
+                    </mat-card-title>
+                    <mat-card-content class="provider-stat-card">
+                        <div class="provider-stat-body">
+                            <table class="provider-stat-table">
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Storage Contracts: </span></td>
+                                    <td><span id="long-ass-provider-td" class="provider-stat-value">{{providerInfo.totalContracts}} contracts with {{providerInfo.totalRenters}} unique renters</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Reserved Space: </span></td>
+                                    <td><span class="provider-stat-value">{{providerInfo.storageReserved | bytes}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Space Usage: </span></td>
+                                    <td><span class="provider-stat-value">{{providerInfo.storageUsed | bytes}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Storage Blocks: </span></td>
+                                    <td><span class="provider-stat-value">{{providerInfo.totalBlocks}}</span></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </mat-card-content>
+                    <!--<h3>Totals</h3>-->
+                    <!--{{providerInfo.totalContracts}} storage contracts with {{providerInfo.totalRenters}} unique renters-->
+                    <!--<br> {{providerInfo.storageReserved | bytes}} reserved space-->
+                    <!--<br> {{providerInfo.storageUsed | bytes}} used-->
+                    <!--<br> {{providerInfo.totalBlocks}} blocks stored-->
                 </mat-card>
             </div>
         </div>
         <div class="col-md-8">
             <div id="provider-charts-container">
-                <!--<mat-card>-->
+                <mat-card class="stats-card">
+                    <mat-accordion>
+                        <!-- storage pie chart -->
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span class="chart-icon">
+                                        <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="chart-title">
+                                        Storage Usage
+                                    </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    See a visual representation of your Skybin storage.
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <canvas id="storage-pie-chart" width="300" height="200"></canvas>
+                        </mat-expansion-panel>
 
-                    <!--<div class="container">-->
-                        <!--<mat-tab-group>-->
-                            <!--<mat-tab label="One">-->
-                                <!--<div class="canvas-holder">-->
-                                    <!--<canvas id="storage-pie-chart" class="chart" width="300" height="200"></canvas>-->
-                                <!--</div>-->
-                            <!--</mat-tab>-->
-                            <!--<mat-tab label="Two">-->
-                                <!--<div class="canvas-holder">-->
-                                    <!--<canvas id="requests-chart" class="chart" width="300" height="200"></canvas>-->
-                                <!--</div>-->
-                            <!--</mat-tab>-->
-                            <!--<mat-tab label="Three">-->
-                                <!--<div class="canvas-holder">-->
-                                    <!--<canvas id="throughput-chart" class="chart" width="300" height="200"></canvas>-->
-                                <!--</div>-->
-                            <!--</mat-tab>-->
-                        <!--</mat-tab-group>-->
-                        <!--&lt;!&ndash; Nav tabs &ndash;&gt;-->
-                        <!--&lt;!&ndash;<ul class="nav nav-tabs" role="tablist" id="bs-tabs">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li><a href="#length" role="tab" data-toggle="tab">Length</a>&ndash;&gt;-->
+                        <!-- requests chart -->
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span class="chart-icon">
+                                        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="chart-title">
+                                        Network Requests
+                                    </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Monitor your actions on the Skybin network.
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <canvas id="requests-chart" width="300" height="200"></canvas>
+                        </mat-expansion-panel>
 
-                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<li class="active"><a href="#height" role="tab" data-toggle="tab">Height</a>&ndash;&gt;-->
-
-                            <!--&lt;!&ndash;</li>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</ul>&ndash;&gt;-->
-                        <!--&lt;!&ndash;&lt;!&ndash; Tab panes &ndash;&gt;&ndash;&gt;-->
-                        <!--&lt;!&ndash;<div class="tab-content">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<div class="tab-pane" id="length">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<div class="canvas-holder">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<canvas id="storage-pie-hart" class="chart"></canvas>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<div class="tab-pane active" id="height">&ndash;&gt;-->
-                                <!--&lt;!&ndash;<div class="canvas-holder">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<canvas id="requests-chart" class="chart"></canvas>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--</div>-->
-                <!--</mat-card>-->
-
-                <mat-card>
-                    <div id="provider-carousel-content" class="carousel slide" data-ride="carousel">
-                        <ol id="provider-carousel-indicators" class="carousel-indicators">
-                            <li data-target="#provider-carousel-content" data-slide-to="0" class="active"></li>
-                            <li data-target="#provider-carousel-content" data-slide-to="1"></li>
-                            <li data-target="#provider-carousel-content" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div id="provider-charts-container-inner">
-
-                                <div class="carousel-item active">
-                                    <canvas id="storage-pie-chart" width="300" height="200"></canvas>
-                                </div>
-                                <div class="carousel-item">
-                                    <canvas id="requests-chart" width="300" height="200"></canvas>
-                                </div>
-                                <div class="carousel-item">
-                                    <canvas id="throughput-chart" width="300" height="200"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#provider-carousel-content" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#provider-carousel-content" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
+                        <!-- throughput chart -->
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span class="chart-icon">
+                                        <i class="fa fa-line-chart" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="chart-title">
+                                        Network Throughput
+                                    </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    Monitor your network throughput on the Skybin network.
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+                            <canvas id="throughput-chart" width="300" height="200"></canvas>
+                        </mat-expansion-panel>
+                    </mat-accordion>
                 </mat-card>
             </div>
         </div>
