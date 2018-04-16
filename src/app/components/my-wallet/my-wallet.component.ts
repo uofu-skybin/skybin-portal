@@ -104,6 +104,18 @@ export class MyWalletComponent implements OnInit {
     }
 
     renterWithdrawClicked() {
+        if (this.renterWithdrawAmount == undefined ||
+             this.renterWithdrawAmount == null || 
+             this.renterWithdrawAmount <= 0) {
+            this.showNotification("please supply an amount to withdraw");
+            return;
+        }
+        if (this.renterWithdrawEmail == undefined || 
+             this.renterWithdrawEmail == null ||
+             this.renterWithdrawEmail == '') {
+            this.showNotification("please supply an email address");
+            return;
+        }
         this.renterService.withdraw(
             this.renterWithdrawEmail, 
             this.renterWithdrawAmount * 100)
@@ -117,6 +129,18 @@ export class MyWalletComponent implements OnInit {
     }
 
     providerWithdrawClicked() {
+        if (this.providerWithdrawAmount == undefined ||
+            this.providerWithdrawAmount == null || 
+            this.providerWithdrawAmount <= 0) {
+           this.showNotification("please supply an amount to withdraw");
+           return;
+       }
+       if (this.providerWithdrawEmail == undefined || 
+            this.providerWithdrawEmail == null ||
+            this.providerWithdrawEmail == '') {
+           this.showNotification("please supply an email address");
+           return;
+       }
         let payload = {
             email: this.providerWithdrawEmail,
             amount: this.providerWithdrawAmount * 100
@@ -284,7 +308,18 @@ export class MyWalletComponent implements OnInit {
     renderPaypal() {
         paypal.Button.render({
             env: 'sandbox',
+            style: {
+                color: 'blue',
+                shape: 'rect'
+            },
             payment: () => {
+                if (this.depositAmount == 0 ||
+                    this.depositAmount == null ||
+                    this.depositAmount == undefined) {
+                        // We just let the error happen for now, because I don't know how to disable the
+                        // button or cancel the payment
+                        this.showNotification("please supply an amount to deposit")
+                    }
                 this.electronService.ipcRenderer.send('close-paypal', '');
                 // HACK! This gets the path to the file by swapping out the route with the file name.
                 let url = window.location.href.replace('my-wallet', 'index.html');
