@@ -2,6 +2,7 @@
 export class SkyFile {
     id: string;
     ownerId: string;
+    ownerAlias: string;
     name: string;
     isDir: boolean;
     accessList: any[];
