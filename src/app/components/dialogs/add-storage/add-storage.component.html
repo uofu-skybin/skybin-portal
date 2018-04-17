@@ -30,7 +30,7 @@
         </mat-dialog-actions>
     </div>
 
-    <mat-dialog-content *ngIf="state === 'SHOW_PROGRESS'" style="min-height: 15em;">
+    <mat-dialog-content *ngIf="state === 'SHOW_PROGRESS'" style="min-height: 15em; padding-top: 10em;">
         <div style="text-align: center;">
             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             <p>{{progressMessage}}</p>
@@ -39,8 +39,8 @@
 
     <div *ngIf="state === 'SHOW_CONFIRMATION'">
         <mat-dialog-content align="center">
-            <p>Storage found!</p>
-            <p>Total Cost: {{formatStorageCost(storageEstimate.totalCost)}}</p>
+            <p style="font-size: 1.5em;">Storage found!</p>
+            <p style="font-size: 1.5em;">Total Cost: {{formatStorageCost(storageEstimate.totalCost)}}</p>
         </mat-dialog-content>
         <mat-dialog-actions align="center" style="margin-top: 15px; margin-bottom: 5px;">
             <button mat-raised-button class='skybin-btn-primary' (click)='confirmClicked()'>Confirm</button>

@@ -65,10 +65,16 @@ export class AddStorageComponent {
             amount: requestedAmountBytes,
         };
         this.showProgress('Finding storage providers');
+        const startTime = new Date();
         this.http.post(`${appConfig['renterAddress']}/create-storage-estimate`, req)
             .subscribe((response: any) => {
-                this.storageEstimate = response;
-                this.state = SHOW_CONFIRMATION;
+                const endTime = new Date();
+                const elapsedMs = endTime.getTime() - startTime.getTime();
+                const delay = Math.max(500 - elapsedMs, 0);
+                setTimeout(() => {
+                    this.storageEstimate = response;
+                    this.state = SHOW_CONFIRMATION;
+                }, delay);
                 console.log('got storage estimate:');
                 console.log(this.storageEstimate);
             }, (error: HttpErrorResponse) => {
@@ -84,11 +90,17 @@ export class AddStorageComponent {
 
     confirmClicked() {
         this.showProgress('Confirming storage agreements');
+        const startTime = new Date();
         this.http.post(`${appConfig['renterAddress']}/confirm-storage-estimate`, this.storageEstimate)
             .subscribe((response: any) => {
                 console.log('storage estimate confirmed');
-                this.storageReserved = this.storageEstimate.totalSpace;
-                this.dialogRef.close();
+                const endTime = new Date();
+                const elapsedMs = endTime.getTime() - startTime.getTime();
+                const delay = Math.max(500 - elapsedMs, 0);
+                setTimeout(() => {
+                    this.storageReserved = this.storageEstimate.totalSpace;
+                    this.dialogRef.close();
+                }, delay);
             }, (error: HttpErrorResponse) => {
                 console.error('Error confirming storage estimate');
                 console.error(error);
@@ -111,7 +123,7 @@ export class AddStorageComponent {
     }
 
     formatStorageCost(cost: number) {
-        return '$' + (cost / 1000).toFixed(3);
+        return '$' + (cost / 1000).toFixed(2);
     }
 
 }
