@@ -141,33 +141,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         });
 
         storageDialog.afterClosed().subscribe(result => {
-            const storageRequested = storageDialog.componentInstance.storageRequested;
-            if (!storageRequested) {
+            const storageReserved = storageDialog.componentInstance.storageReserved;
+            if (!storageReserved) {
                 return;
             }
-            const progressDialog = this.dialog.open(ReserveStorageProgressComponent, {
-                width: '600px',
-                disableClose: true
-            });
-            const params = {
-                amount: storageRequested,
-            };
-            const startTime = new Date();
-            this.renterService.reserveStorage(storageRequested)
-                .subscribe(res => {
-                    if (res.contracts) {
-                        const endTime = new Date();
-                        const elapsedMs = endTime.getTime() - startTime.getTime();
-                        setTimeout(() => {
-                            progressDialog.close();
-                            this.getRenterInfo();
-                            this.renterService.emitStorageChange(storageRequested);
-                            this.showErrorNotification(`Successfully reserved ${beautifyBytes(storageRequested)}!`);
-                        }, Math.max(3000 - elapsedMs, 0));
-                    } else {
-                        progressDialog.close();
-                    }
-                });
+            this.getRenterInfo();
+            this.renterService.emitStorageChange(storageReserved);
+            this.showErrorNotification(`Successfully reserved ${beautifyBytes(storageReserved)}`);
         });
     }
 

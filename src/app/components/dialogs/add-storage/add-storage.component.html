@@ -1,29 +1,61 @@
 <div>
-    <mat-card-title>
-        Reserve More Space
-    </mat-card-title>
-    <br>
-    <br>
-    <mat-card-content>
-        <div>
-            You currently have {{renterInfo.reservedStorage | bytes}} reserved and {{renterInfo.freeStorage | bytes}}
-            of free space.
+    <div style="margin-bottom: 20px;">
+        <mat-card-title>
+            Reserve More Space
+        </mat-card-title>
+    </div>
+
+    <div *ngIf="state === 'SHOW_INPUTS'">
+        <mat-dialog-content>
+            <div>
+                You currently have {{renterInfo.reservedStorage | bytes}} reserved with {{renterInfo.freeStorage | bytes}}
+                of free space.
+            </div>
+            <br>
+            <mat-list align="center">
+                <mat-list-item>
+                    <mat-form-field>
+                        <input matInput [(ngModel)]='requestedAmountGb' placeholder='Amount' pattern="\d+" type='number'>
+                    </mat-form-field>
+                    Gigabytes
+                </mat-list-item>
+                <mat-error id="reserve-error-message" *ngIf="errorMessage.length > 0">
+                    {{errorMessage}}
+                </mat-error>
+            </mat-list>
+        </mat-dialog-content>
+        <mat-dialog-actions align="center" style="margin-top: 15px; margin-bottom: 5px;">
+            <button mat-raised-button class='skybin-btn-primary' (click)='findSpaceClicked()'>Find Space</button>
+            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">Cancel</button>
+        </mat-dialog-actions>
+    </div>
+
+    <mat-dialog-content *ngIf="state === 'SHOW_PROGRESS'" style="min-height: 15em;">
+        <div style="text-align: center;">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <p>{{progressMessage}}</p>
         </div>
-        <br>
-        <mat-list>
-            <mat-list-item>
-                <mat-form-field>
-                    <input matInput [(ngModel)]='requestedAmountGb' placeholder='Amount' pattern="\d+" type='number'>
-                </mat-form-field>
-                Gigabytes
-            </mat-list-item>
-            <mat-error id="reserve-error-message" *ngIf="errorMessage.length > 0">
+    </mat-dialog-content>
+
+    <div *ngIf="state === 'SHOW_CONFIRMATION'">
+        <mat-dialog-content align="center">
+            <p>Storage found!</p>
+            <p>Total Cost: {{formatStorageCost(storageEstimate.totalCost)}}</p>
+        </mat-dialog-content>
+        <mat-dialog-actions align="center" style="margin-top: 15px; margin-bottom: 5px;">
+            <button mat-raised-button class='skybin-btn-primary' (click)='confirmClicked()'>Confirm</button>
+            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">Cancel</button>
+        </mat-dialog-actions>
+    </div>
+
+    <div *ngIf="state === 'SHOW_ERROR'">
+        <mat-dialog-content align="center">
+            <mat-error>
                 {{errorMessage}}
             </mat-error>
-            <br>
-            <mat-list-item>
-                <button style='margin-bottom: 3em;' mat-raised-button class='skybin-btn-primary' (click)='reserveClicked()'>Reserve</button>
-            </mat-list-item>
-        </mat-list>
-    </mat-card-content>
+        </mat-dialog-content>
+        <mat-dialog-actions align="center">
+            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">OK</button>
+        </mat-dialog-actions>
+    </div>
 </div>
