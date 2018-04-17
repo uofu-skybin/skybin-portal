@@ -22,8 +22,9 @@ export class ProviderRegistrationComponent implements OnInit {
     private storageAmountGb = 0;
     public publicApiIp = '';
     public publicApiPort = 8003;
-    public minStorageRate = 0.1;
-    public pricingPolicy = 'aggressive';
+    public minStorageRate = 0.001;
+    public storageRate = 0.001;
+    public pricingPolicy = 'passive';
 
     constructor(
         private http: HttpClient,
@@ -43,17 +44,20 @@ export class ProviderRegistrationComponent implements OnInit {
             return;
         }
 
-
-        if (this.publicApiPort < 1024 || this.publicApiPort > 65535){
+        if (this.publicApiPort < 1024 || this.publicApiPort > 65535) {
             this.errorMessage = 'Port must be in the range 1024-65535';
             return;
         }
 
-        if (this.minStorageRate < 0 || this.minStorageRate > 100) {
-            this.errorMessage = 'Storage Rate must be between 0.000 and 10.000';
+        if (this.minStorageRate < 0) {
+            this.errorMessage = 'Min Storage Rate must be positive';
             return;
         }
 
+        if (this.storageRate < 0) {
+            this.errorMessage = 'Storage Rate must be positive';
+            return;
+        }
 
         this.electronService.ipcRenderer.once('setupProviderDone', (event, result) => {
             this.zone.run(() => {
@@ -70,10 +74,12 @@ export class ProviderRegistrationComponent implements OnInit {
         const storageSpace = this.storageAmountGb * 1e9;
         const providerAddr = this.publicApiIp + ':' + this.publicApiPort;
         const minStorageRate = this.minStorageRate * 1000;
+        const storageRate = this.storageRate * 1000;
         const providerOptions = {
             storageSpace: storageSpace,
             publicApiAddr: providerAddr,
             minStorageRate: minStorageRate,
+            storageRate: storageRate,
             pricingPolicy: this.pricingPolicy,
         };
         this.electronService.ipcRenderer.send('setupProvider', providerOptions);

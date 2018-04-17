@@ -18,12 +18,20 @@
                                     <td><span class="provider-stat-value">{{formatProviderId(providerInfo.providerId)}}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="provider-td"><span class="provider-stat-desc">Storage Available: </span></td>
+                                    <td class="provider-td"><span class="provider-stat-desc">Storage Offered: </span></td>
                                     <td><span class="provider-stat-value">{{providerInfo.storageAllocated | bytes}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td"><span class="provider-stat-desc">Storage Used: </span></td>
+                                    <td><span class="provider-stat-value">{{providerInfo.storageUsed | bytes}}</span></td>
                                 </tr>
                                 <tr>
                                     <td class="provider-td"><span class="provider-stat-desc">Storage Rate: </span></td>
                                     <td><span class="provider-stat-value">{{formatStorageRate(providerInfo.storageRate)}}</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="provider-td"><span class="provider-stat-desc">Pricing Policy: </span></td>
+                                    <td><span class="provider-stat-value">{{formatPricingPolicy(providerInfo.pricingPolicy)}}</span></td>
                                 </tr>
                             </table>
                         </div>

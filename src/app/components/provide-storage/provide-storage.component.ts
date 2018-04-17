@@ -83,9 +83,6 @@ export class ProvideStorageComponent implements OnInit {
     fetchStats() {
         this.http.get(`${appConfig['providerAddress']}/info`).subscribe((info: ProviderInfo) => {
             this.providerInfo = info;
-            if (!this.providerInfo.storageRate) {
-                this.providerInfo.storageRate = 120;
-            }
             console.log('info: ', info);
             this.drawStorageUsedChart();
         }, (error) => {
@@ -348,8 +345,16 @@ export class ProvideStorageComponent implements OnInit {
         }
         return providerId.slice(0, 15) + '...';
     }
+
     formatStorageRate(storageRate: number) {
         return '$' + (storageRate/1000).toFixed(3) + '/GB/Month';
+    }
+
+    formatPricingPolicy(policy: string) {
+        if (!policy || policy.length === 0) {
+            return policy;
+        }
+        return policy[0].toUpperCase() + policy.substr(1);
     }
 
 }

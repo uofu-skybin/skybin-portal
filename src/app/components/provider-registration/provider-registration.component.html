@@ -21,16 +21,15 @@
                     </mat-form-field>
                     <mat-form-field id="port-field">
                         <input matInput [(ngModel)]='publicApiPort' placeholder='Port' min="1024" max="65535" step="1" type='number'>
-                        <span matPrefix>:&nbsp;</span>
                     </mat-form-field>
                 </mat-list-item>
 
                 <br>
                 <mat-list-item>
                     <mat-form-field>
-                        <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Amount" type="number" style="direction: rtl; margin-right: 15px;">
+                        <input matInput [(ngModel)]="storageAmountGb" placeholder="Storage Offered" type="number" style="margin-right: 15px;">
                     </mat-form-field>
-                    Gigabytes Allocated
+                    Gigabytes 
                 </mat-list-item>
                 <br>
                 <mat-list-item>
@@ -41,8 +40,11 @@
                             <mat-option value="fixed">Fixed</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="pricingPolicy !== 'fixed'" style="margin-left: 15px;">
                         <input matInput currencyMask [(ngModel)]='minStorageRate' [options]="{ precision: 3, suffix: '  '}"  placeholder='Minimum Storage Rate'>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="pricingPolicy === 'fixed'" style="margin-left: 15px;">
+                        <input matInput currencyMask [(ngModel)]='storageRate' [options]="{ precision: 3, suffix: '  '}"  placeholder='Storage Rate'>
                     </mat-form-field>
                     /GB/Month
                 </mat-list-item>
