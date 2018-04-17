@@ -124,7 +124,7 @@
                                 <span class='download-file-name'
                                   *ngIf="baseName(upload.destPath).length > 23">{{(baseName(upload.destPath)).slice(0, 23) + '...'}}</span>
                                 <span class='download-file-name'
-                                      *ngIf="baseName(upload.destPath).length <= 25">{{(baseName(upload.destPath))}}</span>
+                                      *ngIf="baseName(upload.destPath).length <= 23">{{(baseName(upload.destPath))}}</span>
                                 <!--<i *ngIf="upload.state === 'TRANSFER_DONE'" class="fa fa-ellipsis-v"></i>-->
                                 <button *ngIf="upload.state === 'TRANSFER_DONE'"
                                         class='post-download-button' mat-icon-button>
