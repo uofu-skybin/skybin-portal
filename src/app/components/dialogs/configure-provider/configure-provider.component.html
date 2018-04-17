@@ -34,10 +34,10 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field *ngIf='providerConfig.pricingPolicy !== "fixed"' style="margin-left: 15px;">
-                        <input matInput currencyMask [(ngModel)]='minStorageRate' [options]="{ precision: 3, suffix: '  '}"  placeholder='Minimum Storage Rate'>
+                        <input matInput currencyMask [(ngModel)]='minStorageRate' [options]="{ precision: 3, suffix: '  '}" placeholder='Minimum Storage Rate'>
                     </mat-form-field>
                     <mat-form-field *ngIf='providerConfig.pricingPolicy === "fixed"' style="margin-left: 15px;">
-                        <input matInput currencyMask [(ngModel)]='storageRate' [options]="{ precision: 3, suffix: '  '}"  placeholder='Storage Rate'>
+                        <input matInput currencyMask [(ngModel)]='storageRate' [options]="{ precision: 3, suffix: '  '}" placeholder='Storage Rate'>
                     </mat-form-field>
                     /GB/Month
                 </mat-list-item>
@@ -48,16 +48,12 @@
             </mat-error>
         </div>
     </mat-dialog-content>
-    <mat-dialog-actions>
-        <div >
-            <button mat-raised-button class="skybin-btn-primary"
-                    (click)="updateSettingsClicked()">
+    <mat-dialog-actions align="center">
+        <div>
+            <button mat-raised-button class="skybin-btn-primary" (click)="updateSettingsClicked()">
                 Update Settings
             </button>
+            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">Cancel</button>
         </div>
-        <!--<button mat-raised-button class="skybin-btn-primary"-->
-        <!--(click)="dialogRef.close()">-->
-        <!--Cancel-->
-        <!--</button>-->
     </mat-dialog-actions>
 </div>

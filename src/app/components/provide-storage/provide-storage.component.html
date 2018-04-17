@@ -22,10 +22,6 @@
                                     <td><span class="provider-stat-value">{{providerInfo.storageAllocated | bytes}}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="provider-td"><span class="provider-stat-desc">Storage Used: </span></td>
-                                    <td><span class="provider-stat-value">{{providerInfo.storageUsed | bytes}}</span></td>
-                                </tr>
-                                <tr>
                                     <td class="provider-td"><span class="provider-stat-desc">Storage Rate: </span></td>
                                     <td><span class="provider-stat-value">{{formatStorageRate(providerInfo.storageRate)}}</span></td>
                                 </tr>
@@ -90,15 +86,15 @@
                                     <td><span class="provider-stat-value">{{providerInfo.totalRenters}}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Reserved Space: </span></td>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Storage Reserved: </span></td>
                                     <td><span class="provider-stat-value">{{providerInfo.storageReserved | bytes}}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Space Usage: </span></td>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Storage Used: </span></td>
                                     <td><span class="provider-stat-value">{{providerInfo.storageUsed | bytes}}</span></td>
                                 </tr>
                                 <tr>
-                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Storage Blocks: </span></td>
+                                    <td class="provider-td x-pad"><span class="provider-stat-desc">Blocks Stored: </span></td>
                                     <td><span class="provider-stat-value">{{providerInfo.totalBlocks}}</span></td>
                                 </tr>
                             </table>
