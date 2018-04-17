@@ -158,7 +158,8 @@ export class RenterService {
      */
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-            console.log(`${operation} failed: ${error.error}`);
+            console.error(`${operation} failed:`);
+            console.error(error.error);
 
             this.zone.run(() => {
                 let errMessage = (error.error.error) ? error.error.error : error.error;
