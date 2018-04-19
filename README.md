@@ -1,27 +1,54 @@
-# SkybinPortal
+# SkyBin Portal
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.5.0.
+This repo contains the Electron-based frontend for SkyBin.
 
-## Development server
+## Getting Started
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+First, ensure you have installed and built the skybin binary and
+set up a SkyBin network locally. See "Prerequisites" for more information.
 
-## Code scaffolding
+Next, clone skybin-portal:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+$ git clone https://github.com/uofu-skybin/skybin-portal.git
+```
 
-## Build
+Fetch NPM dependencies:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+```
+$ cd skybin-portal
+$ npm install
+```
+Finally, build and run the portal with:
 
-## Running unit tests
+```
+$ npm start
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Prerequisites
 
-## Running end-to-end tests
+1. NodeJS and NPM
+2. The skybin binary built from the https://github.com/uofu-skybin/skybin repo.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+The skybin binary is necessary because using the portal requires
+a running SkyBin network. This includes:
 
-## Further help
+1. A running metaserver instance at a known network address.
+2. A configured and running SkyBin renter daemon. This can be
+   set up manually via the `skybin renter init` and `skybin renter daemon`
+   commands or via the portal by packaging the skybin binary with the 
+   portal. See the section below.
+3. (Optional) A configured and running SkyBin provider daemon. 
+   This can also be set up manually via the `skybin provider init` and
+   `skybin provider daemon` commands or via the portal by packaging
+   the skybin binary with the portal.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+The easiest way to run a local SkyBin network is with the `setup.sh` script
+bundled in the main SkyBin repo. See [here](https://github.com/uofu-skybin/skybin/tree/master/integration)
+for instructions. 
+
+## Packaging the skybin binary with the portal
+
+Place a skybin binary within a `/bin` folder underneath the repo's top-level
+directory to allow the portal to run SkyBin renter and provider services automatically. 
+
