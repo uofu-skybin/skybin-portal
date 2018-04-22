@@ -18,6 +18,7 @@
 
 #reserve-step-1-container {
     text-align: center;
+    overflow: hidden;
 }
 
 .storage-found-icon {
@@ -27,6 +28,6 @@
 
 #add-storage-container {
     min-width: 570px;
+    overflow: hidden !important;
 }
-
 

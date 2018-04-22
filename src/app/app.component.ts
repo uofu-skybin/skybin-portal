@@ -23,10 +23,6 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.router.navigate(['my-files']);
-        this.renterService.getRenterInfo()
-            .subscribe(renterInfo => {
-                this.renterInfo = renterInfo;
-            });
 
         // Listen for new storage reservations.
         this.renterService.storageChangeEmitted$.subscribe(addedStorage => {
