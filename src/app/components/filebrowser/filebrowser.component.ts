@@ -46,13 +46,24 @@ export class FilebrowserComponent {
     getDirsInCurrentDirectory() {
         return this.filesToDisplay
             .filter(e => e.isDir)
-            .filter(e => this.inCurrentDirectory(e.name));
+            .filter(e => this.inCurrentDirectory(e.name))
+            .sort((dir1, dir2) => {
+                const n1 = dir1.name.split('/')[dir1.name.split('/').length - 1].toLowerCase();
+                const n2 = dir2.name.split('/')[dir2.name.split('/').length - 1].toLowerCase();
+                return (n1 < n2) ? -1 : 1;
+            });
     }
 
     getFilesInCurrentDirectory() {
         return this.filesToDisplay
             .filter(e => !e.isDir)
-            .filter(e => this.inCurrentDirectory(e.name));
+            .filter(e => this.inCurrentDirectory(e.name))
+            .sort((file1, file2) => {
+                const n1 = file1.name.split('/')[file1.name.split('/').length - 1].toLowerCase();
+                const n2 = file2.name.split('/')[file2.name.split('/').length - 1].toLowerCase();
+                return (n1 < n2) ? -1 : 1;
+            });
+
     }
 
     baseName(fileName: string) {
