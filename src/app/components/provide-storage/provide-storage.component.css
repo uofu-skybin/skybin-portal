@@ -5,6 +5,7 @@
     padding: 40px;
     width: 100%;
     height: 100%;
+    min-width: 986px;
 }
 
 #provider-charts-container {
@@ -138,5 +139,9 @@
 }
 
 #long-ass-provider-td {
+    white-space: nowrap;
+}
+
+.chart-desc, .chart-title {
     white-space: nowrap;
 }

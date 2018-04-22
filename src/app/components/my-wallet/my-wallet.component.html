@@ -1,174 +1,176 @@
-<mat-tab-group (selectedTabChange)="onTabSwitched($event)">
-    <mat-tab label="Deposit/Withdraw">
-        <div class="tab-container">
-            <div class="container-fluid" id='my-wallet-container'>
-                <div class="row">
-                    <div class="col">
-                        <mat-card class="wallet-card">
-                            <h3>Renter</h3>
-                            <h5>Balance: ${{ renterBalance }}</h5>
+<section id="wallet-container">
+    <mat-tab-group (selectedTabChange)="onTabSwitched($event)">
+        <mat-tab label="Deposit/Withdraw">
+            <div class="tab-container">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <mat-card class="wallet-card">
+                                <h3>Renter</h3>
+                                <h5>Balance: ${{ renterBalance }}</h5>
 
-                            <div class="form-section">
-                                <h5>Deposit:</h5>
-                                <mat-form-field>
-                                    <input matInput currencyMask [(ngModel)]='depositAmount' placeholder="Amount">
-                                </mat-form-field>
-                                <div id='paypal-button' #paypalButton></div>
-                            </div>
+                                <div class="form-section">
+                                    <h5>Deposit:</h5>
+                                    <mat-form-field>
+                                        <input matInput currencyMask [(ngModel)]='depositAmount' placeholder="Amount">
+                                    </mat-form-field>
+                                    <div id='paypal-button' #paypalButton></div>
+                                </div>
 
-                            <div class="form-section">
-                                <h5>Withdraw:</h5>
-                                <mat-form-field>
-                                    <input matInput currencyMask [(ngModel)]='renterWithdrawAmount'  placeholder="Amount">
-                                </mat-form-field>
+                                <div class="form-section">
+                                    <h5>Withdraw:</h5>
+                                    <mat-form-field>
+                                        <input matInput currencyMask [(ngModel)]='renterWithdrawAmount'  placeholder="Amount">
+                                    </mat-form-field>
 
-                                <br>
+                                    <br>
 
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]='renterWithdrawEmail' placeholder="Email">
-                                </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]='renterWithdrawEmail' placeholder="Email">
+                                    </mat-form-field>
 
-                                <br>
+                                    <br>
 
-                                <button mat-raised-button class='skybin-btn-primary' (click)='renterWithdrawClicked()'>
-                                    Withdraw
-                                </button>
-                            </div>
-                        </mat-card>
-                    </div>
+                                    <button mat-raised-button class='skybin-btn-primary' (click)='renterWithdrawClicked()'>
+                                        Withdraw
+                                    </button>
+                                </div>
+                            </mat-card>
+                        </div>
 
-                    <div class="col">
-                        <mat-card class="wallet-card">
-                            <h3>Provider</h3>
-                            <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
-                            <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
+                        <div class="col">
+                            <mat-card class="wallet-card">
+                                <h3>Provider</h3>
+                                <h5 *ngIf="isProviderSetup">Balance: ${{ providerBalance }}</h5>
+                                <p *ngIf="!isProviderSetup">Set up a provider to earn money!</p>
 
-                            <div class="form-section">
-                                <h5>Withdraw:</h5>
-                                <mat-form-field>
-                                    <input matInput currencyMask [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' placeholder="Amount">
-                                </mat-form-field>
+                                <div class="form-section">
+                                    <h5>Withdraw:</h5>
+                                    <mat-form-field>
+                                        <input matInput currencyMask [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawAmount' placeholder="Amount">
+                                    </mat-form-field>
 
-                                <br>
+                                    <br>
 
-                                <mat-form-field>
-                                    <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
-                                </mat-form-field>
+                                    <mat-form-field>
+                                        <input matInput [disabled]="!providerInputDisabled()" [(ngModel)]='providerWithdrawEmail' placeholder="Email">
+                                    </mat-form-field>
 
-                                <br>
+                                    <br>
 
-                                <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
-                                    Withdraw
-                                </button>
-                            </div>
-                        </mat-card>
+                                    <button mat-raised-button [disabled]="!providerInputDisabled()" class='skybin-btn-primary' (click)='providerWithdrawClicked()'>
+                                        Withdraw
+                                    </button>
+                                </div>
+                            </mat-card>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </mat-tab>
+        </mat-tab>
 
-    <mat-tab label="Transactions">
-        <div class="tab-container">
-                <div class="container-fluid" id='my-wallet-container'>
-                        <div class="row">
-                            <div class="col-8">
-                                <mat-card class="wallet-card">
-                                    <mat-table id='transaction-container' [dataSource]='dataSource'>
-                                        <ng-container matColumnDef='date'>
-                                            <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
-                                            <mat-cell *matCellDef='let element'> {{getDate(element.date)}}</mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef='wallet'>
-                                            <mat-header-cell *matHeaderCellDef>Wallet</mat-header-cell>
-                                            <mat-cell *matCellDef='let element'> {{element.userType}}</mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef='type'>
-                                            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
-                                            <mat-cell *matCellDef='let element'> {{element.transactionType}}</mat-cell>
-                                        </ng-container>
-                                        <ng-container matColumnDef='amount'>
-                                            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
-                                            <mat-cell *matCellDef='let element'> ${{element.amount / 1000}}</mat-cell>
-                                        </ng-container>
-                                        <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
-                                        <mat-row *matRowDef='let row; columns: displayedColumns;'></mat-row>
-                                    </mat-table>
-                                    <mat-paginator #paginator
-                                                    [pageSize]="pageSize">
-                                    </mat-paginator>
-                                </mat-card>
-                            </div>
+        <mat-tab label="Transactions">
+            <div class="tab-container">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div id="transaction-col" class="col-lg-8">
+                            <mat-card class="wallet-card">
+                                <mat-table id='transaction-container' [dataSource]='dataSource'>
+                                    <ng-container matColumnDef='date'>
+                                        <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                                        <mat-cell *matCellDef='let element'> {{getDate(element.date)}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef='wallet'>
+                                        <mat-header-cell *matHeaderCellDef>Wallet</mat-header-cell>
+                                        <mat-cell *matCellDef='let element'> {{element.userType}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef='type'>
+                                        <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+                                        <mat-cell *matCellDef='let element'> {{element.transactionType}}</mat-cell>
+                                    </ng-container>
+                                    <ng-container matColumnDef='amount'>
+                                        <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                                        <mat-cell *matCellDef='let element'> ${{element.amount / 1000}}</mat-cell>
+                                    </ng-container>
+                                    <mat-header-row *matHeaderRowDef='displayedColumns'></mat-header-row>
+                                    <mat-row *matRowDef='let row; columns: displayedColumns;'></mat-row>
+                                </mat-table>
+                                <mat-paginator #paginator
+                                               [pageSize]="pageSize">
+                                </mat-paginator>
+                            </mat-card>
+                        </div>
 
-                            <div class="col">
-                                <mat-card class="wallet-card">
-                                    <h3>Filters</h3>
+                        <div class="col-lg-4">
+                            <mat-card class="wallet-card">
+                                <h3>Filters</h3>
 
-                                    <mat-form-field>
-                                        <mat-select [(ngModel)]="filterWallet" (selectionChange)="filtersChanged()" placeholder="Wallet">
-                                            <mat-option value="renter">
-                                                renter
-                                            </mat-option>
-                                            <mat-option value="provider">
-                                                provider
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="filterWallet" (selectionChange)="filtersChanged()" placeholder="Wallet">
+                                        <mat-option value="renter">
+                                            renter
+                                        </mat-option>
+                                        <mat-option value="provider">
+                                            provider
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <mat-form-field>
-                                        <mat-select [(ngModel)]="filterTransactionTypes" (selectionChange)="filtersChanged()" placeholder="Transaction Type" multiple>
-                                            <mat-option value="deposit">
-                                                deposit
-                                            </mat-option>
-                                            <mat-option value="withdrawal">
-                                                withdrawal
-                                            </mat-option>
-                                            <mat-option value="payment">
-                                                payment
-                                            </mat-option>
-                                            <mat-option value="receipt">
-                                                receipt
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <mat-select [(ngModel)]="filterTransactionTypes" (selectionChange)="filtersChanged()" placeholder="Transaction Type" multiple>
+                                        <mat-option value="deposit">
+                                            deposit
+                                        </mat-option>
+                                        <mat-option value="withdrawal">
+                                            withdrawal
+                                        </mat-option>
+                                        <mat-option value="payment">
+                                            payment
+                                        </mat-option>
+                                        <mat-option value="receipt">
+                                            receipt
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="filterNewerThan" (dateChange)="filtersChanged()" [matDatepicker]="newerThanPicker" placeholder="Newer Than">
-                                        <mat-datepicker-toggle matSuffix [for]="newerThanPicker"></mat-datepicker-toggle>
-                                        <mat-datepicker #newerThanPicker></mat-datepicker>
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="filterNewerThan" (dateChange)="filtersChanged()" [matDatepicker]="newerThanPicker" placeholder="Newer Than">
+                                    <mat-datepicker-toggle matSuffix [for]="newerThanPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #newerThanPicker></mat-datepicker>
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="filterOlderThan" (dateChange)="filtersChanged()" [matDatepicker]="olderThanPicker" placeholder="Older Than">
-                                        <mat-datepicker-toggle matSuffix [for]="olderThanPicker"></mat-datepicker-toggle>
-                                        <mat-datepicker #olderThanPicker></mat-datepicker>
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="filterOlderThan" (dateChange)="filtersChanged()" [matDatepicker]="olderThanPicker" placeholder="Older Than">
+                                    <mat-datepicker-toggle matSuffix [for]="olderThanPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #olderThanPicker></mat-datepicker>
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="filterLessThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="Less Than">
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="filterLessThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="Less Than">
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <mat-form-field>
-                                        <input matInput [(ngModel)]="filterMoreThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="More Than">
-                                    </mat-form-field>
+                                <mat-form-field>
+                                    <input matInput [(ngModel)]="filterMoreThan" (input)="filtersChanged()" min="0.001" step="0.001" type="number" placeholder="More Than">
+                                </mat-form-field>
 
-                                    <br>
+                                <br>
 
-                                    <button id="wallet-filter-bttn" mat-raised-button (click)="clearFilters()" >Clear</button>
-                                </mat-card>
-                            </div>
+                                <button id="wallet-filter-bttn" mat-raised-button (click)="clearFilters()" >Clear</button>
+                            </mat-card>
                         </div>
                     </div>
-        </div>
-    </mat-tab>
-</mat-tab-group>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</section>

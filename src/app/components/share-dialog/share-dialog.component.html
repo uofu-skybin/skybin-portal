@@ -1,4 +1,4 @@
-<div>
+<div id="share-dialog-container">
     <h2 id="share-dialog-title" mat-dialog-title>Share File</h2>
     <mat-dialog-content>
         <div *ngIf="sharedFile.accessList.length > 0">
@@ -17,7 +17,7 @@
         </mat-error>
     </mat-dialog-content>
     <mat-dialog-actions align="center">
-        <button (click)="shareFile(currentName)" mat-button>Share</button>
-        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button  mat-dialog-close>Cancel</button>
+        <button (click)="shareFile(currentName)" class="skybin-btn-primary" mat-raised-button>Share</button>
     </mat-dialog-actions>
 </div>

@@ -6,3 +6,27 @@
 #reserve-error-message {
     padding-left: 20px;
 }
+
+#reserve-space-title {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#reserve-input-container {
+    padding-left: 10em;
+}
+
+#reserve-step-1-container {
+    text-align: center;
+}
+
+.storage-found-icon {
+    color: green;
+    margin-left: 0.3em;
+}
+
+#add-storage-container {
+    min-width: 570px;
+}
+
+

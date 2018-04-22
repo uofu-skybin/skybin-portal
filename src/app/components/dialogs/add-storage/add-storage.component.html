@@ -1,18 +1,18 @@
-<div>
-    <div style="margin-bottom: 20px;">
+<div id="add-storage-container">
+    <div id="reserve-space-title">
         <mat-card-title>
             Reserve More Space
         </mat-card-title>
     </div>
 
     <div *ngIf="state === 'SHOW_INPUTS'">
-        <mat-dialog-content>
+        <mat-dialog-content id="reserve-step-1-container">
             <div>
                 You currently have {{renterInfo.reservedStorage | bytes}} reserved with {{renterInfo.freeStorage | bytes}}
                 of free space.
             </div>
             <br>
-            <mat-list align="center">
+            <mat-list id="reserve-input-container" align="center">
                 <mat-list-item>
                     <mat-form-field>
                         <input matInput [(ngModel)]='requestedAmountGb' placeholder='Amount' pattern="\d+" type='number'>
@@ -25,8 +25,8 @@
             </mat-list>
         </mat-dialog-content>
         <mat-dialog-actions align="center" style="margin-top: 15px; margin-bottom: 5px;">
+            <button mat-raised-button mat-dialog-close>Cancel</button>
             <button mat-raised-button class='skybin-btn-primary' (click)='findSpaceClicked()'>Find Space</button>
-            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">Cancel</button>
         </mat-dialog-actions>
     </div>
 
@@ -39,12 +39,13 @@
 
     <div *ngIf="state === 'SHOW_CONFIRMATION'">
         <mat-dialog-content align="center">
-            <p style="font-size: 1.5em;">Storage found!</p>
+            <p>Storage found! <i class="fa fa-check-circle storage-found-icon" aria-hidden="true"></i>
+            </p>
             <p style="font-size: 1.5em;">Total Cost: {{formatStorageCost(storageEstimate.totalCost)}}</p>
         </mat-dialog-content>
-        <mat-dialog-actions align="center" style="margin-top: 15px; margin-bottom: 5px;">
+        <mat-dialog-actions align="center" style="margin-bottom: 5px;">
+            <button mat-raised-button mat-dialog-close>Cancel</button>
             <button mat-raised-button class='skybin-btn-primary' (click)='confirmClicked()'>Confirm</button>
-            <button mat-raised-button mat-dialog-close class="skybin-btn-primary">Cancel</button>
         </mat-dialog-actions>
     </div>
 

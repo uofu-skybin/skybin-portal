@@ -1,6 +1,7 @@
 
 #configure-provider-dialog-container {
     padding: 20px;
+    min-width: 545px;
 }
 
 #auto-ip-button {

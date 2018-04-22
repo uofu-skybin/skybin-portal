@@ -176,6 +176,15 @@ export class MyFilesComponent implements OnInit, OnDestroy {
             state: TRANSFER_RUNNING,
             isDir: isDir
         };
+
+        const dupUpload = this.uploads.find((up) => {
+            return upload.sourcePath === up.sourcePath;
+        });
+
+        if (dupUpload) {
+            newVersion = true;
+        }
+
         this.uploads.unshift(upload);
         this.showUploads = true;
 

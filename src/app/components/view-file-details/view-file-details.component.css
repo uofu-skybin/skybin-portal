@@ -27,3 +27,11 @@
     background: #f16e6e;
     color: white;
 }
+
+.version-td {
+    height: 4em;
+}
+
+#file-details-container {
+    min-width: 540px;
+}

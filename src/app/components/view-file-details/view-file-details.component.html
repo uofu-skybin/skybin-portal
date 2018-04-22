@@ -1,61 +1,64 @@
-<h2 mat-dialog-title tabindex="1">{{ baseName(file.name) }}</h2>
-<hr>
-<mat-dialog-content>
-    <p>Size: {{ latestVersion(file).size| bytes }}</p>
-    <p>Total Size: {{ getTotalFileSize(file) | bytes }}</p>
-    <p>Last Modified: {{ formatModTime(latestVersion(file).modTime)}}</p>
-    <div class="detail-content">
-        Shared With:
-        <span *ngIf="file.accessList.length === 0">Nobody</span>
-        <li *ngFor="let permission of file.accessList">{{permission.renterAlias}}</li>
-    </div>
+<section id="file-details-container">
+    <h2 mat-dialog-title tabindex="1">{{ baseName(file.name) }}</h2>
+    <hr>
+    <mat-dialog-content>
+        <p>Size: {{ latestVersion(file).size| bytes }}</p>
+        <p>Total Size: {{ getTotalFileSize(file) | bytes }}</p>
+        <p>Last Modified: {{ formatModTime(latestVersion(file).modTime)}}</p>
+        <div class="detail-content">
+            Shared With:
+            <span *ngIf="file.accessList.length === 0">Nobody</span>
+            <li *ngFor="let permission of file.accessList">{{permission.renterAlias}}</li>
+        </div>
 
-    <mat-expansion-panel *ngIf="!data.shared && file.versions.length > 1" id="version-dropdown">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
+        <mat-expansion-panel *ngIf="!data.shared && file.versions.length > 1" id="version-dropdown">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
                 <span *ngIf="file.versions.length === 1">
                     1 Version
                 </span>
-                <span *ngIf="file.versions.length > 1">
+                    <span *ngIf="file.versions.length > 1">
                     {{file.versions.length}} Versions
                 </span>
-            </mat-panel-title>
-            <mat-panel-description>
-                Download a version
-            </mat-panel-description>
-        </mat-expansion-panel-header>
+                </mat-panel-title>
+                <mat-panel-description>
+                    Download a version
+                </mat-panel-description>
+            </mat-expansion-panel-header>
 
-        <table id="version-table">
-            <thead>
-            <tr>
-                <td>Number</td>
-                <td>Size</td>
-                <td>Upload Date</td>
-                <td></td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="version-row" *ngFor="let version of file.versions; let i = index;">
-                <td>{{i}}</td>
-                <td>{{version.size | bytes}}</td>
-                <td>{{getDateString(version.uploadTime)}}</td>
-                <td><button matTooltip="Download this version" (click)="downloadVersion(file, version)" mat-button class="skybin-btn-primary">Download</button></td>
-                <td><button matTooltip="Delete this version" (click)="deleteFile(file, version)" mat-button class="delete-version-button">Delete</button></td>
-            </tr>
-            </tbody>
-        </table>
-        <!--<mat-list>-->
+            <table id="version-table">
+                <thead>
+                <tr>
+                    <td>Number</td>
+                    <td>Size</td>
+                    <td>Upload Date</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="version-row" *ngFor="let version of file.versions; let i = index;">
+                    <td class="version-td">{{i}}</td>
+                    <td class="version-td">{{version.size | bytes}}</td>
+                    <td class="version-td">{{getDateString(version.uploadTime)}}</td>
+                    <td class="version-td"><button matTooltip="Download this version" matTooltipShowDelay="500" (click)="downloadVersion(file, version)" mat-raised-button class="skybin-btn-primary">Download</button></td>
+                    <td class="version-td"><button matTooltip="Delete this version" matTooltipShowDelay="500" (click)="deleteFile(file, version)" mat-raised-button class="delete-version-button">Delete</button></td>
+                </tr>
+                </tbody>
+            </table>
+            <!--<mat-list>-->
             <!--<mat-list-item *ngFor="let version of file.versions; let i = index;">-->
-                <!--<span class="version-number">{{i}}</span>-->
-                <!--|-->
-                <!--<span class="version-size">Size: {{version.size}}</span>-->
-                <!--<button class="skybin-btn-primary" mat-button>Download</button>-->
+            <!--<span class="version-number">{{i}}</span>-->
+            <!--|-->
+            <!--<span class="version-size">Size: {{version.size}}</span>-->
+            <!--<button class="skybin-btn-primary" mat-button>Download</button>-->
             <!--</mat-list-item>-->
-        <!--</mat-list>-->
-    </mat-expansion-panel>
-    <p *ngIf="!data.shared && file.versions.length == 1" ><em>Only 1 version of this file</em></p>
-</mat-dialog-content>
-<mat-dialog-actions align="center">
-    <button mat-button [mat-dialog-close]="true" tabindex="2">Done</button>
-</mat-dialog-actions>
+            <!--</mat-list>-->
+        </mat-expansion-panel>
+        <p *ngIf="!data.shared && file.versions.length == 1" ><em>Only 1 version of this file</em></p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="center">
+        <button mat-button [mat-dialog-close]="true" tabindex="2">Done</button>
+    </mat-dialog-actions>
+
+</section>

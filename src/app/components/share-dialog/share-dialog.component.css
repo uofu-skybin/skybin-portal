@@ -15,3 +15,7 @@
 #share-access-title {
     margin-top: 1em;
 }
+
+#share-dialog-container {
+    min-width: 232px;
+}

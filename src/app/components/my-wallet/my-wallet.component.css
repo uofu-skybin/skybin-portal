@@ -39,3 +39,11 @@ so that the tab content takes up the entire window */
 #transaction-container {
     background: #fbfafa !important;
 }
+
+#wallet-container {
+    min-width: 600px;
+}
+
+#transaction-col {
+    margin-bottom: 1.5em;
+}
