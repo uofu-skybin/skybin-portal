@@ -10,23 +10,21 @@ import {RenterService} from '../../../services/renter.service';
 })
 export class DeleteFolderComponent implements OnInit {
 
+    folderName = '';
+    numberOfChildren = 0;
+
     constructor(public dialogRef: MatDialogRef<DeleteFolderComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any,
                 private renterService: RenterService) {
+        this.folderName = data.folderName;
+        this.numberOfChildren = data.numberOfChildren;
     }
 
     ngOnInit() {
     }
 
     deleteFolder() {
-        this.renterService.deleteFile(this.data.folder.id, null, true)
-            .subscribe(delRes => {
-                console.log(delRes);
-                this.dialogRef.close(true);
-            });
+        this.dialogRef.close(true);
     }
 
 }
-
-// constructor(public dialogRef: MatDialogRef<NewFolderDialogComponent>) {
-// }
