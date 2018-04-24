@@ -119,12 +119,14 @@ export class MyWalletComponent implements OnInit {
         this.renterService.withdraw(
             this.renterWithdrawEmail, 
             this.renterWithdrawAmount * 100)
-            .subscribe(() => {
-                this.updateRenterBalance();
-                this.showNotification("Withdrawal successful!")
-                this.renterWithdrawAmount = null;
-                this.renterWithdrawEmail = '';
-                this.getTransactions();
+            .subscribe((res: any) => {
+                if (!res.error) {
+                    this.renterWithdrawAmount = null;
+                    this.renterWithdrawEmail = '';
+                    this.updateRenterBalance();
+                    this.showNotification("Withdrawal successful!")
+                    this.getTransactions();
+                }
             })
     }
 
