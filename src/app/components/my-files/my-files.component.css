@@ -50,7 +50,7 @@ button:focus {outline:0;}
 }
 
 .modal-body {
-    overflow: scroll;
+    /*overflow: scroll;*/
     padding: 0 !important;
 }
 

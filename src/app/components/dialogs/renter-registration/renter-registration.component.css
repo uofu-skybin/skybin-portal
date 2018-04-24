@@ -1,6 +1,7 @@
 
 #registration-container {
     padding: 30px;
+    overflow: hidden !important;
 }
 
 #registration-progress-content {

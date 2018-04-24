@@ -6,36 +6,43 @@
             <button (click)='uploadClicked(false)' mat-menu-item>New File</button>
             <button (click)='uploadClicked(true)' mat-menu-item>New Folder</button>
         </mat-menu>
+
+        <span class="no-select">
         <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' [matMenuTriggerFor]="appMenu"
                 name='my-files-upload-button' matTooltip="Upload a new file or folder" matTooltipShowDelay="500">
             Upload
         </button>
         <button mat-raised-button class='skybin-btn-primary' (click)='downloadClicked(false)'
-                name='my-files-download-button' matTooltip="Download the selected file or folder" matTooltipShowDelay="500">
+                name='my-files-download-button' matTooltip="Download the selected file or folder"
+                matTooltipShowDelay="500">
             Download
         </button>
         <button *ngIf="!shared" mat-raised-button class='skybin-btn-primary' (click)='shareClicked()'
                 name='my-files-share-button' matTooltip="Share the selected file or folder" matTooltipShowDelay="500">
             Share
         </button>
+        </span>
 
         <!-- Group storage info views. -->
-        <span *ngIf="!shared" id='my-files-storage-management-container'>
+        <span *ngIf="!shared" id='my-files-storage-management-container' class="no-select">
             <!-- Show available/reserved storage space. -->
             <span id='available-space-container'>
-                <span id="free-space-label"><b>Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
+                <span id="free-space-label"><b class="no-select">Free Space:</b> </span>{{renterInfo.freeStorage | bytes}}
             </span>
-            <button id="reserve-space-button" type="button" class="btn btn-default btn-circle" (click)='storageSettingsClicked()' matTooltip="Reserve more space" matTooltipShowDelay="500">
-                <i id='reserve-space-icon' class='fa fa-plus'  aria-hidden='true' ></i>
+            <button id="reserve-space-button" type="button" class="btn btn-default btn-circle"
+                    (click)='storageSettingsClicked()' matTooltip="Reserve more space" matTooltipShowDelay="500">
+                <i id='reserve-space-icon' class='fa fa-plus' aria-hidden='true'></i>
             </button>
-            <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
+            <mat-menu id='profile-menu-container' #appMenu="matMenu" yPosition="below" xPosition="before"
+                      [overlapTrigger]="false">
             <p class='profile-menu-info' mat-menu-item disabled><b>Alias: </b>{{renterInfo.alias}}</p>
             <p class='profile-menu-info' mat-menu-item disabled><b>Available Storage: </b>{{renterInfo.freeStorage | bytes}}</p>
             <hr class='profile-menu-divider'>
             <button (click)="exportRenterKey()" mat-menu-item>Export user profile</button>
             </mat-menu>
-            <button id="profile-button" type="button" class="btn btn-default btn-circle" [matMenuTriggerFor]="appMenu" matTooltip="Renter profile" matTooltipShowDelay="500">
-                <i id='profile-icon'   class="fa fa-user" aria-hidden="true"></i>
+            <button id="profile-button" type="button" class="btn btn-default btn-circle" [matMenuTriggerFor]="appMenu"
+                    matTooltip="Renter profile" matTooltipShowDelay="500">
+                <i id='profile-icon' class="fa fa-user" aria-hidden="true"></i>
             </button>
             <!--<button id="profile-button" mat-mini-fab>-->
             <!--</button>-->
@@ -122,18 +129,20 @@
                         <div *ngFor='let upload of uploads' class='upload-item'>
                             <div>
                                 <span class='download-file-name'
-                                  *ngIf="baseName(upload.destPath).length > 23">{{(baseName(upload.destPath)).slice(0, 23) + '...'}}</span>
+                                      *ngIf="baseName(upload.destPath).length > 23">{{(baseName(upload.destPath)).slice(0, 23) + '...'}}</span>
                                 <span class='download-file-name'
                                       *ngIf="baseName(upload.destPath).length <= 23">{{(baseName(upload.destPath))}}</span>
                                 <!--<i *ngIf="upload.state === 'TRANSFER_DONE'" class="fa fa-ellipsis-v"></i>-->
                                 <button *ngIf="upload.state === 'TRANSFER_DONE'"
                                         class='post-download-button' mat-icon-button>
                                     <!--<mat-icon aria-label="Example icon-button with a heart icon">favorite</mat-icon>-->
-                                    <i class='fa fa-check-circle transfer-icon green download-success-icon' aria-hidden='true'></i>
+                                    <i class='fa fa-check-circle transfer-icon green download-success-icon'
+                                       aria-hidden='true'></i>
                                 </button>
                                 <button *ngIf="upload.state === 'TRANSFER_ERROR'"
                                         class='post-download-button' mat-icon-button>
-                                    <i class='fa fa-exclamation-circle transfer-icon download-success-icon red' aria-hidden='true'></i>
+                                    <i class='fa fa-exclamation-circle transfer-icon download-success-icon red'
+                                       aria-hidden='true'></i>
                                 </button>
                             </div>
                             <mat-progress-bar *ngIf="upload.state === 'TRANSFER_RUNNING'"
@@ -197,7 +206,8 @@
                                         </div>
                                         <div class='download-block-container'>
                                             <span class='download-subtitle'>Correct Blocks</span>:
-                                            <span class='success-blocks download-value'>{{download.correctBlocks}}</span>
+                                            <span
+                                                class='success-blocks download-value'>{{download.correctBlocks}}</span>
                                         </div>
                                         <div class='download-block-container'>
                                             <span class='download-subtitle'>Failed Blocks</span>:
@@ -217,11 +227,15 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr  *ngFor="let block of download.blocks">
+                                            <tr *ngFor="let block of download.blocks">
                                                 <td class='download-block-td block-id'>
                                                     <div
                                                         class="download-stats-td">
-                                                        <i matTooltip='Copy block ID to clipboard' matTooltipShowDelay="500" class="fa fa-clipboard copy-block-button" (click)='copyBlockIdToClip(block.blockId)' aria-hidden="true"></i>
+                                                        <i matTooltip='Copy block ID to clipboard'
+                                                           matTooltipShowDelay="500"
+                                                           class="fa fa-clipboard copy-block-button"
+                                                           (click)='copyBlockIdToClip(block.blockId)'
+                                                           aria-hidden="true"></i>
                                                         <span matTooltip={{block.blockId}} matTooltipShowDelay="500">
                                                             {{block.blockId.split('-')[0]}}-...
                                                         </span>
@@ -229,9 +243,11 @@
                                                 </td>
                                                 <td class='download-block-td download-status-td'>
                                                     <div class="download-stats-td">
-                                                        <i *ngIf="block.error" class='fa fa-times-circle transfer-icon red'
+                                                        <i *ngIf="block.error"
+                                                           class='fa fa-times-circle transfer-icon red'
                                                            aria-hidden='true'></i>
-                                                        <i *ngIf="!block.error" class='fa fa-check-circle transfer-icon green'
+                                                        <i *ngIf="!block.error"
+                                                           class='fa fa-check-circle transfer-icon green'
                                                            aria-hidden='true'></i>
                                                     </div>
                                                 </td>

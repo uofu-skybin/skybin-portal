@@ -73,7 +73,7 @@ ol.breadcrumb {
     color: gray;
 }
 
-.file-table-header, .no-select {
+.file-table-header {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;

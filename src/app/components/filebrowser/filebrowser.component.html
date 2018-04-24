@@ -47,14 +47,14 @@
                     </span>
                 </td>
                 <!--<td>-</td>-->
-                <td>-</td>
-                <td>-</td>
+                <td class="no-select">-</td>
+                <td class="no-select">-</td>
             </tr>
             <tr *ngFor="let file of getFilesInCurrentDirectory()"
                 (click)="selectFile(file)"
                 (contextmenu)="onContextClick($event, file)"
                 [class.selected]="file === selectedFile">
-                <td>
+                <td class="no-select">
                     <span draggable [dragData]='file' [dragTransitClass]="'fileDrag'" class="file-folder-drag">
                     <i *ngIf="file.versions.length < 2" class="fa" aria-hidden="true" [ngClass]="{
                         'fa-file-text-o': file.name.split('.')[file.name.split('.').length - 1].toLowerCase() === 'txt',
@@ -94,15 +94,13 @@
                     {{baseName(file.name)}}
                     </span>
                 </td>
-                <td *ngIf="shared">
+                <td class="no-select" *ngIf="shared">
                     {{file.ownerAlias}}
                 </td>
-                <!--<td>{{file.versions.length}}</td>-->
-                <td>
+                <td class="no-select">
                     {{latestVersion(file).size | bytes}}
-                    <!--<span class="file-version-number" *ngIf="file.versions.length >= 2">(x{{file.versions.length}})</span>-->
                 </td>
-                <td>{{formatModTime(latestVersion(file).modTime)}}</td>
+                <td class="no-select">{{formatModTime(latestVersion(file).modTime)}}</td>
             </tr>
             </tbody>
         </table>
