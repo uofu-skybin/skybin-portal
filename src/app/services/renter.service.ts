@@ -139,7 +139,7 @@ export class RenterService {
     withdraw(email: string, amount: number) {
         return this.http.post(`${appConfig['renterAddress']}/paypal/withdraw`, {email: email, amount: amount})
             .pipe(
-                catchError(this.handleError('withdraw', {}))
+                catchError(this.handleError('withdraw', {error: true}))
             );
     }
 
