@@ -13,7 +13,6 @@
 }
 
 #reserve-input-container {
-    padding-left: 10em;
 }
 
 #reserve-step-1-container {
@@ -27,7 +26,9 @@
 }
 
 #add-storage-container {
-    min-width: 570px;
-    overflow: hidden !important;
 }
 
+#reserve-input-inner-container {
+    margin-left: auto;
+    margin-right: auto;
+}

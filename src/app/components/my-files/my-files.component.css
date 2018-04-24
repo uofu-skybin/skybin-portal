@@ -18,6 +18,8 @@ button:focus {outline:0;}
     position: fixed;
     bottom: 20px;
     right: 30px;
+    max-height: 50vh;
+    overflow: scroll;
 }
 
 .modal.in {
