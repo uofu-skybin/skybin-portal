@@ -1,6 +1,6 @@
 <section id="delete-folder-container">
-    <h4 *ngIf="data.childItemCount === 1" mat-dialog-title>Delete {{data.folder.name}} and {{data.childItemCount}} item?</h4>
-    <h4 *ngIf="data.childItemCount > 1" mat-dialog-title>Delete {{data.folder.name}} and {{data.childItemCount}} items?</h4>
+    <h4 *ngIf="numberOfChildren === 1" mat-dialog-title>Delete {{folderName}} and {{numberOfChildren}} item?</h4>
+    <h4 *ngIf="numberOfChildren > 1" mat-dialog-title>Delete {{folderName}} and {{numberOfChildren}} items?</h4>
     <!--<mat-dialog-content>Confirm deletion of Sample and 7 items</mat-dialog-content>-->
     <mat-dialog-actions align="center">
         <button mat-raised-button mat-dialog-close>Cancel</button>

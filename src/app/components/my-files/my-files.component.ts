@@ -1,25 +1,27 @@
-import {Component, OnInit, ViewEncapsulation, ViewChild, NgZone, Output, EventEmitter} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {ElectronService} from 'ngx-electron';
-import {MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef} from '@angular/material';
-import {NewFolderDialogComponent} from '../dialogs/new-folder-dialog/new-folder-dialog.component';
-import {ChangeDetectorRef} from '@angular/core';
-import {SkyFile, latestVersion, GetFilesResponse} from '../../models/common';
-import {appConfig} from '../../models/config';
-import {ShareDialogComponent} from '../share-dialog/share-dialog.component';
-import {ViewFileDetailsComponent} from '../view-file-details/view-file-details.component';
-import {Subscription} from 'rxjs/Subscription';
-import {OnDestroy} from '@angular/core/src/metadata/lifecycle_hooks';
-import {AddStorageComponent} from '../dialogs/add-storage/add-storage.component';
+import { Component, OnInit, ViewEncapsulation, ViewChild, NgZone, Output, EventEmitter } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ElectronService } from 'ngx-electron';
+import { MatDialog, MatMenuTrigger, MatSnackBar, MatSnackBarConfig, MatDialogRef } from '@angular/material';
+import { NewFolderDialogComponent } from '../dialogs/new-folder-dialog/new-folder-dialog.component';
+import { ChangeDetectorRef } from '@angular/core';
+import { SkyFile, latestVersion, GetFilesResponse } from '../../models/common';
+import { appConfig } from '../../models/config';
+import { ShareDialogComponent } from '../share-dialog/share-dialog.component';
+import { ViewFileDetailsComponent } from '../view-file-details/view-file-details.component';
+import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { AddStorageComponent } from '../dialogs/add-storage/add-storage.component';
 import OpenDialogOptions = Electron.OpenDialogOptions;
-import {NotificationComponent} from '../notification/notification.component';
-import {RenterRegistrationComponent} from '../dialogs/renter-registration/renter-registration.component';
-import {RenterService} from '../../services/renter.service';
-import {ReserveStorageProgressComponent} from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
-import {RenameFileDialogComponent} from '../dialogs/rename-file-dialog/rename-file-dialog.component';
-import {beautifyBytes} from '../../pipes/bytes.pipe';
-import {ActivatedRoute} from '@angular/router';
-import {DeleteFolderComponent} from '../dialogs/delete-folder/delete-folder.component';
+import { NotificationComponent } from '../notification/notification.component';
+import { RenterRegistrationComponent } from '../dialogs/renter-registration/renter-registration.component';
+import { RenterService } from '../../services/renter.service';
+import { ReserveStorageProgressComponent } from '../dialogs/reserve-storage-progress/reserve-storage-progress.component';
+import { RenameFileDialogComponent } from '../dialogs/rename-file-dialog/rename-file-dialog.component';
+import { beautifyBytes } from '../../pipes/bytes.pipe';
+import { ActivatedRoute } from '@angular/router';
+import { DeleteFolderComponent } from '../dialogs/delete-folder/delete-folder.component';
+
+const filepath = require('path');
 
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
@@ -70,13 +72,13 @@ export class MyFilesComponent implements OnInit, OnDestroy {
 
 
     constructor(private http: HttpClient,
-                public electronService: ElectronService,
-                public dialog: MatDialog,
-                private ref: ChangeDetectorRef,
-                public snackBar: MatSnackBar,
-                public zone: NgZone,
-                private renterService: RenterService,
-                private route: ActivatedRoute) {
+        public electronService: ElectronService,
+        public dialog: MatDialog,
+        private ref: ChangeDetectorRef,
+        public snackBar: MatSnackBar,
+        public zone: NgZone,
+        private renterService: RenterService,
+        private route: ActivatedRoute) {
 
         this.shared = this.route.snapshot.data.shared;
 
@@ -152,7 +154,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath: string, isDir: boolean) {
-        const baseName = this.baseName(sourcePath);
+        const baseName = filepath.basename(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
             destPath += '/';
@@ -279,13 +281,6 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         elem.style.top = `${top}px`;
     }
 
-    // Returns the last element of a file path.
-    // e.g. "/users/a.txt" -> "a.txt"
-    baseName(fileName: string) {
-        const pathElems = fileName.split('/');
-        return pathElems[pathElems.length - 1];
-    }
-
     showErrorNotification(message) {
         const scope = this;
         this.zone.run(() => {
@@ -303,7 +298,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file) {
             return;
         }
-        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/' + file.name}, (destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({ defaultPath: '*/' + file.name }, (destPath: string) => {
             if (!destPath) {
                 return;
             }
@@ -426,45 +421,44 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         if (!file) {
             return;
         }
-        // If the file is a directory, make sure it is empty
         if (file.isDir) {
-            const hasChild = this.allFiles.some(e =>
-                e.name.startsWith(file.name) && e.id !== file.id);
-            if (hasChild) {
-                const childItems = this.allFiles.filter((f) => {
-                    return f.name.startsWith(file.name) && f.id !== file.id;
-                });
-                const deleteConfirmationDialog = this.dialog.open(DeleteFolderComponent, {
+            const children = this.allFiles.filter(e => this.isChild(e, file));
+            if (children.length > 0) {
+                const confirmDialog = this.dialog.open(DeleteFolderComponent, {
                     width: '325px',
                     data: {
-                        folder: file,
-                        childItemCount: childItems.length
-                    }
+                        folderName: this.baseName(file.name),
+                        numberOfChildren: children.length,
+                    },
                 });
-                deleteConfirmationDialog.afterClosed()
-                    .subscribe((res) => {
-                        if (res) {
-                            this.getFiles();
-                            this.showErrorNotification(`${file.name} has been deleted!`);
-                        }
+                confirmDialog.afterClosed().subscribe(res => {
+                    if (!res) {
+                        // The user doesn't want to delete the folder.
+                        return;
+                    }
+                    // Remove the folder and its children from the display.
+                    this.zone.run(() => {
+                        this.allFiles = this.allFiles.filter(e => !this.isInSubtree(e, file));
+                        this.filteredFiles = this.filteredFiles.filter(e => !this.isInSubtree(e, file));
+                        const baseName = this.baseName(file.name);
+                        this.showErrorNotification(`${baseName} has been deleted`);
                     });
-                // this.showErrorNotification('That folder isn\'t empty!');
+                    this.renterService.deleteFile(file.id, null, true)
+                        .subscribe(delRes => {
+                        });
+                });
                 return;
             }
         }
-
         this.zone.run(() => {
-            this.renterService.deleteFile(file.id)
-                .subscribe(deletedFile => {
-                    this.allFiles = this.allFiles.filter(e => e.id !== file.id);
-                    // this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
-                    this.onSearchChanged();
-                    this.getRenterInfo();
-                    // this.ref.detectChanges();
-                    const filePath = file.name.split('/');
-                    const name = (filePath.length === 1) ? filePath[0] : filePath[filePath.length - 1];
-                    this.showErrorNotification(`${name} has been deleted!`);
-                });
+            this.allFiles = this.allFiles.filter(e => e.id !== file.id);
+            this.filteredFiles = this.filteredFiles.filter(e => e.id !== file.id);
+            const baseName = this.baseName(file.name);
+            this.showErrorNotification(`${baseName} has been deleted!`);
+            this.renterService.deleteFile(file.id).subscribe(deletedFile => {
+                this.onSearchChanged();
+                this.getRenterInfo();
+            });
         });
     }
 
@@ -697,7 +691,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     exportRenterKey(): void {
-        this.electronService.remote.dialog.showSaveDialog({defaultPath: '*/renterid'}, (destPath: string) => {
+        this.electronService.remote.dialog.showSaveDialog({ defaultPath: '*/renterid' }, (destPath: string) => {
             if (!destPath) {
                 return;
             }
@@ -716,5 +710,24 @@ export class MyFilesComponent implements OnInit, OnDestroy {
         this.showErrorNotification('Copied to clipboard!');
     }
 
+    // Returns the last element of a file path.
+    // e.g. "/users/a.txt" -> "a.txt"
+    baseName(fileName: string) {
+        const pathElems = fileName.split('/');
+        return pathElems[pathElems.length - 1];
+    }
+
+    isChild(file1: SkyFile, file2: SkyFile) {
+        return file2.isDir &&
+            file1.name.length > file2.name.length &&
+            file1.name.startsWith(file2.name) &&
+            file1.name[file2.name.length] === '/';
+    }
+
+    // Returns whether file with name name1 is a child
+    // of folder with name name2.
+    isInSubtree(file: SkyFile, folder: SkyFile) {
+        return file.id === folder.id || this.isChild(file, folder);
+    }
 
 }
