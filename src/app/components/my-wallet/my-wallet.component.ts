@@ -156,8 +156,8 @@ export class MyWalletComponent implements OnInit {
             this.providerWithdrawEmail = '';
             this.getTransactions();
         }, (error) => {
-            console.error('Error depositing');
             console.error(error);
+            this.showNotification(error.error.error);
         });
     }
 
