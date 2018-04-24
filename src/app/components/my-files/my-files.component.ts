@@ -21,6 +21,8 @@ import { beautifyBytes } from '../../pipes/bytes.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { DeleteFolderComponent } from '../dialogs/delete-folder/delete-folder.component';
 
+const filepath = require('path');
+
 // An upload or download.
 // 'sourcePath' and 'destPath' are full path names.
 export class Transfer {
@@ -152,7 +154,7 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath: string, isDir: boolean) {
-        const baseName = this.baseName(sourcePath);
+        const baseName = filepath.basename(sourcePath);
         let destPath = this.currentPath;
         if (destPath.length > 0) {
             destPath += '/';
