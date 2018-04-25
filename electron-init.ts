@@ -20,7 +20,7 @@ ipcMain
     .on('setupRenter', (event, options) => {
         const makeMsg = (error) => `Unable to setup skybin renter. Error: ${error.toString()}`;
         try {
-            options.push('--meta-addr', META_ADDR);
+            options.metaAddr = META_ADDR;
             setupRenter(options, (error) => {
                 const message = error ? makeMsg(error) : null;
                 event.sender.send('setupRenterDone', {
@@ -42,7 +42,7 @@ ipcMain
     .on('setupProvider', (event, options) => {
         const makeMsg = (error) => `Unable to setup skybin provider. Error: ${error.toString()}`;
         try {
-            options.push('--meta-addr', META_ADDR);
+            options.metaAddr = META_ADDR;
             setupProvider(options, (error) => {
                 const message = error ? makeMsg(error) : null;
                 event.sender.send('setupProviderDone', {
