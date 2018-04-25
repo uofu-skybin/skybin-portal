@@ -154,7 +154,8 @@ export class MyFilesComponent implements OnInit, OnDestroy {
     }
 
     uploadFile(sourcePath: string, isDir: boolean) {
-        const baseName = filepath.basename(sourcePath);
+        const splitPath = sourcePath.split('\\');
+        const baseName = splitPath[splitPath.length - 1];
         let destPath = this.currentPath;
         if (destPath.length > 0) {
             destPath += '/';
