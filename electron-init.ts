@@ -55,7 +55,7 @@ ipcMain
         event.returnValue = providerConfig;
     })
     .on('exportRenterKey' , (event, destPath) => {
-        const keyPath = `${skybinHome}/renter/renterid`;
+        const keyPath = `${skybinHome}\\renter\\renterid`;
         const keyFile = fs.readFileSync(keyPath);
 
         try {
@@ -139,7 +139,7 @@ function maybeStartRenter(callback) {
 
 function setupRenter(options, callback) {
     initRenter(options);
-    renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+    renterConfig = loadConfig(`${skybinHome}\\renter\\config.json`);
     startRenter(callback);
 }
 
@@ -176,7 +176,7 @@ function maybeStartProvider(callback) {
 function setupProvider(options, callback) {
 	// options.metaAddr = '159.89.148.233:8001';
     initProvider(options);
-    providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
+    providerConfig = loadConfig(`${skybinHome}\\provider\\config.json`);
     startProvider(callback);
 }
 
@@ -193,12 +193,12 @@ function init() {
 
     appWindow.setMenu(null);
     appWindow.maximize();
-    // win.webContents.openDevTools();
+    // appWindow.webContents.openDevTools();
     appWindow.on('closed', function () {
         appWindow = null;
     });
 
-    skybinHome = `${process.env.HOME}/.skybin`;
+    skybinHome = `${process.env.USERPROFILE}\\.skybin`;
     if (process.env.SKYBIN_HOME) {
         skybinHome = process.env.SKYBIN_HOME;
     }
@@ -219,17 +219,18 @@ function init() {
         }
     };
 
-    const isRenterSetup = fs.existsSync(`${skybinHome}/renter`);
+    const isRenterSetup = fs.existsSync(`${skybinHome}\\renter`);
+    fs.writeFileSync('C:\\Users\\kinca\\stuff', `${skybinHome}\\renter`)
     if (isRenterSetup) {
         pendingServices++;
-        renterConfig = loadConfig(`${skybinHome}/renter/config.json`);
+        renterConfig = loadConfig(`${skybinHome}\\renter\\config.json`);
         maybeStartRenter(callback);
     }
 
-    const isProviderSetup = fs.existsSync(`${skybinHome}/provider`);
+    const isProviderSetup = fs.existsSync(`${skybinHome}\\provider`);
     if (isProviderSetup) {
         pendingServices++;
-        providerConfig = loadConfig(`${skybinHome}/provider/config.json`);
+        providerConfig = loadConfig(`${skybinHome}\\provider\\config.json`);
         maybeStartProvider(callback);
     }
 
