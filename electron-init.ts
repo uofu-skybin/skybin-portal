@@ -224,7 +224,6 @@ function init() {
     };
 
     const isRenterSetup = fs.existsSync(`${skybinHome}\\renter`);
-    fs.writeFileSync('C:\\Users\\kinca\\stuff', `${skybinHome}\\renter`)
     if (isRenterSetup) {
         pendingServices++;
         renterConfig = loadConfig(`${skybinHome}\\renter\\config.json`);
